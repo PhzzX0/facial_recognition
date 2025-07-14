@@ -1,4 +1,8 @@
+# Importa bibliotecas necessárias para banco de dados e manipulação de arquivos
+
+# Importa a biblioteca sqlite3 para interagir com o banco de dados SQLite (usada nos logs e verificações de usuários)
 import sqlite3
+# Importa a biblioteca OS para manipulação de caminhos de arquivos e diretórios (usada para salvar capturas e organizar pastas)
 import os
 
 def criar_banco_de_dados():
@@ -12,9 +16,9 @@ def criar_banco_de_dados():
 
     print("[DB SETUP] Verificando e criando tabelas...")
 
-    # 1. Tabela Operadores
+    # 1. Tabela de operadores do sistema (admin, porteiro etc)
     c.execute('''
-        CREATE TABLE IF NOT EXISTS Operadores (
+        CREATE TABLE IF NOT EXISTS app_Operadores (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
             login TEXT NOT NULL UNIQUE,
@@ -24,17 +28,17 @@ def criar_banco_de_dados():
         )
     ''')
 
-    # 2. Tabela Cursos
+    # 2. Cursos disponíveis
     c.execute('''
-        CREATE TABLE IF NOT EXISTS Cursos (
+        CREATE TABLE IF NOT EXISTS app_Cursos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome_curso TEXT NOT NULL UNIQUE
         )
     ''')
 
-    # 3. Tabela Turmas
+    # 3. Turmas associadas aos cursos
     c.execute('''
-        CREATE TABLE IF NOT EXISTS Turmas (
+        CREATE TABLE IF NOT EXISTS app_Turmas (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome_turma TEXT NOT NULL,
             curso_id INTEGER,
@@ -44,9 +48,9 @@ def criar_banco_de_dados():
         )
     ''')
 
-    # 4. Tabela Usuarios
+    # 4. Usuários do sistema (alunos, professores, servidores)
     c.execute('''
-        CREATE TABLE IF NOT EXISTS Usuarios (
+        CREATE TABLE IF NOT EXISTS app_Usuarios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome_completo TEXT NOT NULL,
             matricula TEXT UNIQUE,
@@ -56,9 +60,9 @@ def criar_banco_de_dados():
         )
     ''')
 
-    # 5. Tabela UsuarioTurma (Associação)
+    # 5. Relaciona usuários com turmas
     c.execute('''
-        CREATE TABLE IF NOT EXISTS UsuarioTurma (
+        CREATE TABLE IF NOT EXISTS app_UsuarioTurma (
             usuario_id INTEGER NOT NULL,
             turma_id INTEGER NOT NULL,
             PRIMARY KEY (usuario_id, turma_id),
@@ -67,9 +71,9 @@ def criar_banco_de_dados():
         )
     ''')
 
-    # 6. Tabela Visitantes
+    # 6. Visitantes cadastrados no sistema
     c.execute('''
-        CREATE TABLE IF NOT EXISTS Visitantes (
+        CREATE TABLE IF NOT EXISTS app_Visitantes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome_completo TEXT NOT NULL,
             documento TEXT NOT NULL,
@@ -81,9 +85,9 @@ def criar_banco_de_dados():
         )
     ''')
 
-    # 7. Tabela LogsAcesso
+    # 7. Registros de acesso realizados
     c.execute('''
-        CREATE TABLE IF NOT EXISTS LogsAcesso (
+        CREATE TABLE IF NOT EXISTS app_LogsAcesso (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             timestamp_acesso TEXT NOT NULL,
             status TEXT NOT NULL CHECK(status IN ('Aceito', 'Negado', 'Não Encontrado')),
@@ -95,9 +99,9 @@ def criar_banco_de_dados():
         )
     ''')
 
-    # 8. Tabela AcoesDisciplinares
+    # 8. Registro de ações disciplinares aplicadas
     c.execute('''
-        CREATE TABLE IF NOT EXISTS AcoesDisciplinares (
+        CREATE TABLE IF NOT EXISTS app_AcoesDisciplinares (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             usuario_id INTEGER NOT NULL,
             operador_id INTEGER NOT NULL,
@@ -111,9 +115,9 @@ def criar_banco_de_dados():
         )
     ''')
 
-    # 9. Tabela PermissoesEspeciais
+    # 9. Permissões especiais concedidas
     c.execute('''
-        CREATE TABLE IF NOT EXISTS PermissoesEspeciais (
+        CREATE TABLE IF NOT EXISTS app_PermissoesEspeciais (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             usuario_id INTEGER NOT NULL,
             operador_id INTEGER NOT NULL,
@@ -125,9 +129,9 @@ def criar_banco_de_dados():
         )
     ''')
 
-    # 10. Tabela LiberacoesCOAPAC
+    # 10. Liberações feitas por COAPAC
     c.execute('''
-        CREATE TABLE IF NOT EXISTS LiberacoesCOAPAC (
+        CREATE TABLE IF NOT EXISTS app_LiberacoesCOAPAC (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             turma_id INTEGER NOT NULL,
             operador_id INTEGER NOT NULL,
@@ -140,9 +144,9 @@ def criar_banco_de_dados():
         )
     ''')
 
-    # 11. Tabela Anuncios
+    # 11. Tabela para exibição de anúncios
     c.execute('''
-        CREATE TABLE IF NOT EXISTS Anuncios (
+        CREATE TABLE IF NOT EXISTS app_Anuncios (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             operador_id INTEGER NOT NULL,
             tipo TEXT CHECK(tipo IN ('Evento', 'Lembrete')),
@@ -156,9 +160,9 @@ def criar_banco_de_dados():
         )
     ''')
 
-    # 12. Tabela Notificacoes
+    # 12. Notificações geradas no sistema
     c.execute('''
-        CREATE TABLE IF NOT EXISTS Notificacoes (
+        CREATE TABLE IF NOT EXISTS app_Notificacoes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             operador_id INTEGER NOT NULL,
             mensagem TEXT,
@@ -170,7 +174,9 @@ def criar_banco_de_dados():
         )
     ''')
 
+    # Finaliza alterações
     conn.commit()
     conn.close()
     print("[DB SETUP] Configuração do banco de dados concluída.")
 
+criar_banco_de_dados()

@@ -1,10 +1,13 @@
 ## Projeto
 
-Código base para funcionamento de um sistema de reconhecimento e análise facial
+Este projeto é um sistema de verificação facial que utiliza uma webcam IP (como o app IP Webcam no Android) para capturar rostos em tempo real, comparar com imagens previamente cadastradas e registrar acessos no banco de dados.
+
 
 ## Instalação
 
-**CODADO COM PYTHON 3.12.3 ALGUMAS BIBLIOTECAS PODERÃO PRECISAR DE AJUSTE PARA A SUA VERSÃO DO PYTHON**
+**Desenvolvido com Python 3.12.3**  
+*Algumas bibliotecas podem precisar de ajustes dependendo da sua versão.*
+
 
 1. Clone ou baixe este repositório.
 2. Navegue até a pasta do projeto no terminal. (Comando cd)
@@ -14,15 +17,9 @@ Código base para funcionamento de um sistema de reconhecimento e análise facia
 pip install -r requirements_3.12.txt
 ```
 
-ou
-
-```bash
-pip install -r requirements_3.10.txt
-```
-
 4. No celular Android, instale e abra o app [IP Webcam](https://play.google.com/store/apps/details?id=com.pas.webcam).
 5. Inicie a câmera no app e pegue o endereço IP mostrado (ex: `http://192.168.18.45:8080/video`).
-6. No arquivo `main.py`, configure a variável `CAMERA_URL` com o endereço obtido. (necessário ter o /video no final)
+6. No arquivo `main.py`, na linha que tiver "video_capture = cv2.VideoCapture(0)" coloque o endereço obtido no lugar do zero. (necessário ter o /video no final)
 
 ---
 
@@ -31,8 +28,10 @@ pip install -r requirements_3.10.txt
 No terminal, dentro da pasta do projeto, rode o main.py
 
 - Uma janela vai abrir mostrando o vídeo da câmera com rostos detectados.
-- Pressiona a tecla `c` para cadastrar o rosto capturado com os dados necessários
-- Pressiona a tecla `v` para verificar se o rosto capturado está cadastrado
+Quando um rosto for detectado:
+   - O sistema capturará a imagem automaticamente.
+   - Fará a verificação com os rostos cadastrados.
+   - O resultado será exibido no terminal.
 - Pressione a tecla `q` para fechar o programa.
 - As imagens dos rostos detectados estarão na pasta `rostos/`
 - O banco de dados `database.db` terá os registros das imagens salvas com os dados da pessoa cadastrada.

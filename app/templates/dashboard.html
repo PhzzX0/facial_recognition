@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceIN - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .sidebar {
+            scrollbar-width: thin;
+            scrollbar-color: #4CAF50 transparent;
+        }
+        
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb {
+            background-color: #4CAF50;
+            border-radius: 6px;
+        }
+        
+        .camera-feed {
+            background-image: url('https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1476&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        @media (max-width: 1023px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar-open {
+                transform: translateX(0);
+            }
+            
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0,0,0,0.5);
+                z-index: 40;
+            }
+            
+            .sidebar-overlay-open {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="lg:hidden fixed top-4 left-4 z-50">
+        <button id="mobileMenuButton" class="p-2 rounded-md bg-green-500 text-white">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+    
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+    
+    <div id="sidebar" class="sidebar w-64 bg-white h-screen fixed top-0 left-0 flex flex-col justify-between overflow-y-auto">
+        <div class="p-4">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-white">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <span class="text-xl font-bold">FaceIN</span>
+            </div>
+            <div class="mt-4 flex items-center space-x-2 text-gray-500">
+                <i class="fas fa-th"></i>
+                <span>IFRN Apodi</span>
+            </div>
+        </div>
+        
+        <nav class="flex-1 px-4 py-2">
+            <ul>
+                <li>
+                    <a href="/dashboard" class="flex items-center space-x-3 p-3 rounded-lg bg-green-100 text-green-700">
+                        <span class="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </span>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/usuarios" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <span class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                            <i class="fas fa-users"></i>
+                        </span>
+                        <span>Usuários</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/turmas" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <span class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                            <i class="fas fa-chalkboard"></i>
+                        </span>
+                        <span>Turmas</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/registro" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <span class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                            <i class="fas fa-clipboard-list"></i>
+                        </span>
+                        <span>Registro</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/permissoes" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <span class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                            <i class="fas fa-key"></i>
+                        </span>
+                        <span>Permissões</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/suspensoes" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <span class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                            <i class="fas fa-ban"></i>
+                        </span>
+                        <span>Suspensões</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/acessoExterno" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 text-gray-700">
+                        <span class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600">
+                            <i class="fas fa-external-link-alt"></i>
+                        </span>
+                        <span>Acesso Externo</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="p-4">
+            <button class="w-full py-3 bg-green-500 text-white rounded-lg font-bold hover:bg-green-600 transition" onclick="window.location.href='/logout'">
+                SAIR
+            </button>
+            <div class="mt-2 text-center text-xs text-gray-400">irw</div>
+        </div>
+    </div>
+    
+    <div class="flex flex-col lg:flex-row lg:ml-64">
+        <div class="flex-1 p-6"> <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                <div>
+                    <h1 class="text-2xl font-bold">Olá, IFRN Apodi!</h1>
+                    <p id="currentDate" class="text-gray-500"></p>
+                </div>
+                <div class="flex items-center space-x-3 mt-4 md:mt-0">
+                    <button class="w-10 h-10 rounded-lg bg-green-500 text-white flex items-center justify-center hover:bg-green-600">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </button>
+                    <button class="w-10 h-10 rounded-lg bg-green-500 text-white flex items-center justify-center hover:bg-green-600">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <div class="relative">
+                        <input type="text" placeholder="Buscar..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="bg-green-500 rounded-lg p-6 text-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm">Acessos Hoje</p>
+                            <h3 class="text-2xl font-bold">142</h3>
+                        </div>
+                        <div class="bg-green-400 rounded-full p-2">
+                            <i class="fas fa-door-open"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-2 border-t border-green-400">
+                        <p class="text-xs flex items-center">
+                            <span class="text-green-200 mr-1"><i class="fas fa-arrow-up"></i> 12%</span>
+                            em relação a ontem
+                        </p>
+                    </div>
+                </div>
+                <div class="bg-green-500 rounded-lg p-6 text-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm">Alunos Presentes</p>
+                            <h3 class="text-2xl font-bold">87</h3>
+                        </div>
+                        <div class="bg-green-400 rounded-full p-2">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-2 border-t border-green-400">
+                        <p class="text-xs flex items-center">
+                            <span class="text-green-200 mr-1"><i class="fas fa-arrow-up"></i> 5%</span>
+                            em relação a ontem
+                        </p>
+                    </div>
+                </div>
+                <div class="bg-green-500 rounded-lg p-6 text-white">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-sm">Acessos Negados</p>
+                            <h3 class="text-2xl font-bold">3</h3>
+                        </div>
+                        <div class="bg-green-400 rounded-full p-2">
+                            <i class="fas fa-user-times"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-2 border-t border-green-400">
+                        <p class="text-xs flex items-center">
+                            <span class="text-green-200 mr-1"><i class="fas fa-arrow-down"></i> 25%</span>
+                            em relação a ontem
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-xl font-bold mb-4">Gerenciar Acesso</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Acesso</label>
+                            <select class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <option>Selecione um tipo</option>
+                                <option>Aluno</option>
+                                <option>Professor</option>
+                                <option>Funcionário</option>
+                                <option>Visitante</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nome</label>
+                            <input type="text" placeholder="Digite o nome" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Matrícula/ID</label>
+                            <input type="text" placeholder="Digite a matrícula" class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        </div>
+                        <div class="flex space-x-3">
+                            <button class="flex-1 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                                Adicionar
+                            </button>
+                            <button class="flex-1 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                                Limpar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Visualizar Câmera</h2>
+                        <button class="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center hover:bg-green-600">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    <div class="camera-feed rounded-lg border-2 border-green-500 h-64 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                            <button class="w-16 h-16 rounded-full bg-green-500 text-white flex items-center justify-center hover:bg-green-600">
+                                <i class="fas fa-play text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-3 gap-2">
+                        <button class="py-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            <i class="fas fa-cog"></i> Configurar
+                        </button>
+                        <button class="py-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            <i class="fas fa-history"></i> Histórico
+                        </button>
+                        <button class="py-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            <i class="fas fa-qrcode"></i> QR Code
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="w-full lg:w-80 xl:w-96 bg-white p-6 border-l border-gray-200">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Registros</h2>
+                <button class="w-8 h-8 rounded-lg bg-green-500 text-white flex items-center justify-center hover:bg-green-600">
+                    <i class="fas fa-calendar"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-6 overflow-y-auto" style="max-height: calc(100vh - 120px);">
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-500 mb-2">Jun 06, 2025</h3>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold">10:00</span>
+                                <span class="text-green-600 font-bold">LIBERADO</span>
+                            </div>
+                            <p class="text-sm mt-1">Maria Silva</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold">09:00</span>
+                                <span class="text-red-500 font-bold">NEGADO</span>
+                            </div>
+                            <p class="text-sm mt-1">João Oliveira</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-sm font-semibold text-gray-500 mb-2">Jun 05, 2025</h3>
+                    <div class="space-y-3">
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold">10:00</span>
+                                <span class="text-green-600 font-bold">LIBERADO</span>
+                            </div>
+                            <p class="text-sm mt-1">Carlos Pereira</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold">09:00</span>
+                                <span class="text-red-500 font-bold">NEGADO</span>
+                            </div>
+                            <p class="text-sm mt-1">Ana Souza</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold">08:00</span>
+                                <span class="text-green-600 font-bold">LIBERADO</span>
+                            </div>
+                            <p class="text-sm mt-1">Pedro Costa</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold">07:00</span>
+                                <span class="text-red-500 font-bold">NEGADO</span>
+                            </div>
+                            <p class="text-sm mt-1">Luiza Mendes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update current date
+        function updateCurrentDate() {
+            const options = { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' };
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('pt-BR', options)
+                                     .replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase()) // Capitalize all words
+                                     .replace('-Feira', '-feira');
+            document.getElementById('currentDate').textContent = formattedDate;
+        }
+        
+        // Mobile menu toggle
+        document.getElementById('mobileMenuButton').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('sidebar-open');
+            document.getElementById('sidebarOverlay').classList.toggle('sidebar-overlay-open');
+        });
+        
+        // Close sidebar when clicking on overlay
+        document.getElementById('sidebarOverlay').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.remove('sidebar-open');
+            document.getElementById('sidebarOverlay').classList.remove('sidebar-overlay-open');
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentDate();
+        });
+    </script>
+</body>
+</html>
