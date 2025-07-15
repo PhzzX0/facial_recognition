@@ -2,6 +2,27 @@ from django.shortcuts import render, redirect
 from .models import Operadores
 import hashlib
 
+from django.http import StreamingHttpResponse
+import cv2
+
+# Captura da câmera
+camera = cv2.VideoCapture(0)
+
+def generate_frames():
+    while True:
+        success, frame = camera.read()
+        if not success:
+            break
+        else:
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+
+def video_feed(request):
+    return StreamingHttpResponse(generate_frames(), content_type='multipart/x-mixed-replace; boundary=frame')
+
 
 def index(request):
 	if 'operador_id' not in request.session: # verifica se ha um usuario logado
