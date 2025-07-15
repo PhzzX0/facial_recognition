@@ -14,7 +14,7 @@ import os
 # Importa a função que cria o banco de dados e tabelas, garantindo que tudo esteja pronto antes de rodar o sistema
 from database_setup import criar_banco_de_dados
 # Importa a função que realiza a verificação facial comparando com dados existentes no banco
-from core_functions import verificar_pessoa
+from core_functions import *
 
 # Garante que o banco de dados e tabelas sejam criados ao iniciar
 criar_banco_de_dados()

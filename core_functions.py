@@ -38,7 +38,7 @@ def registrar_log_acesso(status, usuario_id=None, caminho_foto_capturada=None):
     try:
         # Insere o log de acesso na tabela LogsAcesso
         c.execute('''
-            INSERT INTO LogsAcesso (timestamp_acesso, status, usuario_id, caminho_foto_capturada)
+            INSERT INTO app_LogsAcesso (timestamp_acesso, status, usuario_id, caminho_foto_capturada)
             VALUES (?, ?, ?, ?)
         ''', (timestamp_local, status, usuario_id, caminho_foto_capturada))
         conn.commit()
@@ -69,7 +69,7 @@ def verificar_pessoa(imagem_rosto_detectado):
 
     try:
         # Recupera todos os usuários cadastrados no banco
-        c.execute("SELECT id, nome_completo, tipo, situacao, caminho_foto_rosto FROM Usuarios")
+        c.execute("SELECT id, nome_completo, tipo, situacao, caminho_foto_rosto FROM app_Usuarios")
         registros = c.fetchall()
 
         # Se não houver usuários cadastrados, registra como "Não Encontrado"
