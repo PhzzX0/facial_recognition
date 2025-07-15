@@ -4,3 +4,4 @@ opencv-python==4.9.0.80
 tensorflow==2.13.0
 tf-keras==2.15.0
 django
+gunicorn
