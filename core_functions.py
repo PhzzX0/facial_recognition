@@ -97,22 +97,13 @@ def verificar_pessoa(imagem_rosto_detectado):
     finally:
         conn.close()
 
-<<<<<<< HEAD
 def cadastrar_usuario(nome, matricula, tipo, caminho_foto):
-=======
-def cadastrar_usuario(nome, matricula, tipo, imagem_rosto):
->>>>>>> 67b83fb5f1426c6f4f3153566c3339ef1c36a4aa
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     
     # Salva o arquivo de imagem do rosto
-<<<<<<< HEAD
     #caminho_foto = os.path.join(rostos_dir, f"{matricula}.jpg")
     #cv2.imwrite(caminho_foto, imagem_rosto)
-=======
-    caminho_foto = os.path.join(rostos_dir, f"{matricula}.jpg")
-    cv2.imwrite(caminho_foto, imagem_rosto)
->>>>>>> 67b83fb5f1426c6f4f3153566c3339ef1c36a4aa
     
     try:
         c.execute('''
@@ -133,11 +124,8 @@ def cadastrar_usuario(nome, matricula, tipo, imagem_rosto):
     finally:
         conn.close()
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> 67b83fb5f1426c6f4f3153566c3339ef1c36a4aa
 def editar_usuario(usuario_id, novos_dados):
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
@@ -161,7 +149,6 @@ def editar_usuario(usuario_id, novos_dados):
     finally:
         conn.close()
 
-<<<<<<< HEAD
 def excluir_usuario(usuario_nome_completo):
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
@@ -174,31 +161,13 @@ def excluir_usuario(usuario_nome_completo):
         
         caminho_foto = resultado[0]
         c.execute("DELETE FROM app_Usuarios WHERE nome_completo = ?", (usuario_nome_completo,))
-=======
-def excluir_usuario(usuario_id):
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
-    try:
-        c.execute("SELECT caminho_foto_rosto FROM app_Usuarios WHERE id = ?", (usuario_id,))
-        resultado = c.fetchone()
-        if not resultado:
-            print(f"[AVISO] Nenhum usuário encontrado com ID {usuario_id}.")
-            return False
-        
-        caminho_foto = resultado[0]
-        c.execute("DELETE FROM app_Usuarios WHERE id = ?", (usuario_id,))
->>>>>>> 67b83fb5f1426c6f4f3153566c3339ef1c36a4aa
         conn.commit()
         
         # Exclui o arquivo da foto
         if os.path.exists(caminho_foto):
             os.remove(caminho_foto)
             
-<<<<<<< HEAD
         print(f"usuário {usuario_nome_completo} e sua foto foram excluídos com sucesso.")
-=======
-        print(f"usuário ID {usuario_id} e sua foto foram excluídos com sucesso.")
->>>>>>> 67b83fb5f1426c6f4f3153566c3339ef1c36a4aa
         return True
     except Exception as e:
         print(f"falha ao excluir usuário: {e}")
@@ -247,10 +216,7 @@ def vincular_aluno_turma(usuario_id, turma_id):
     except sqlite3.IntegrityError:
         print("Este vínculo já existe.")
         return False
-<<<<<<< HEAD
         
-=======
->>>>>>> 67b83fb5f1426c6f4f3153566c3339ef1c36a4aa
     except Exception as e:
         print(f"Falha ao vincular aluno: {e}")
         return False
