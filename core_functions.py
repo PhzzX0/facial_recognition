@@ -286,7 +286,7 @@ def criar_curso(nome_curso):
         print(f"Curso '{nome_curso}' criado com sucesso com ID {novo_id}.")
         return novo_id
     except sqlite3.IntegrityError:
-        print(f"[O curso '{nome_curso}' já existe.")
+        print(f"O curso '{nome_curso}' já existe.")
         return None
     except Exception as e:
         print(f"Falha ao criar curso: {e}")
@@ -373,9 +373,7 @@ def excluir_turma(turma_id):
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     try:
-        # Primeiro, remove os vínculos na tabela de associação
         c.execute("DELETE FROM app_UsuarioTurma WHERE turma_id = ?", (turma_id,))
-        # Depois, remove a turma
         c.execute("DELETE FROM app_Turmas WHERE id = ?", (turma_id,))
         conn.commit()
         print(f"Turma ID {turma_id} e seus vínculos foram excluídos.")
