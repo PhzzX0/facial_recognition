@@ -4,7 +4,7 @@ import cv2
 from datetime import datetime
 from deepface import DeepFace
 
-# --- CONFIGURAÇÕES GLOBAIS ---
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 db_path = os.path.join(BASE_DIR, 'database.db')
 capturas_dir = os.path.join(BASE_DIR, 'capturas_log')
@@ -14,7 +14,7 @@ os.makedirs(capturas_dir, exist_ok=True)
 os.makedirs(rostos_dir, exist_ok=True)
 
 
-# --- FUNÇÕES DE LOG E VERIFICAÇÃO FACIAL (JÁ EXISTENTES E ATUALIZADAS) ---
+
 
 def registrar_log_acesso(status, usuario_id=None, caminho_foto_capturada=None):
     conn = sqlite3.connect(db_path)
@@ -205,23 +205,7 @@ def buscar_usuario(termo_busca):
     finally:
         conn.close()
 
-def vincular_aluno_turma(usuario_id, turma_id):
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
-    try:
-        c.execute("INSERT INTO app_UsuarioTurma (usuario_id, turma_id) VALUES (?, ?)", (usuario_id, turma_id))
-        conn.commit()
-        print(f"Aluno ID {usuario_id} vinculado à turma ID {turma_id}.")
-        return True
-    except sqlite3.IntegrityError:
-        print("Este vínculo já existe.")
-        return False
-        
-    except Exception as e:
-        print(f"Falha ao vincular aluno: {e}")
-        return False
-    finally:
-        conn.close()
+
 
 
 
@@ -229,4 +213,175 @@ def vincular_aluno_turma(usuario_id, turma_id):
 
 #cadastrar_curso("Informática")
 #cadastrar_usuario("juan", 1111111, "Discente", ".\capturas_log\juan.jpg")
-print(listar_todos_usuarios())
+#print(listar_todos_usuarios())
+
+def cadastrar_visitante(nome, documento, empresa, motivo, horario_inicio, horario_fim):
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    sql = '''
+        INSERT INTO app_Visitantes (nome_completo, documento, empresa, motivo_acesso, horario_programado_inicio, horario_programado_fim)
+        VALUES (?, ?, ?, ?, ?, ?)
+    '''
+    try:
+        c.execute(sql, (nome, documento, empresa, motivo, horario_inicio, horario_fim))
+        conn.commit()
+        novo_id = c.lastrowid
+        print(f"Visitante '{nome}' cadastrado com sucesso com ID {novo_id}.")
+        return novo_id
+    except Exception as e:
+        print(f"Falha ao cadastrar visitante: {e}")
+        return None
+    finally:
+        conn.close()
+
+def listar_visitantes_agendados(data):
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    sql = "SELECT * FROM app_Visitantes WHERE date(horario_programado_inicio) = ? ORDER BY horario_programado_inicio"
+    try:
+        c.execute(sql, (data,))
+        visitantes = [dict(row) for row in c.fetchall()]
+        return visitantes
+    except Exception as e:
+        print(f"[ERRO] Falha ao listar visitantes: {e}")
+        return []
+    finally:
+        conn.close()
+
+def listar_logs_recentes(limite=5):
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    sql = """
+        SELECT
+            L.timestamp_acesso,
+            L.status,
+            U.nome_completo
+        FROM app_LogsAcesso L
+        LEFT JOIN app_Usuarios U ON L.usuario_id = U.id
+        ORDER BY L.timestamp_acesso DESC
+        LIMIT ?
+    """
+    try:
+        c.execute(sql, (limite,))
+        logs = [dict(row) for row in c.fetchall()]
+        return logs
+    except Exception as e:
+        print(f"Falha ao listar logs recentes: {e}")
+        return []
+    finally:
+        conn.close()
+
+
+
+def criar_curso(nome_curso):
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    sql = "INSERT INTO app_Cursos (nome_curso) VALUES (?)"
+    try:
+        c.execute(sql, (nome_curso,))
+        conn.commit()
+        novo_id = c.lastrowid
+        print(f"Curso '{nome_curso}' criado com sucesso com ID {novo_id}.")
+        return novo_id
+    except sqlite3.IntegrityError:
+        print(f"[O curso '{nome_curso}' já existe.")
+        return None
+    except Exception as e:
+        print(f"Falha ao criar curso: {e}")
+        return None
+    finally:
+        conn.close()
+
+def listar_cursos():
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    sql = "SELECT * FROM app_Cursos ORDER BY nome_curso"
+    try:
+        c.execute(sql)
+        cursos = [dict(row) for row in c.fetchall()]
+        return cursos
+    except Exception as e:
+        print(f"Falha ao listar cursos: {e}")
+        return []
+    finally:
+        conn.close()
+
+def criar_turma(nome_turma, curso_id, ano, turno):
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    sql = "INSERT INTO app_Turmas (nome_turma, curso_id, ano, turno) VALUES (?, ?, ?, ?)"
+    try:
+        c.execute(sql, (nome_turma, curso_id, ano, turno))
+        conn.commit()
+        novo_id = c.lastrowid
+        print(f"Turma '{nome_turma}' criada com sucesso com ID {novo_id}.")
+        return novo_id
+    except Exception as e:
+        print(f"Falha ao criar turma: {e}")
+        return None
+    finally:
+        conn.close()
+
+def listar_turmas(curso_id=None):
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    
+    sql = """
+        SELECT T.id, T.nome_turma, T.ano, T.turno, C.nome_curso
+        FROM app_Turmas T
+        JOIN app_Cursos C ON T.curso_id = C.id
+    """
+    params = []
+    if curso_id:
+        sql += " WHERE T.curso_id = ?"
+        params.append(curso_id)
+        
+    sql += " ORDER BY C.nome_curso, T.nome_turma"
+    
+    try:
+        c.execute(sql, params)
+        turmas = [dict(row) for row in c.fetchall()]
+        return turmas
+    except Exception as e:
+        print(f"Falha ao listar turmas: {e}")
+        return []
+    finally:
+        conn.close()
+
+def editar_turma(turma_id, novos_dados):
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    set_clause = ", ".join([f"{key} = ?" for key in novos_dados.keys()])
+    values = list(novos_dados.values())
+    values.append(turma_id)
+    sql = f"UPDATE app_Turmas SET {set_clause} WHERE id = ?"
+    try:
+        c.execute(sql, tuple(values))
+        conn.commit()
+        return c.rowcount > 0
+    except Exception as e:
+        print(f"Falha ao editar turma: {e}")
+        return False
+    finally:
+        conn.close()
+
+def excluir_turma(turma_id):
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    try:
+        # Primeiro, remove os vínculos na tabela de associação
+        c.execute("DELETE FROM app_UsuarioTurma WHERE turma_id = ?", (turma_id,))
+        # Depois, remove a turma
+        c.execute("DELETE FROM app_Turmas WHERE id = ?", (turma_id,))
+        conn.commit()
+        print(f"Turma ID {turma_id} e seus vínculos foram excluídos.")
+        return True
+    except Exception as e:
+        print(f"Falha ao excluir turma: {e}")
+        return False
+    finally:
+        conn.close()
