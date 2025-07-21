@@ -59,7 +59,12 @@ def dashboard(request):
 		return redirect("login") # se nao tiver um usuario logado redireciona para a pagina de login
 	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
 	
-	return render(request, "dashboard.html") # carrega a pagina dashboard 
+	#if operador.papel == "COAPAC":
+	# ...
+	#elif operador.papel == "Porteiro":
+	# ...
+
+	return render(request, "dashboard.html", {"papel": operador.papel}) # carrega a pagina dashboard
 
 
 def usuarios(request):
