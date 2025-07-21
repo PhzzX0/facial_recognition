@@ -84,9 +84,7 @@
                         <label for="senha" class="block mb-2 text-sm font-medium">Senha:</label>
                         <div class="relative flex items-center">
                             <input type="password" id="senha" name="senha"class="input-field">
-                            <div class="absolute right-3 w-8 h-8 rounded-full overflow-hidden border-2 border-white/50">
-                                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover">
-                            </div>
+                            <i id="togglePasswordIcon" class="fi fi-ss-eye absolute right-4 text-gray-400 cursor-pointer"></i>
                         </div>
                     </div>
                     <div class="pt-4">
@@ -101,6 +99,33 @@
         <span>desenvolvido por</span>
         <img src="{% static 'imagens/Logo_IN4_png2.png' %}" alt="Logo IN4" class="h-5">
     </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+            const passwordInput = document.getElementById('senha');
 
+            togglePasswordIcon.addEventListener('click', function () {
+                // Verifica o tipo atual do campo de senha
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+
+                // Muda a cor e o ícone
+                if (type === 'text') {
+                    // Senha visível: ícone de olho cortado e preto
+                    this.classList.remove('fi-ss-eye');
+                    this.classList.add('fi-ss-eye-crossed');
+                    this.classList.remove('text-gray-400');
+                    this.classList.add('text-black');
+                } else {
+                    // Senha oculta: ícone de olho normal e cinza
+                    this.classList.remove('fi-ss-eye-crossed');
+                    this.classList.add('fi-ss-eye');
+                    this.classList.remove('text-black');
+                    this.classList.add('text-gray-400');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
