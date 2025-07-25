@@ -4,6 +4,7 @@
 import sqlite3
 # Importa a biblioteca OS para manipulação de caminhos de arquivos e diretórios (usada para salvar capturas e organizar pastas)
 import os
+from datetime import datetime, timedelta
 
 def criar_banco_de_dados():
     """
@@ -44,7 +45,7 @@ def criar_banco_de_dados():
             curso_id INTEGER,
             ano INTEGER,
             turno TEXT,
-            FOREIGN KEY (curso_id) REFERENCES Cursos(id)
+            FOREIGN KEY (curso_id) REFERENCES app_Cursos(id)
         )
     ''')
 
@@ -174,7 +175,7 @@ def criar_banco_de_dados():
         )
     ''')
 
-    # Finaliza alterações
+    # Finaliza alterações e fecha a conexão
     conn.commit()
     conn.close()
     print("[DB SETUP] Configuração do banco de dados concluída.")

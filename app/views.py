@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect
 from .models import Operadores
 import hashlib
-
+import os
+import sqlite3
 from django.http import StreamingHttpResponse
 import cv2
+from django.http import JsonResponse
+from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
+
+
 
 # Captura da câmera
 camera = cv2.VideoCapture(0)
@@ -75,12 +81,141 @@ def usuarios(request):
 	return render(request, "usuarios.html") # carrega a pagina usuarios
 
 
-def turmas(request):
-	if 'operador_id' not in request.session: # verifica se ha um usuario logado
-		return redirect("login") # se nao tiver um usuario logado redireciona para a pagina de login
-	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
+# Função para obter conexão com o banco de dados SQLite
+def get_db_connection():
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # app/
+    db_path = os.path.join(BASE_DIR, '..', 'database.db')  # facial_recognition/database.db
+    db_path = os.path.abspath(db_path)  # Garante caminho completo
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    return conn
 
-	return render(request, "turmas.html") # carrega a pagina turmas
+
+def turmas(request):
+    if 'operador_id' not in request.session: # verifica se ha um usuario logado
+        return redirect("login") # se nao tiver um usuario logado redireciona para a pagina de login
+
+    conn = get_db_connection()
+
+    # Consulta todas as turmas com seus respectivos cursos
+    turmas = conn.execute("""
+        SELECT t.id, t.nome_turma, t.turno, t.ano, t.curso_id,
+               c.nome_curso
+        FROM app_Turmas t
+        JOIN app_Cursos c ON t.curso_id = c.id
+        ORDER BY c.nome_curso, t.ano DESC
+    """).fetchall()
+
+    cursos_organizados = {}
+    for turma in turmas:
+        curso_nome = turma["nome_curso"]
+        if curso_nome not in cursos_organizados:
+            cursos_organizados[curso_nome] = []
+        cursos_organizados[curso_nome].append(turma)
+
+    # Lógica do painel registros
+    ver_todos = False
+    if request.method == "POST":
+        ver_todos = request.POST.get("ver_todos") == "1"
+
+    c = conn.cursor()
+    # Consulta os registros de liberações com base no dia atual ou todos
+    if ver_todos:
+        c.execute("""
+            SELECT data_liberacao, horario_liberacao, justificativa 
+            FROM app_LiberacoesCOAPAC 
+            ORDER BY data_liberacao DESC, horario_liberacao DESC
+        """)
+    else:
+        hoje = datetime.now().date().isoformat()
+        c.execute("""
+            SELECT data_liberacao, horario_liberacao, justificativa 
+            FROM app_LiberacoesCOAPAC 
+            WHERE data_liberacao = ? 
+            ORDER BY horario_liberacao DESC
+        """, (hoje,))
+    # Transforma os dados em dicionários para o template
+    registros = [{
+        "data": r[0],
+        "horario": r[1],
+        "status": r[2]  # Aqui usamos 'justificativa' como status no painel
+    } for r in c.fetchall()]
+
+
+    conn.close()
+    # Renderiza o template com os dados organizados
+    return render(request, 'turmas.html', {
+        'cursos': cursos_organizados,
+        'registros': registros,
+        'ver_todos': ver_todos,
+    })
+
+# View para adicionar nova turma
+def adicionar_turma(request):
+    if request.method == 'POST':
+        nome_turma = request.POST.get('nome_turma')
+        curso_id = request.POST.get('curso_id')
+        ano = request.POST.get('ano')
+        turno = request.POST.get('turno')
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Verifica se já existe turma com mesmo curso, ano e turno
+        cursor.execute(
+            "SELECT COUNT(*) FROM app_Turmas WHERE curso_id = ? AND ano = ? AND turno = ?",
+            (curso_id, ano, turno)
+        )
+        (count,) = cursor.fetchone()
+
+        if count > 0:
+            # Busca os cursos para exibir no template
+            cursor.execute("SELECT id, nome_curso FROM app_Cursos")
+            cursos = cursor.fetchall()
+            conn.close()
+            return render(request, 'adicionar_turma.html', {
+                'cursos': cursos,
+                'error': 'Já existe uma turma para esse curso, ano e turno.'
+            })
+
+        # Se não existir, insere normalmente
+        cursor.execute(
+            "INSERT INTO app_Turmas (nome_turma, curso_id, ano, turno) VALUES (?, ?, ?, ?)",
+            (nome_turma, curso_id, ano, turno)
+        )
+        conn.commit()
+        conn.close()
+
+        return redirect('turmas')
+	
+    # Se não for POST, apenas exibe o formulário com os cursos
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, nome_curso FROM app_Cursos")
+    cursos = cursor.fetchall()
+    conn.close()
+
+    return render(request, 'adicionar_turma.html', {'cursos': cursos})
+
+# View que lida com exclusão de turmas via POST
+def deletar_turma(request, turma_id):
+    print("Método:", request.method)
+    print("Turma ID recebido:", turma_id)
+    if request.method == 'POST':
+        try:
+            turma_id = int(turma_id)
+            conn = get_db_connection()
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM app_Turmas WHERE id = ?", (turma_id,))
+            print("Linhas deletadas:", cursor.rowcount)
+            conn.commit()
+            conn.close()
+            return JsonResponse({'status': 'ok'})
+        except Exception as e:
+            print("Erro:", e)
+            return JsonResponse({'status': 'erro', 'mensagem': str(e)}, status=500)
+    return JsonResponse({'status': 'erro', 'mensagem': 'Método não permitido'}, status=405)
+
 
 
 def registro(request):

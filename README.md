@@ -45,3 +45,38 @@ Quando um rosto for detectado:
 - Para melhores resultados, utilize boa iluminação.
 
 ---
+
+        # Inserir cursos se ainda não existirem
+    c.execute("SELECT COUNT(*) FROM app_Cursos")
+    if c.fetchone()[0] == 0:
+        print("[DB SETUP] Inserindo cursos de exemplo...")
+        cursos_exemplo = ['Informática', 'Manutenção', 'Química', 'Agropecuária']
+        for nome in cursos_exemplo:
+            c.execute("INSERT INTO app_Cursos (nome_curso) VALUES (?)", (nome,))
+
+    # Inserir turmas se ainda não existirem
+    c.execute("SELECT COUNT(*) FROM app_Turmas")
+    if c.fetchone()[0] == 0:
+        print("[DB SETUP] Inserindo turmas de exemplo...")
+
+        turnos = ['Matutino', 'Vespetino']  # alternância: 1º = manhã, 2º = tarde...
+
+        c.execute("SELECT id, nome_curso FROM app_Cursos")
+        cursos = c.fetchall()
+
+        for curso_id, nome_curso in cursos:
+            for i in range(4):  # 4 turmas por curso
+                ano = i + 1
+                turno = turnos[i % 2]
+
+                # Código da turma (ex: 25807V)
+                base = curso_id * 10000 + ano * 1000 + i * 10
+                letra = 'M' if turno == 'Matutino' else 'V'
+                codigo = f"{base}{letra}"
+
+                c.execute('''
+                    INSERT INTO app_Turmas (nome_turma, curso_id, ano, turno)
+                    VALUES (?, ?, ?, ?)
+                ''', (codigo, curso_id, ano, turno))
+
+        print(f"[DB SETUP] Turmas geradas com sucesso para {len(cursos)} cursos.")

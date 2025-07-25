@@ -30,5 +30,6 @@ urlpatterns = [
     path('permissoes', views.permissoes, name="permissoes"),
     path('registro/', views.registro, name="registro"),
     path('suspensoes/', views.suspensoes, name="suspensoes"),
-    path('acessoExterno/', views.acessoExterno, name="acessoExterno")
+    path('acessoExterno/', views.acessoExterno, name="acessoExterno"),
+    path('turmas/deletar/<int:turma_id>/', views.deletar_turma, name='deletar_turma'), # View que lida com exclusão de turmas via POST
 ]
