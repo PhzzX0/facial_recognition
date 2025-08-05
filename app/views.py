@@ -68,9 +68,9 @@ def dashboard(request):
 	#if operador.papel == "COAPAC":
 	# ...
 	#elif operador.papel == "Porteiro":
-	# ...
+	# return render(request, "porteiro.html", {"papel": operador.papel})
 
-	return render(request, "dashboard.html", {"papel": operador.papel}) # carrega a pagina dashboard
+	return render(request, "porteiro.html", {"papel": operador.papel}) # carrega a pagina dashboard
 
 
 def usuarios(request):
