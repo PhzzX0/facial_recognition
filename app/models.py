@@ -1,142 +1,142 @@
-de django.db importar modelos
+from django.db import models
 
-# 1. Operadores
-classe Operadores(modelos.Modelo): # classe para a tabela operadores
-nome = modelos.Campo de Char(comprimento_máximo=150)
-login = modelos.Campo de Char(comprimento_máximo=100, único=Verdadeiro)
-senha_hash = modelos.Campo de Char(comprimento_máximo=128)
-papel = modelos.Campo de Char(comprimento_máximo=50)
-data_criacao = modelos.Campo de data e hora(auto_agora_adicionar=Verdadeiro)
+#1. operadores
+class Operadores(models.Model): # classe para a tabela operadores
+	nome = models.CharField(max_length=150)
+	login = models.CharField(max_length=100, unique=True)
+	senha_hash = models.CharField(max_length=128)
+	papel = models.CharField(max_length=50)
+	data_criacao = models.DateTimeField(auto_now_add=True)
 
 # 2. Cursos
-classe Curso(modelos.Modelo):
- nome_curso = modelos.Campo de Char(comprimento_máximo=255, único=Verdadeiro)
+class Curso(models.Model):
+    nome_curso = models.CharField(max_length=255, unique=True)
 
-    classe Meta:
- tabela_db = 'app_Cursos'
- gerenciou = Falso
+    class Meta:
+        db_table = 'app_Cursos'
+        managed = False
 
 # 3. Turmas
-classe Turma(modelos.Modelo):
- nome_turma = modelos.Campo de Char(comprimento_máximo=255)
- curso = modelos.Chave Estrangeira(Curso, on_delete=modelos.DEFINIR_NULO, nulo=Verdadeiro)
- ano = modelos.Campo Inteiro()
- turno = modelos.Campo de Char(comprimento_máximo=50)
+class Turma(models.Model):
+    nome_turma = models.CharField(max_length=255)
+    curso = models.ForeignKey(Curso, on_delete=models.SET_NULL, null=True)
+    ano = models.IntegerField()
+    turno = models.CharField(max_length=50)
 
-    classe Meta:
- tabela_db = 'app_Turmas'
- gerenciou = Falso
+    class Meta:
+        db_table = 'app_Turmas'
+        managed = False
 
 # 4. Usuários
-classe Usuário(modelos.Modelo):
- nome_completo = modelos.Campo de Char(comprimento_máximo=255)
- matricula = modelos.Campo de Char(comprimento_máximo=100, único=Verdadeiro, nulo=Verdadeiro)
- tipo = modelos.Campo de Char(comprimento_máximo=20, escolhas=[('Descente', 'Descente'), ('Docente', 'Docente'), ('Servidor', 'Servidor')], nulo=True)
- situação = modelos.Campo de Char(comprimento_máximo=20, escolhas=[('Normal', 'Normal'), ('Advertido', 'Advertido'), ('Suspenso', 'Suspenso')], padrão='Normal')
- caminho_foto_rosto = modelos.Campo de texto()
+class Usuario(models.Model):
+    nome_completo = models.CharField(max_length=255)
+    matricula = models.CharField(max_length=100, unique=True, null=True)
+    tipo = models.CharField(max_length=20, choices=[('Discente', 'Discente'), ('Docente', 'Docente'), ('Servidor', 'Servidor')], null=True)
+    situacao = models.CharField(max_length=20, choices=[('Normal', 'Normal'), ('Advertido', 'Advertido'), ('Suspenso', 'Suspenso')], default='Normal')
+    caminho_foto_rosto = models.TextField()
 
-    classe Meta:
- tabela_db = 'app_Usuários'
- gerenciou = Falso
+    class Meta:
+        db_table = 'app_Usuarios'
+        managed = False
 
 # 5. UsuarioTurma
-classe UsuarioTurma(modelos.Modelo):
- usuário = modelos.Chave Estrangeira(Usuario, on_delete=modelos.CASCATA)
+class UsuarioTurma(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     turma = models.ForeignKey(Turma, on_delete=models.CASCADE)
 
-    classe Meta:
- tabela_db = 'app_UsuarioTurma'
- único_junto = (('usuário', 'turma'),)
- gerenciou = Falso
+    class Meta:
+        db_table = 'app_UsuarioTurma'
+        unique_together = (('usuario', 'turma'),)
+        managed = False
 
 # 6. Visitantes
-classe Visitante(modelos.Modelo):
- nome_completo = modelos.Campo de Char(comprimento_máximo=255)
- documento = modelos.Campo de Char(comprimento_máximo=100)
- empresa = modelos.Campo de Char(comprimento_máximo=255, nulo=Verdadeiro, em branco=Verdadeiro)
- motivo_acesso = modelos.Campo de texto(nulo=Verdadeiro, em branco=Verdadeiro)
- horario_programado_inicio = modelos.Campo de data e hora(nulo=Verdadeiro, em branco=Verdadeiro)
- horario_programado_fim = modelos.Campo de data e hora(nulo=Verdadeiro, em branco=Verdadeiro)
- data_cadastro = modelos.Campo de data e hora(auto_agora_adicionar=Verdadeiro)
+class Visitante(models.Model):
+    nome_completo = models.CharField(max_length=255)
+    documento = models.CharField(max_length=100)
+    empresa = models.CharField(max_length=255, null=True, blank=True)
+    motivo_acesso = models.TextField(null=True, blank=True)
+    horario_programado_inicio = models.DateTimeField(null=True, blank=True)
+    horario_programado_fim = models.DateTimeField(null=True, blank=True)
+    data_cadastro = models.DateTimeField(auto_now_add=True)
 
-    classe Meta:
- tabela_db = 'app_Visitantes'
- gerenciou = Falso
+    class Meta:
+        db_table = 'app_Visitantes'
+        managed = False
 
 #7. Logs de Acesso
-classe LogAcesso(modelos.Modelo):
- timestamp_acesso = modelos.Campo de texto()
- status = modelos.Campo de Char(comprimento_máximo=20, escolhas=[('Aceito', 'Aceito'), ('Negado', 'Negado'), ('Não Encontrado', 'Não Encontrado')])
- usuário = modelos.Chave Estrangeira(Usuário, nulo=Verdadeiro, em branco=Verdadeiro, on_delete=modelos.SET_NULL)
- visitante = modelos.Chave Estrangeira(Visitante, nulo=Verdadeiro, em branco=Verdadeiro, on_delete=modelos.SET_NULL)
- caminho_foto_capturada = modelos.Campo de texto(nulo=Verdadeiro, em branco=Verdadeiro)
-    classe Meta:
- tabela_db = 'app_LogsAcesso'
- gerenciou = Falso
+class LogAcesso(models.Model):
+    timestamp_acesso = models.TextField()
+    status = models.CharField(max_length=20, choices=[('Aceito', 'Aceito'), ('Negado', 'Negado'), ('Não Encontrado', 'Não Encontrado')])
+    usuario = models.ForeignKey(Usuario, null=True, blank=True, on_delete=models.SET_NULL)
+    visitante = models.ForeignKey(Visitante, null=True, blank=True, on_delete=models.SET_NULL)
+    caminho_foto_capturada = models.TextField(null=True, blank=True)
+    class Meta:
+        db_table = 'app_LogsAcesso'
+        managed = False
 
 # 8. Ações Disciplinares
-classe AcaoDisciplinar(modelos.Modelo):
- usuário = modelos.Chave Estrangeira(Usuario, on_delete=modelos.CASCATA)
- operador = modelos.Chave Estrangeira(Operadores, on_delete=modelos.CASCATA)
- tipo = modelos.Campo de Char(comprimento_máximo=20, escolhas=[('Advertência', 'Advertência'), ('Suspensão', 'Suspensão')])
- motivo = modelos.Campo de texto(nulo=Verdadeiro, em branco=Verdadeiro)
- data_inicio = modelos.Campo de data(nulo=Verdadeiro, em branco=Verdadeiro)
- data_fim = modelos.Campo de data(nulo=Verdadeiro, em branco=Verdadeiro)
- data_registro = modelos.Campo de data e hora(auto_agora_adicionar=Verdadeiro)
+class AcaoDisciplinar(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    operador = models.ForeignKey(Operadores, on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=20, choices=[('Advertência', 'Advertência'), ('Suspensão', 'Suspensão')])
+    motivo = models.TextField(null=True, blank=True)
+    data_inicio = models.DateField(null=True, blank=True)
+    data_fim = models.DateField(null=True, blank=True)
+    data_registro = models.DateTimeField(auto_now_add=True)
 
-    classe Meta:
- tabela_db = 'app_AcoesDisciplinares'
- gerenciou = Falso
+    class Meta:
+        db_table = 'app_AcoesDisciplinares'
+        managed = False
 
 # 9. Permissões Especiais
-classe PermissãoEspecial(modelos.Modelo):
- usuário = modelos.Chave Estrangeira(Usuario, on_delete=modelos.CASCATA)
- operador = modelos.Chave Estrangeira(Operadores, on_delete=modelos.CASCATA)
- justificativa = modelos.Campo de texto(nulo=Verdadeiro, em branco=Verdadeiro)
- data_hora_permissao = modelos.Campo de data e hora(nulo=Verdadeiro, em branco=Verdadeiro)
- data_criacao = modelos.Campo de data e hora(auto_agora_adicionar=Verdadeiro)
+class PermissaoEspecial(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    operador = models.ForeignKey(Operadores, on_delete=models.CASCADE)
+    justificativa = models.TextField(null=True, blank=True)
+    data_hora_permissao = models.DateTimeField(null=True, blank=True)
+    data_criacao = models.DateTimeField(auto_now_add=True)
 
- classe Meta:
- tabela_db = 'app_PermissoesEspeciais'
- gerenciou = Falso
+    class Meta:
+        db_table = 'app_PermissoesEspeciais'
+        managed = False
 
 # 10. Liberações COAPAC
-classe LiberacaoCOAPAC(modelos.Modelo):
- turma = modelos.Chave Estrangeira(Turma, on_delete=modelos.CASCATA)
- operador = modelos.Chave Estrangeira(Operadores, on_delete=modelos.CASCATA)
- justificativa = modelos.Campo de texto(nulo=Verdadeiro, em branco=Verdadeiro)
- data_liberacao = modelos.Campo de dados(nulo=Verdadeiro, em branco=Verdadeiro)
- horario_liberacao = modelos.Campo de tempo(nulo=Verdadeiro, em branco=Verdadeiro)
- data_registro = modelos.Campo de dados e hora(auto_agora_adicionar=Verdadeiro)
+class LiberacaoCOAPAC(models.Model):
+    turma = models.ForeignKey(Turma, on_delete=models.CASCADE)
+    operador = models.ForeignKey(Operadores, on_delete=models.CASCADE)
+    justificativa = models.TextField(null=True, blank=True)
+    data_liberacao = models.DateField(null=True, blank=True)
+    horario_liberacao = models.TimeField(null=True, blank=True)
+    data_registro = models.DateTimeField(auto_now_add=True)
 
- classe Meta:
- tabela_db = 'app_LiberacoesCOAPAC'
- gerenciou = Falso
+    class Meta:
+        db_table = 'app_LiberacoesCOAPAC'
+        managed = False
 
 # 11. Anúncios
-classe Anúncio(modelos.Modelo):
- operador = modelos.Chave Estrangeira(Operadores, on_delete=modelos.CASCATA)
- tipo = modelos.Campo de Char(comentário_máximo=20, escolhas=[('Evento', 'Evento'), ('Lembrete', 'Lembrete')], nulo=True)
- título = modelos.Campo de Char(comentário_máximo=255, nulo=Verdadeiro, em branco=Verdadeiro)
- legenda = modelos.Campo de texto(nulo=Verdadeiro, em branco=Verdadeiro)
- caminho_imagem = modelos.Campo de texto(nulo=Verdadeiro, em branco=Verdadeiro)
- data_inicio_exibicao = modelos.Campo de dados(nulo=Verdadeiro, em branco=Verdadeiro)
- data_fim_exibicao = modelos.Campo de dados(nulo=Verdadeiro, em branco=Verdadeiro)
- data_criacao = modelos.Campo de dados e hora(auto_agora_adicionar=Verdadeiro)
+class Anuncio(models.Model):
+    operador = models.ForeignKey(Operadores, on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=20, choices=[('Evento', 'Evento'), ('Lembrete', 'Lembrete')], null=True)
+    titulo = models.CharField(max_length=255, null=True, blank=True)
+    legenda = models.TextField(null=True, blank=True)
+    caminho_imagem = models.TextField(null=True, blank=True)
+    data_inicio_exibicao = models.DateField(null=True, blank=True)
+    data_fim_exibicao = models.DateField(null=True, blank=True)
+    data_criacao = models.DateTimeField(auto_now_add=True)
 
- classe Meta:
- tabela_db = 'app_Anúncios'
- gerenciou = Falso
+    class Meta:
+        db_table = 'app_Anuncios'
+        managed = False
 
 # 12. Notificações
-classe Notificação(modelos.Modelo):
- operador = modelos.Chave Estrangeira(Operadores, on_delete=modelos.CASCATA)
- mensagem = modelos.Campo de texto()
- tipo_alerta = modelos.Campo de texto(nulo=Verdadeiro, em branco=Verdadeiro)
- link_relacionado = modelos.Campo de texto(nulo=Verdadeiro, em branco=Verdadeiro)
- vida = modelos.Campo Booleano(padrão=Falso)
- data_criacao = modelos.Campo de dados e hora(auto_agora_adicionar=Verdadeiro)
+class Notificacao(models.Model):
+    operador = models.ForeignKey(Operadores, on_delete=models.CASCADE)
+    mensagem = models.TextField()
+    tipo_alerta = models.TextField(null=True, blank=True)
+    link_relacionado = models.TextField(null=True, blank=True)
+    lida = models.BooleanField(default=False)
+    data_criacao = models.DateTimeField(auto_now_add=True)
 
- classe Meta:
- tabela_db = 'app_Notificacoes'
- gerenciou = Falso
+    class Meta:
+        db_table = 'app_Notificacoes'
+        managed = False
