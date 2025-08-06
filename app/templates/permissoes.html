@@ -41,6 +41,29 @@
         .border-divider {
             border-right: 2px solid #e5e7eb;
         }
+
+        /* Sugestão para dropdown autocomplete */
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #ddd;
+            border-top: none;
+            z-index: 99;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            max-height: 200px;
+            overflow-y: auto;
+            color: black;
+            border-radius: 0 0 0.5rem 0.5rem;
+        }
+        .autocomplete-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .autocomplete-item:hover {
+            background-color: #e5e7eb;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-coapac">
@@ -48,7 +71,7 @@
 
         <div class="flex flex-col lg:flex-row bg-white rounded-3xl shadow-lg w-full max-w-[calc(100%-22rem)] overflow-hidden">
 
-            <aside class="flex flex-col justify-between w-full lg:w-64 p-4 border-divider">
+            <aside class="flex flex-col justify-between w-full lg:w-64 p-4 border-divider relative">
                 <div>
                     <div class="text-center">
                         <img src="FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
@@ -68,7 +91,7 @@
                     </nav>
                 </div>
                 <div>
-                    <button class="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center gap-2">
+                    <button id="btn-logout" class="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center gap-2">
                         <i class="fi fi-sr-exit"></i> SAIR
                     </button>
                     <div class="mt-6 flex justify-center">
@@ -78,6 +101,7 @@
             </aside>
 
             <main class="flex-1 flex flex-col p-6 space-y-6 overflow-auto">
+
                 <header class="flex justify-between items-center">
                     <div>
                         <h2 class="text-2xl font-bold">Controle de acessos autorizados fora do horário</h2>
@@ -85,41 +109,44 @@
                     </div>
                     <div class="flex items-center gap-4">
                         <div class="bg-white p-3 rounded-full shadow-md cursor-pointer"><i class="fi fi-sr-bell text-coapac"></i></div>
-                        <span class="bg-coapac text-white px-6 py-3 rounded-lg font-bold tracking-wider">9RS8YB</span>
+                        <span class="bg-coapac text-white px-6 py-3 rounded-lg font-bold tracking-wider" id="codigo-operador">...</span>
                     </div>
                 </header>
 
                 <section class="bg-coapac text-white p-6 rounded-2xl shadow-lg">
                     <h3 class="font-bold text-lg mb-4">Cadastrar nova permissão</h3>
-                    <form class="space-y-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <form id="form-permissao" class="space-y-4" autocomplete="off">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 relative">
                             <div>
-                                <label class="block text-sm font-semibold mb-1">Nome:</label>
-                                <input type="text" value="Fulano de tal" class="form-input">
+                                <label for="input-nome" class="block text-sm font-semibold mb-1">Nome:</label>
+                                <input type="text" id="input-nome" name="nome" class="form-input" placeholder="Digite o nome" required>
+                                <div id="autocomplete-nome" class="autocomplete-items hidden"></div>
                             </div>
                             <div>
-                                <label class="block text-sm font-semibold mb-1">Matrícula:</label>
-                                <input type="text" value="XXXXXXXXXX" class="form-input">
+                                <label for="input-matricula" class="block text-sm font-semibold mb-1">Matrícula:</label>
+                                <input type="text" id="input-matricula" name="matricula" class="form-input" placeholder="Digite a matrícula" required>
+                                <div id="autocomplete-matricula" class="autocomplete-items hidden"></div>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-1">Justificativa:</label>
-                            <input type="text" value="Pai veio buscar porque estava doente" class="form-input">
+                            <label for="input-justificativa" class="block text-sm font-semibold mb-1">Justificativa:</label>
+                            <input type="text" id="input-justificativa" name="justificativa" class="form-input" placeholder="Motivo da liberação" required>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <div>
-                                <label class="block text-sm font-semibold mb-1">Data:</label>
-                                <input type="date" value="2025-07-18" class="form-input">
+                                <label for="input-data" class="block text-sm font-semibold mb-1">Data:</label>
+                                <input type="date" id="input-data" name="data" class="form-input" required>
                             </div>
-                             <div>
-                                <label class="block text-sm font-semibold mb-1">Horário:</label>
-                                <input type="time" value="16:00" class="form-input">
+                            <div>
+                                <label for="input-hora" class="block text-sm font-semibold mb-1">Horário:</label>
+                                <input type="time" id="input-hora" name="hora" class="form-input" required>
                             </div>
-                             <div>
+                            <div>
                                 <label class="block text-sm font-semibold mb-1">Liberado por:</label>
-                                <input type="text" value="Luciana Bertini" class="form-input">
+                                <input type="text" id="input-operador" name="operador" class="form-input" readonly>
                             </div>
                         </div>
+                        <input type="hidden" id="input-usuario-id" name="usuario_id">
                         <div class="flex justify-end pt-4">
                             <button type="submit" class="bg-gray-100 text-coapac font-bold py-2 px-6 rounded-lg">
                                 LIBERAR ACESSO
@@ -129,10 +156,14 @@
                 </section>
 
                 <div class="text-center">
-                    <button class="bg-coapac text-white font-bold py-3 px-8 rounded-lg shadow-md">
+                    <button id="btn-ver-permissoes" class="bg-coapac text-white font-bold py-3 px-8 rounded-lg shadow-md">
                         VER PERMISSÕES
-                    </button>
+                    </button>                    
                 </div>
+                
+                <section id="lista-permissoes" class="bg-white rounded-lg p-4 shadow mt-6 max-h-96 overflow-auto hidden">
+                    <!-- Permissões carregadas via JS -->
+                </section>                
 
             </main>
         </div>
@@ -144,7 +175,8 @@
                     <i class="fi fi-sr-folder-open text-coapac text-2xl"></i>
                 </div>
             </div>
-            
+       
+            {% for log in logs %}
             <div class="flex justify-between items-center mb-4">
                 <p class="text-sm font-semibold opacity-80">Jul 18, 2025</p>
                 <i class="fi fi-sr-menu-dots text-white/80"></i>
@@ -162,6 +194,7 @@
             {% for log in logs%}
             <div class="flex justify-between items-center mb-4">
                 <p class="text-sm font-semibold opacity-80">{{ log.timestamp_dt|date:"M d, Y"}}</p>
+                <p class="text-sm font-semibold opacity-80">{{ log.data_formatada }}</p>
                 <i class="fi fi-sr-menu-dots text-white/80"></i>
             </div>
             <div class="space-y-4">
@@ -195,20 +228,285 @@
                 VER TODO O REGISTRO
             </button>
 
+                    <span class="font-bold text-lg">{{ log.hora }}</span>
+                    <div class="w-px h-8 bg-white/30"></div>
+                    <div>
+                        <p class="font-medium text-white/90 text-sm">
+                            {% if log.usuario_nome %}
+                                {{ log.usuario_nome }}
+                            {% elif log.visitante_nome %}
+                                {{ log.visitante_nome }}
+                            {% else %}
+                                Usuário Desconhecido
+                            {% endif %}
+                        </p>
+                        <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
+                            {{ log.status }}
+                        {% if log.status == "Aceito" %}
+                            <i class="fi fi-sr-check"></i>
+                        {% elif log.status == "Negado" %}
+                            <i class="fi fi-sr-lock"></i>
+                        {% else %}
+                            <i class="fi fi-sr-cross-small"></i>
+                        {% endif %}</p>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-white/80">Nenhum registro encontrado.</p>
+        {% endfor %}
+       
+            <a href="?ver_todos={% if ver_todos %}0{% else %}1{% endif %}"
+               class="w-full mt-6 bg-gray-100 text-coapac font-bold py-2.5 rounded-lg block text-center">
+                {% if ver_todos %} VER REGISTRO DO DIA {% else %} VER TODO O REGISTRO {% endif %}
+            </a>
+       
             <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-coapac to-transparent pointer-events-none"></div>
         </aside>
+
+
     </div>
-    <script>
-        // Seu script JavaScript aqui
-        document.addEventListener('DOMContentLoaded', function() {
-            const dateElement = document.getElementById('current-date');
-            if (dateElement) {
-                const today = new Date();
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                const formattedDate = today.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', ...options });
-                dateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Atualiza data no topo
+    const dateElement = document.getElementById('current-date');
+    if (dateElement) {
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const formattedDate = today.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', ...options });
+        dateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+    }
+
+    // Preenche campo operador com nome e código
+    // Supondo que servidor manda operador_nome e código em template ou via JS (aqui placeholder)
+    const operadorNome = "{{ operador_nome|default:'Luciana Bertini' }}"; // Template Django
+    document.getElementById('input-operador').value = operadorNome;
+    document.getElementById('codigo-operador').textContent = "9RS8YB"; // código fixo ou dinâmico
+
+    // Variáveis globais para guardar usuário selecionado
+    let usuarioSelecionado = null;
+
+    // Função para criar autocomplete para um input (nome e matrícula)
+    function setupAutocomplete(input, container) {
+        input.addEventListener('input', function() {
+            const val = this.value.trim();
+            if (!val) {
+                container.innerHTML = '';
+                container.classList.add('hidden');
+                usuarioSelecionado = null;
+                document.getElementById('input-usuario-id').value = '';
+                return;
+            }
+            fetch(`/buscar_usuario/?q=${encodeURIComponent(val)}`)
+            .then(res => res.json())
+            .then(data => {
+                container.innerHTML = '';
+                if(data.length === 0) {
+                    container.classList.add('hidden');
+                    usuarioSelecionado = null;
+                    document.getElementById('input-usuario-id').value = '';
+                    return;
+                }
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.classList.add('autocomplete-item');
+                    div.textContent = `${item.nome} (${item.matricula})`;
+                    div.dataset.id = item.id;
+                    div.dataset.nome = item.nome;
+                    div.dataset.matricula = item.matricula;
+                    div.addEventListener('click', () => {
+                        input.value = item[input.id.includes('nome') ? 'nome' : 'matricula'] || item.nome || '';
+                        // Preenche o outro campo também
+                        if(input.id === 'input-nome'){
+                            document.getElementById('input-matricula').value = item.matricula;
+                        } else {
+                            document.getElementById('input-nome').value = item.nome;
+                        }
+                        usuarioSelecionado = item;
+                        document.getElementById('input-usuario-id').value = item.id;
+                        container.innerHTML = '';
+                        container.classList.add('hidden');
+                    });
+                    container.appendChild(div);
+                });
+                container.classList.remove('hidden');
+            });
+        });
+
+        // Fecha dropdown se clicar fora
+        document.addEventListener('click', (e) => {
+            if (e.target !== input && !container.contains(e.target)) {
+                container.classList.add('hidden');
             }
         });
-    </script>
+    }
+
+    // Setup autocomplete para nome e matrícula
+    setupAutocomplete(document.getElementById('input-nome'), document.getElementById('autocomplete-nome'));
+    setupAutocomplete(document.getElementById('input-matricula'), document.getElementById('autocomplete-matricula'));
+
+    // Envio do formulário via AJAX para conceder permissão
+    document.getElementById('form-permissao').addEventListener('submit', function(e){
+        e.preventDefault();
+
+        if(!usuarioSelecionado) {
+            alert('Por favor, selecione um usuário válido no campo Nome ou Matrícula.');
+            return;
+        }
+
+        const justificativa = document.getElementById('input-justificativa').value.trim();
+        const data = document.getElementById('input-data').value;
+        const hora = document.getElementById('input-hora').value;
+
+        if(!justificativa || !data || !hora) {
+            alert('Preencha todos os campos.');
+            return;
+        }
+
+        const payload = {
+            usuario_id: usuarioSelecionado.id,
+            justificativa: justificativa,
+            data: data,
+            hora: hora
+        };
+
+        fetch('/conceder_permissao_especial/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        })
+        .then(res => {
+            if(!res.ok) throw new Error('Erro ao salvar permissão');
+            return res.json();
+        })
+        .then(data => {
+            if(data.status === 'ok'){
+                alert('Permissão concedida com sucesso!');
+                this.reset();
+                document.getElementById('input-usuario-id').value = '';
+                usuarioSelecionado = null;
+                // Atualizar lista de permissões
+                carregarPermissoes();
+                // Atualizar registros
+                carregarRegistros(false);
+            } else {
+                alert('Erro: ' + (data.erro || 'Desconhecido'));
+            }
+        })
+        .catch(() => alert('Erro ao enviar permissão.'));
+    });
+
+    // Função para carregar lista de permissões e mostrar na div
+    function carregarPermissoes(){
+        fetch('/listar_permissoes_especiais/')
+        .then(res => res.json())
+        .then(data => {
+            const container = document.getElementById('lista-permissoes');
+            container.innerHTML = '';
+            if(data.length === 0){
+                container.innerHTML = '<p class="text-center text-gray-500">Nenhuma permissão encontrada.</p>';
+            } else {
+                const table = document.createElement('table');
+                table.className = 'w-full text-coapac';
+                table.innerHTML = `
+                    <thead class="bg-coapac text-white">
+                        <tr>
+                            <th class="p-2 text-left">Usuário</th>
+                            <th class="p-2 text-left">Matrícula</th>
+                            <th class="p-2 text-left">Justificativa</th>
+                            <th class="p-2 text-left">Liberado por</th>
+                            <th class="p-2 text-left">Data/Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                `;
+                const tbody = table.querySelector('tbody');
+                data.forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="border px-2 py-1">${p.usuario_nome}</td>
+                        <td class="border px-2 py-1">${p.matricula}</td>
+                        <td class="border px-2 py-1">${p.justificativa}</td>
+                        <td class="border px-2 py-1">${p.operador_nome}</td>
+                        <td class="border px-2 py-1">${p.data_hora_permissao}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                container.appendChild(table);
+            }
+        });
+    }
+
+    document.getElementById('btn-ver-permissoes').addEventListener('click', function(){
+        carregarPermissoes();
+    });
+
+    // Função para carregar registros (logs recentes)
+    let verTodosRegistros = false;
+    function carregarRegistros(verTodos){
+        verTodosRegistros = verTodos;
+        fetch(`/listar_logs_recentes/?ver_todos=${verTodos ? '1' : '0'}`)
+        .then(res => res.json())
+        .then(data => {
+            const container = document.getElementById('registros-container');
+            container.innerHTML = '';
+
+            if(data.length === 0){
+                container.innerHTML = '<p>Nenhum registro encontrado.</p>';
+                return;
+            }
+
+            // Agrupar por data (dia)
+            let currentDate = null;
+
+            data.forEach(log => {
+                const date = new Date(log.timestamp_acesso);
+                const dateStr = date.toLocaleDateString('pt-BR', {timeZone: 'America/Sao_Paulo'});
+
+                if(currentDate !== dateStr) {
+                    currentDate = dateStr;
+                    const dateHeading = document.createElement('h5');
+                    dateHeading.className = 'font-bold mt-4 mb-2 text-lg';
+                    dateHeading.textContent = currentDate;
+                    container.appendChild(dateHeading);
+                }
+
+                const timeStr = date.toLocaleTimeString('pt-BR', {timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit'});
+
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center p-2 mb-1 rounded-lg ' + 
+                    (log.status === 'permitido' ? 'bg-green-600' : 'bg-red-600');
+                div.innerHTML = `
+                    <span>${timeStr} - ${log.usuario_nome || 'Desconhecido'}</span>
+                    <span>${log.status.toUpperCase()}</span>
+                `;
+                container.appendChild(div);
+            });
+        });
+    }
+
+    // Carregar registros do dia ao iniciar
+    carregarRegistros(false);
+
+
+    document.getElementById('btn-ver-permissoes').addEventListener('click', function () {
+    const container = document.getElementById('lista-permissoes');
+
+    if (container.classList.contains('hidden')) {
+        carregarPermissoes(); // Só carrega
+        container.classList.remove('hidden'); // Mostra
+        this.textContent = 'OCULTAR PERMISSÕES';
+    } else {
+        container.classList.add('hidden'); // Esconde
+        this.textContent = 'VER PERMISSÕES';
+    }
+});
+
+
+
+});
+</script>
 </body>
 </html>

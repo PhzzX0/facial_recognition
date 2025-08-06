@@ -14,6 +14,7 @@ import numpy as np
 import json
 from core_functions import verificar_pessoa
 import mediapipe as mp
+import json
 
 mp_face_detection = mp.solutions.face_detection
 
@@ -274,6 +275,9 @@ def registro(request):
 
 	return render(request, "registro.html") # carrega a pagina registro
 
+# ------------------ PERMISSÕES ESPECIAIS ------------------
+
+from datetime import datetime
 
 def permissoes(request):
     if 'operador_id' not in request.session: # verifica se ha um usuario logado
@@ -304,7 +308,141 @@ def permissoes(request):
         "logs": logs,
         "operador": operador,
     })#renderiza a pagina permissoes com as variaveis logs e operador
+    if 'operador_id' not in request.session:
+        return redirect("login")
 
+    operador = Operadores.objects.get(id=request.session['operador_id'])
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    # Verifica se precisa mostrar todos ou só do dia
+    ver_todos = request.GET.get('ver_todos') == '1'
+
+    if ver_todos:
+        cursor.execute("""
+            SELECT l.timestamp_acesso, l.status, u.nome_completo AS usuario_nome, v.nome_completo AS visitante_nome
+            FROM app_LogsAcesso l
+            LEFT JOIN app_Usuarios u ON l.usuario_id = u.id
+            LEFT JOIN app_Visitantes v ON l.visitante_id = v.id
+            ORDER BY l.timestamp_acesso DESC
+            LIMIT 50
+        """)
+    else:
+        hoje = datetime.now().date().isoformat()
+        cursor.execute("""
+            SELECT l.timestamp_acesso, l.status, u.nome_completo AS usuario_nome, v.nome_completo AS visitante_nome
+            FROM app_LogsAcesso l
+            LEFT JOIN app_Usuarios u ON l.usuario_id = u.id
+            LEFT JOIN app_Visitantes v ON l.visitante_id = v.id
+            WHERE DATE(l.timestamp_acesso) = ?
+            ORDER BY l.timestamp_acesso DESC
+            LIMIT 50
+        """, (hoje,))
+
+    logs = cursor.fetchall()
+    conn.close()
+
+    # Converte para lista de dicionários com hora e data formatadas
+    lista_logs = []
+    for log in logs:
+        try:
+            dt = datetime.strptime(log["timestamp_acesso"], "%Y-%m-%d %H:%M:%S")
+            data_formatada = dt.strftime("%b %d, %Y")  # exemplo: Aug 06, 2025
+            hora = dt.strftime("%H:%M")
+        except Exception:
+            data_formatada = log["timestamp_acesso"]
+            hora = ""
+
+        lista_logs.append({
+            "data_formatada": data_formatada,
+            "hora": hora,
+            "status": log["status"],
+            "usuario_nome": log["usuario_nome"],
+            "visitante_nome": log["visitante_nome"]
+        })
+
+    return render(request, "permissoes.html", {
+        "operador_nome": operador.nome,
+        "logs": lista_logs,
+        "ver_todos": ver_todos
+    })
+
+
+# Buscar usuário para autocomplete por nome ou matrícula (GET com param "q")
+def buscar_usuario(request):
+    query = request.GET.get('q', '').strip()
+    if not query:
+        return JsonResponse([], safe=False)
+
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("""
+        SELECT id, nome_completo, matricula FROM app_Usuarios
+        WHERE nome_completo LIKE ? OR matricula LIKE ?
+        LIMIT 10
+    """, (f'%{query}%', f'%{query}%'))
+    resultados = [{"id": row["id"], "nome": row["nome_completo"], "matricula": row["matricula"]} for row in c.fetchall()]
+    conn.close()
+    return JsonResponse(resultados, safe=False)
+
+# Recebe POST para conceder permissão especial
+@csrf_exempt
+def conceder_permissao_especial(request):
+    if request.method != 'POST':
+        return JsonResponse({'erro': 'Método não permitido'}, status=405)
+    if 'operador_id' not in request.session:
+        return JsonResponse({'erro': 'Usuário não autenticado'}, status=401)
+
+    data = json.loads(request.body)
+    usuario_id = data.get('usuario_id')
+    justificativa = data.get('justificativa')
+    data_permissao = data.get('data')
+    hora_permissao = data.get('hora')
+    operador_id = request.session['operador_id']
+
+    if not all([usuario_id, justificativa, data_permissao, hora_permissao]):
+        return JsonResponse({'erro': 'Campos obrigatórios faltando'}, status=400)
+
+    data_hora = f"{data_permissao} {hora_permissao}:00"
+
+    conn = get_db_connection()
+    c = conn.cursor()
+    c.execute("""
+        INSERT INTO app_PermissoesEspeciais (usuario_id, operador_id, justificativa, data_hora_permissao)
+        VALUES (?, ?, ?, ?)
+    """, (usuario_id, operador_id, justificativa, data_hora))
+    conn.commit()
+    conn.close()
+
+    return JsonResponse({'status': 'ok'})
+
+# Lista todas permissões especiais (GET)
+def listar_permissoes_especiais(request):
+    if 'operador_id' not in request.session:
+        return JsonResponse({'erro': 'Usuário não autenticado'}, status=401)
+
+    conn = get_db_connection()
+    permissoes = conn.execute("""
+        SELECT pe.id, u.nome_completo AS usuario_nome, u.matricula, pe.justificativa,
+               o.nome AS operador_nome, pe.data_hora_permissao
+        FROM app_PermissoesEspeciais pe
+        JOIN app_Usuarios u ON pe.usuario_id = u.id
+        JOIN app_Operadores o ON pe.operador_id = o.id
+        ORDER BY pe.data_hora_permissao DESC
+    """).fetchall()
+    conn.close()
+
+    lista = [{
+        "id": p["id"],
+        "usuario_nome": p["usuario_nome"],
+        "matricula": p["matricula"],
+        "justificativa": p["justificativa"],
+        "operador_nome": p["operador_nome"],
+        "data_hora_permissao": p["data_hora_permissao"]
+    } for p in permissoes]
+
+    return JsonResponse(lista, safe=False)
 
 def suspensoes(request):
 	if 'operador_id' not in request.session: # verifica se ha um usuario logado

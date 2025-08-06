@@ -79,4 +79,4 @@ Quando um rosto for detectado:
                     VALUES (?, ?, ?, ?)
                 ''', (codigo, curso_id, ano, turno))
 
-        print(f"[DB SETUP] Turmas geradas com sucesso para {len(cursos)} cursos.")
+        print(f"[DB SETUP] Turmas geradas com sucesso para {len(cursos)} cursos.") pppnjkbj
