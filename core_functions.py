@@ -3,7 +3,7 @@ import os
 import cv2
 from datetime import datetime
 from deepface import DeepFace
-# from catraca import enviar_comando tira o comentário se quiser rodar o esp plmds
+# from catraca import enviar_comando (tira o comentário se quiser rodar o esp plmds)
 
 # --- CONFIGURAÇÕES GLOBAIS ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -84,7 +84,7 @@ def verificar_pessoa(imagem_rosto_detectado):
                                 print(f"  - Curso: {curso or 'Não vinculado'}")
                                 print(f"  - Turma: {turma or 'Não vinculada'}")
                             registrar_log_acesso('Aceito', user_id, log_img_path)
-                            # enviar_comando('1') tira o comentário se quiser rodar o esp plms
+                            # enviar_comando('1') (tira o comentário se quiser rodar o esp plmds)
                             return {"resposta": 2, "dados": {"nome": nome_completo,
                                                              "matricula": matricula,
                                                              "tipo": tipo,
@@ -624,3 +624,4 @@ def contar_sancoes_ativas():
         return 0
     finally:
         conn.close()
+
