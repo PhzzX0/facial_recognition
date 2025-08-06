@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Operadores
+from .models import (Operadores, LogAcesso, Usuario, Curso, Turma, UsuarioTurma, Visitante)
+from .forms import FormPermissaoEspecial
 import hashlib
 import os
 import sqlite3
@@ -269,11 +270,34 @@ def registro(request):
 
 
 def permissoes(request):
-	if 'operador_id' not in request.session: # verifica se ha um usuario logado
-		return redirect("login") # se nao tiver um usuario logado redireciona para a pagina de login
-	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
+    if 'operador_id' not in request.session: # verifica se ha um usuario logado
+        return redirect("login") # se nao tiver um usuario logado redireciona para a pagina de login
+    operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado   
+    logs = LogAcesso.objects.order_by('-timestamp_acesso')[:5] # Pega os últimos 5 logs de acesso
+    for log in logs:
+        try:
+            log.timestamp_dt = datetime.strptime(log.timestamp_acesso, "%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            log.timestamp_dt = None
+    # aqui abaixo é o código para criar uma nova permissão especial, ainda não está pronto
+    if request.method == "POST":
+        matricula = request.POST.get("usuario")
+        try:
+            usuario = Usuarios.objects.get(matricula=matricula)
+            nova_permissao = PermissaoEspecial.objects.create(
+                usuario=usuario,
+                operador=operador,
+                data_hora_permissao=timezone.now()
+            )
+        except Usuarios.DoesNotExist:
+            pass
 
-	return render(request, "permissoes.html") # carrega a pagina permissoes
+        return redirect("permissoes") 
+
+    return render(request, "permissoes.html", {
+        "logs": logs,
+        "operador": operador,
+    })#renderiza a pagina permissoes com as variaveis logs e operador
 
 
 def suspensoes(request):
@@ -290,5 +314,6 @@ def acessoExterno(request):
 	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
 
 	return render(request, "acessoExterno.html") # carrega a pagina acesso externo
+
 
 
