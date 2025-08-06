@@ -85,6 +85,22 @@
             position: absolute; /* Para que fique na parte inferior */
             bottom: 0;
         }
+        .focus-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .focus-box { position: relative; width: 60%; height: 70%; }
+
+        .focus-corner {
+            position: absolute; width: 40px; height: 40px;
+            border: 5px solid white;
+        }
+
+        .focus-corner.top-left { top: 0; left: 0; border-right: none; border-bottom: none; border-top-left-radius: var(--border-radius); }
+        .focus-corner.top-right { top: 0; right: 0; border-left: none; border-bottom: none; border-top-right-radius: var(--border-radius); }
+        .focus-corner.bottom-left { bottom: 0; left: 0; border-right: none; border-top: none; border-bottom-left-radius: var(--border-radius); }
+        .focus-corner.bottom-right { bottom: 0; right: 0; border-left: none; border-top: none; border-bottom-right-radius: var(--border-radius); }
 
         /* Layout para Telas Horizontais (Portaria - Desktop/Tablet Landscape) */
         @media (min-aspect-ratio: 1/1) {
@@ -153,6 +169,14 @@
         <div class="camera-outer-container">
             <div class="camera-placeholder">
                 <video id="camera" autoplay playsinline class="w-full h-full object-cover"></video>
+                <div class="focus-overlay">
+                    <div class="focus-box">
+                        <div class="focus-corner top-left"></div>
+                        <div class="focus-corner top-right"></div>
+                        <div class="focus-corner bottom-left"></div>
+                        <div class="focus-corner bottom-right"></div>
+                    </div>
+                </div>
             </div>
             
             <div class="instruction-bar">

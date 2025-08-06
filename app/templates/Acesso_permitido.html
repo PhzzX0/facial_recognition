@@ -209,7 +209,7 @@
 
     <main class="main-content">
         <div class="camera-feed">
-            <img src="macaco-camera.jpg" alt="">
+            <video id="camera" autoplay playsinline class="w-full h-full object-cover"></video>
             <div class="focus-overlay">
                 <div class="focus-box">
                     <div class="focus-corner top-left"></div>
@@ -245,6 +245,46 @@
         <span>desenvolvido por</span>
         <img src="Logo IN4 png2.png" alt="Logo IN4">
     </footer>
+    <script>
+        const video = document.getElementById('camera');
 
+        // Pede acesso à câmera
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Erro ao acessar a câmera:', error);
+            });
+
+        // Envia imagem para o servidor a cada 2 segundos
+        const enviarImagem = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imagemBase64 = canvas.toDataURL('image/jpeg');
+
+            fetch('/receber_imagem/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ imagem: imagemBase64 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                            if (data.redirect) {
+                           window.location.href = data.redirect;
+                            }})
+            .catch(err => console.error('Erro ao enviar imagem:', err));
+        };
+
+        // Espera vídeo carregar antes de começar a enviar
+        video.addEventListener('loadedmetadata', () => {
+            setInterval(enviarImagem, 3000); // a cada 2 segundos
+        });
+    </script>
 </body>
 </html>
