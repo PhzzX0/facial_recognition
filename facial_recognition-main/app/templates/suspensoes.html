@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FaceIN - Controle de Suspensões</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Estilos baseados no design fornecido */
+    :root {
+      --bg-main: #f3f4ef;
+      --green-dark: #244a1e;
+      --text-gray: #5a5a5a;
+      --border-color: #b6c0b0;
+      --card-bg: #f9faf7;
+      --red-button: #b92a2a;
+      --faded-link: #7b8b76;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--green-dark);
+      margin: 0;
+      height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .flex-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Layout principal de 3 colunas */
+    .page-container {
+        display: flex;
+        height: 100vh;
+        width: 100vw;
+    }
+
+    /* Sidebar esquerda (Menu) */
+    aside.sidebar-left {
+      width: 18rem;
+      background: var(--bg-main);
+      border-right: 1px solid var(--border-color);
+      padding: 2rem 1.5rem;
+      user-select: none;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-y: auto;
+    }
+
+    .coapac-logo {
+      width: 5rem;
+      height: 5rem;
+      background-color: var(--green-dark);
+      border: 4px solid var(--bg-main);
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 1rem;
+    }
+
+    .coapac-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .text-facein {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--green-dark);
+      letter-spacing: 0.15em;
+    }
+
+    nav.sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    nav.sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--faded-link); /* Cor dos links não selecionados */
+      text-decoration: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s ease-in-out;
+    }
+
+    nav.sidebar-nav a.active {
+      background-color: #e0e3d9;
+      color: var(--green-dark);
+      font-weight: 800;
+    }
+
+    nav.sidebar-nav a.active i {
+      color: #79a149;
+    }
+
+    nav.sidebar-nav a:not(.active):hover {
+      background-color: #e0e3d9;
+      color: var(--green-dark);
+    }
+    
+    .btn-sair {
+      background-color: var(--red-button);
+      color: white;
+      font-weight: 700;
+      padding: 0.5rem 1.5rem;
+      border-radius: 0.5rem;
+      width: 100%;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-sair:hover {
+      background-color: #9b2121;
+    }
+
+    /* Conteúdo principal e barra lateral direita */
+    .main-content-wrapper {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+
+    main.content-main {
+      flex-grow: 1;
+      background-color: var(--bg-main);
+      padding: 2.5rem 2rem;
+      border-top-right-radius: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .content-main .header-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    /* Botões do cabeçalho para dispositivos móveis */
+    .mobile-buttons {
+      display: none;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .mobile-buttons button {
+      background-color: #e0e3d9;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      color: var(--green-dark);
+      cursor: pointer;
+      border: none;
+    }
+
+    .content-main .header-info h1 {
+        font-weight: 800;
+        font-size: 2.25rem;
+        color: var(--green-dark);
+        margin: 0;
+    }
+
+    .content-main .header-info p {
+        margin: 0.25rem 0 0;
+        font-weight: 400;
+        font-size: 0.875rem;
+        color: var(--text-gray);
+    }
+    
+    .codigo {
+      background-color: var(--green-dark);
+      color: white;
+      font-weight: 700;
+      padding: 0.5rem 1.5rem;
+      border-radius: 0.5rem;
+      letter-spacing: 0.2em;
+      font-size: 1.25rem;
+    }
+    
+    .form-suspensao {
+        background-color: #e0e3d9;
+        border-radius: 1.5rem;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .form-suspensao h2 {
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: var(--green-dark);
+        margin-bottom: 1rem;
+    }
+    
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 2rem;
+    }
+    
+    .form-row .form-group {
+        flex: 1;
+    }
+
+    .form-suspensao label {
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--green-dark);
+    }
+    
+    .form-suspensao input, .form-suspensao textarea {
+        background-color: #f3f4ef;
+        border: 1px solid var(--border-color);
+        border-radius: 0.5rem;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        color: var(--green-dark);
+    }
+
+    .form-suspensao input::placeholder, .form-suspensao textarea::placeholder {
+        color: #9ca3af;
+    }
+    
+    .btn-registrar {
+        background-color: var(--green-dark);
+        color: white;
+        font-weight: 700;
+        padding: 0.75rem 2rem;
+        border-radius: 0.5rem;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        align-self: flex-end;
+    }
+
+    .btn-registrar:hover {
+        background-color: #386641;
+    }
+    
+    .historic-suspensao {
+        background-color: #e0e3d9;
+        border-radius: 1.5rem;
+        padding: 2rem;
+    }
+    
+    .historic-suspensao h2 {
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: var(--green-dark);
+        margin-bottom: 1rem;
+    }
+    
+    .historic-table-wrapper {
+        overflow-x: auto;
+    }
+    
+    .historic-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 600px;
+    }
+    
+    .historic-table th, .historic-table td {
+        padding: 0.75rem 0.5rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 0.9rem;
+    }
+
+    .historic-table th {
+        font-weight: 700;
+        color: var(--green-dark);
+    }
+
+    .historic-table td {
+        color: #515151;
+    }
+    
+    .historic-table .actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .historic-table .actions button {
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .btn-remove {
+        background-color: var(--red-button);
+        transition: background-color 0.3s;
+    }
+
+    .btn-remove:hover {
+        background-color: #9b2121;
+    }
+
+    .btn-edit {
+        background-color: var(--green-dark);
+        transition: background-color 0.3s;
+    }
+
+    .btn-edit:hover {
+        background-color: #386641;
+    }
+
+    /* Sidebar direita (Registros) */
+    aside.sidebar-right {
+      width: 18rem;
+      background-color: var(--green-dark);
+      padding: 2rem 1.5rem;
+      color: white;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      overflow-y: auto;
+    }
+
+    .registro-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+    }
+
+    .registro-data {
+      font-size: 0.875rem;
+      opacity: 0.75;
+    }
+
+    .registro-scroll {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding-right: 0.75rem;
+    }
+
+    .registro-scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .registro-scroll::-webkit-scrollbar-thumb {
+        background-color: #386641;
+        border-radius: 3px;
+    }
+    
+    .registro-scroll::-webkit-scrollbar-track {
+        background-color: #244a1e;
+    }
+
+    .registro-item-aside {
+        margin-bottom: 1rem;
+    }
+    
+    .registro-item-aside .time {
+        font-weight: 700;
+        margin-right: 1rem;
+    }
+    
+    .registro-item-aside .name {
+        font-weight: 700;
+        color: white;
+        margin-right: 0.3rem;
+    }
+
+    .registro-item-aside .status-box {
+        display: inline-block;
+        font-weight: 700;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.8rem;
+    }
+    
+    .registro-item-aside .status-liberado {
+        background-color: #79a149;
+        color: white;
+    }
+    
+    .registro-item-aside .status-negado {
+        background-color: #e63946;
+        color: white;
+    }
+
+    .btn-ver-registro {
+      margin-top: 1rem;
+      background-color: var(--bg-main);
+      color: var(--green-dark);
+      font-weight: 700;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+
+    .btn-ver-registro:hover {
+      background-color: #e0e3d9;
+    }
+
+    /* Media queries para responsividade */
+    @media (max-width: 1024px) {
+      .page-container {
+        flex-direction: column;
+        overflow-y: auto;
+      }
+
+      .mobile-buttons {
+        display: flex;
+      }
+      
+      .header-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .header-info .header-right {
+        order: -1;
+      }
+      
+      .sidebar-left {
+        position: fixed;
+        top: 0;
+        left: -18rem; /* Oculta a sidebar para fora da tela */
+        height: 100%;
+        transition: left 0.3s ease-in-out;
+        z-index: 100;
+        border-right: none;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+      }
+      
+      .sidebar-left.open {
+        left: 0; /* Mostra a sidebar */
+      }
+
+      aside.sidebar-right {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+        border-top-right-radius: 0;
+        order: 3; /* Move a sidebar para o final */
+      }
+      
+      main.content-main {
+        width: 100%;
+        padding: 1.5rem;
+        border-top-right-radius: 0;
+        order: 1; /* Move o conteúdo principal para o topo */
+      }
+      
+      .form-row {
+          flex-direction: column;
+          gap: 1.5rem;
+      }
+      
+      .btn-registrar {
+          align-self: stretch;
+      }
+      
+      .historic-table th, .historic-table td {
+          padding: 0.5rem 0.2rem;
+      }
+      
+      .historic-table .actions {
+          flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body class="flex">
+  <div class="page-container">
+    <aside class="sidebar-left" aria-label="Menu lateral">
+      <div>
+        <div class="text-facein flex-center gap-2">
+            FaceIN
+        </div>
+        <div class="coapac-logo">
+          <img src="https://i.imgur.com/uG2nL4m.png" alt="Logo IFRN COAPAC" />
+        </div>
+        <div class="title-porteiro text-center font-bold text-lg mb-8">COAPAC</div>
+
+        <nav class="sidebar-nav">
+          <a href="#"><i class="bi bi-house-fill"></i> Início</a>
+          <a href="#"><i class="bi bi-person-fill"></i> Usuários</a>
+          <a href="#"><i class="bi bi-people-fill"></i> Turmas</a>
+          <a href="#"><i class="bi bi-journal-check"></i> Registro</a>
+          <a href="#"><i class="bi bi-shield-lock-fill"></i> Permissões</a>
+          <a href="#" class="active"><i class="bi bi-person-fill-lock"></i> Suspensões</a>
+          <a href="#"><i class="bi bi-door-open-fill"></i> Acesso Externo</a>
+        </nav>
+      </div>
+      <div>
+        <button class="btn-sair" type="button">SAIR</button>
+        <div class="footer-in4 text-center font-bold text-base mt-2 text-green-800">in4</div>
+      </div>
+    </aside>
+
+    <div class="main-content-wrapper">
+        <main class="content-main" role="main">
+          <header class="header-info mb-8">
+            <div class="mobile-buttons">
+                <button id="menu-toggle" aria-label="Abrir menu"><i class="bi bi-list-nested text-2xl"></i></button>
+                <div class="header-right flex items-center space-x-4">
+                  <button aria-label="Notificações" class="bg-[#e0e3d9] p-2 rounded-lg">
+                    <i class="bi bi-bell-fill text-xl text-[#244a1e]"></i>
+                  </button>
+                  <div class="codigo">9RS8YB</div>
+                </div>
+            </div>
+            <div>
+              <h1>Controle de suspensões</h1>
+              <p class="data-atual" id="data-atual">Quarta, 16 de Julho de 2025</p>
+            </div>
+          </header>
+    
+          <section class="form-suspensao">
+            <h2>Cadastrar nova suspensão</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="nome-aluno">Nome:</label>
+                    <input type="text" id="nome-aluno" placeholder="Fulano de tal" value="Fulano de tal" />
+                </div>
+                <div class="form-group">
+                    <label for="matricula">Matrícula:</label>
+                    <input type="text" id="matricula" placeholder="XXXXXX-XX" value="XXXXXX-XX" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="turma">Turma:</label>
+                    <input type="text" id="turma" placeholder="0.0000.0X" value="0.0000.0X" />
+                </div>
+                <div class="form-group">
+                    <label for="data-suspensao">Data de início e fim:</label>
+                    <input type="text" id="data-suspensao" placeholder="01/01/2019 a 02/02/2029" value="01/01/2019 a 02/02/2029" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="motivo">Motivo:</label>
+                <textarea id="motivo" rows="3" placeholder="Aluno furou os pneus do ônibus.">Aluno furou os pneus do ônibus.</textarea>
+            </div>
+            <button class="btn-registrar">
+                REGISTRAR SUSPENSÃO
+            </button>
+          </section>
+    
+          <section class="historic-suspensao">
+            <h2>Histórico de suspensões</h2>
+            <div class="historic-table-wrapper">
+                <table class="historic-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Matrícula</th>
+                            <th>Turma</th>
+                            <th>Início/Fim</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Macaco Prego</td>
+                            <td>0000</td>
+                            <td>4.0000.0X</td>
+                            <td>05/06 a 07/11</td>
+                            <td class="actions">
+                                <button class="btn-remove">REMOVER SUSPENSÃO</button>
+                                <button class="btn-edit">EDITAR SUSPENSÃO</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Mica-leão-dourado</td>
+                            <td>111</td>
+                            <td>5.0000.0X</td>
+                            <td>05/06 a 07/11</td>
+                            <td class="actions">
+                                <button class="btn-remove">REMOVER SUSPENSÃO</button>
+                                <button class="btn-edit">EDITAR SUSPENSÃO</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Macaco Narigudo</td>
+                            <td>2222</td>
+                            <td>1.0000.0X</td>
+                            <td>05/06 a 07/12</td>
+                            <td class="actions">
+                                <button class="btn-remove">REMOVER SUSPENSÃO</button>
+                                <button class="btn-edit">EDITAR SUSPENSÃO</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sagui-anão</td>
+                            <td>3333</td>
+                            <td>1.0000.0X</td>
+                            <td>05/06 a 07/12</td>
+                            <td class="actions">
+                                <button class="btn-remove">REMOVER SUSPENSÃO</button>
+                                <button class="btn-edit">EDITAR SUSPENSÃO</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+          </section>
+        </main>
+    
+        <aside class="sidebar-right" aria-label="Registro de acessos">
+          <div>
+            <header class="registro-header">
+              <span>Registros</span>
+              <span class="registro-data">Jul 16, 2025</span>
+            </header>
+            <div class="registro-scroll" tabindex="0" aria-live="polite">
+              <div class="registro-item-aside">
+                <div class="flex items-center">
+                  <time class="time">16:00</time>
+                  <span class="name">Fulano de tal</span>
+                  <span class="status-box status-liberado">LIBERADO</span>
+                </div>
+                <p class="text-sm mt-1 ml-16">Nome do Usuário</p>
+              </div>
+              <div class="registro-item-aside">
+                <div class="flex items-center">
+                  <time class="time">00:00</time>
+                  <span class="name">Nome do Usuário</span>
+                  <span class="status-box status-negado">NEGADO</span>
+                </div>
+              </div>
+              <div class="registro-item-aside">
+                <div class="flex items-center">
+                  <time class="time">00:00</time>
+                  <span class="name">Nome do Usuário</span>
+                  <span class="status-box status-liberado">LIBERADO</span>
+                </div>
+              </div>
+              <div class="registro-item-aside">
+                <div class="flex items-center">
+                  <time class="time">00:00</time>
+                  <span class="name">Nome do Usuário</span>
+                  <span class="status-box status-negado">NEGADO</span>
+                </div>
+              </div>
+              <div class="registro-item-aside">
+                <div class="flex items-center">
+                  <time class="time">00:00</time>
+                  <span class="name">Nome do Usuário</span>
+                  <span class="status-box status-liberado">LIBERADO</span>
+                </div>
+              </div>
+              <div class="registro-item-aside">
+                <div class="flex items-center">
+                  <time class="time">00:00</time>
+                  <span class="name">Nome do Usuário</span>
+                  <span class="status-box status-negado">NEGADO</span>
+                </div>
+              </div>
+              
+              <div class="registro-data mt-4">Jan 01, 2025</div>
+              <div class="registro-item-aside mt-2">
+                <div class="flex items-center">
+                  <time class="time">00:00</time>
+                  <span class="name">Nome do Usuário</span>
+                  <span class="status-box status-liberado">LIBERADO</span>
+                </div>
+              </div>
+              <div class="registro-item-aside">
+                <div class="flex items-center">
+                  <time class="time">00:00</time>
+                  <span class="name">Nome do Usuário</span>
+                  <span class="status-box status-negado">NEGADO</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="btn-ver-registro" type="button">VER TODO O REGISTRO</button>
+        </aside>
+    </div>
+  </div>
+
+  <script>
+    const meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+    const diasSemana = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+
+    function atualizarDataAtual() {
+      const hoje = new Date();
+      const diaSemana = diasSemana[hoje.getDay()];
+      const dia = hoje.getDate();
+      const mes = meses[hoje.getMonth()];
+      const ano = hoje.getFullYear();
+      document.getElementById("data-atual").textContent = `${diaSemana}, ${dia} de ${mes} de ${ano}`;
+    }
+
+    // Lógica para o menu hamburguer
+    const menuToggle = document.getElementById('menu-toggle');
+    const sidebarLeft = document.querySelector('.sidebar-left');
+    const mobileHeaderButtons = document.querySelector('.mobile-buttons');
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', () => {
+            sidebarLeft.classList.toggle('open');
+            const icon = menuToggle.querySelector('i');
+            if (sidebarLeft.classList.contains('open')) {
+                icon.className = 'bi bi-x-lg text-2xl'; // Ícone de fechar
+            } else {
+                icon.className = 'bi bi-list-nested text-2xl'; // Ícone de menu
+            }
+        });
+    }
+
+    window.onload = () => {
+      atualizarDataAtual();
+    };
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+mediapipe==0.10.21
+deepface==0.0.93
+opencv-python==4.11.0.86
+tensorflow==2.19.0
+tf-keras==2.19.0
+pyserial
+django
+gunicorn

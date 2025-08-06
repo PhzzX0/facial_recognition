@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FaceIN - Controle de Permissões</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .bg-coapac { background-color: #386641; }
+        .text-coapac { color: #386641; }
+        .border-coapac { border-color: #386641; }
+
+        .form-input {
+            background-color: #F0F2F5;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: #386641;
+            font-weight: 500;
+            width: 100%;
+            border: none;
+        }
+        .form-input:focus {
+            outline: 2px solid #6A994E;
+        }
+        
+        nav a {
+            color: #9ca3af;
+            transition: color 0.3s ease;
+            font-weight: 600;
+        }
+        nav a:hover {
+            color: #386641;
+        }
+        .nav-active, .nav-active i {
+            color: #386641;
+            font-weight: 700;
+        }
+        .border-divider {
+            border-right: 2px solid #e5e7eb;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-coapac">
+    <div class="flex min-h-screen p-4 gap-4">
+
+        <div class="flex flex-col lg:flex-row bg-white rounded-3xl shadow-lg w-full max-w-[calc(100%-22rem)] overflow-hidden">
+
+            <aside class="flex flex-col justify-between w-full lg:w-64 p-4 border-divider">
+                <div>
+                    <div class="text-center">
+                        <img src="FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
+                        <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover">
+                        </div>
+                        <h1 class="mt-2 font-bold text-lg uppercase">COAPAC</h1>
+                    </div>
+                    <nav class="mt-10 space-y-2 text-sm">
+                        <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-home"></i> Início</a>
+                        <a href="{% url "usuarios"%}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
+                        <a href="{% url "turmas"%}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
+                        <a href="{% url "registro"%}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
+                        <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-user-key"></i> Permissões</a>
+                        <a href="{% url "suspensoes"%}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
+                        <a href="{% url "acessoExterno"%}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-door-open"></i> Acesso Externo</a>
+                    </nav>
+                </div>
+                <div>
+                    <button class="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center gap-2">
+                        <i class="fi fi-sr-exit"></i> SAIR
+                    </button>
+                    <div class="mt-6 flex justify-center">
+                        <img src="Logo IN4 png verde.png" alt="Logo IN4" class="h-8">
+                    </div>
+                </div>
+            </aside>
+
+            <main class="flex-1 flex flex-col p-6 space-y-6 overflow-auto">
+                <header class="flex justify-between items-center">
+                    <div>
+                        <h2 class="text-2xl font-bold">Controle de acessos autorizados fora do horário</h2>
+                        <p id="current-date" class="text-sm text-gray-500">Carregando data...</p>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="bg-white p-3 rounded-full shadow-md cursor-pointer"><i class="fi fi-sr-bell text-coapac"></i></div>
+                        <span class="bg-coapac text-white px-6 py-3 rounded-lg font-bold tracking-wider">9RS8YB</span>
+                    </div>
+                </header>
+
+                <section class="bg-coapac text-white p-6 rounded-2xl shadow-lg">
+                    <h3 class="font-bold text-lg mb-4">Cadastrar nova permissão</h3>
+                    <form class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Nome:</label>
+                                <input type="text" value="Fulano de tal" class="form-input">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Matrícula:</label>
+                                <input type="text" value="XXXXXXXXXX" class="form-input">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold mb-1">Justificativa:</label>
+                            <input type="text" value="Pai veio buscar porque estava doente" class="form-input">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold mb-1">Data:</label>
+                                <input type="date" value="2025-07-18" class="form-input">
+                            </div>
+                             <div>
+                                <label class="block text-sm font-semibold mb-1">Horário:</label>
+                                <input type="time" value="16:00" class="form-input">
+                            </div>
+                             <div>
+                                <label class="block text-sm font-semibold mb-1">Liberado por:</label>
+                                <input type="text" value="Luciana Bertini" class="form-input">
+                            </div>
+                        </div>
+                        <div class="flex justify-end pt-4">
+                            <button type="submit" class="bg-gray-100 text-coapac font-bold py-2 px-6 rounded-lg">
+                                LIBERAR ACESSO
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <div class="text-center">
+                    <button class="bg-coapac text-white font-bold py-3 px-8 rounded-lg shadow-md">
+                        VER PERMISSÕES
+                    </button>
+                </div>
+
+            </main>
+        </div>
+
+        <aside class="relative w-80 bg-coapac text-white p-6 overflow-auto rounded-3xl shadow-lg flex-shrink-0">
+            <div class="flex justify-between items-center mb-6">
+                <h4 class="text-2xl font-bold">Registros</h4>
+                <div class="w-11 h-11 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <i class="fi fi-sr-folder-open text-coapac text-2xl"></i>
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center mb-4">
+                <p class="text-sm font-semibold opacity-80">Jul 18, 2025</p>
+                <i class="fi fi-sr-menu-dots text-white/80"></i>
+            </div>
+            <div class="space-y-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-lg">16:00</span>
+                    <div class="w-px h-8 bg-white/30"></div>
+                    <div>
+                        <p class="font-medium text-white/90 text-sm">Fulano de Tal</p>
+                        <p class="flex items-center gap-1.5 font-bold text-xs uppercase">LIBERADO <i class="fi fi-sr-lock-open-alt"></i></p>
+                    </div>
+                </div>
+            </div>
+            {% for log in logs%}
+            <div class="flex justify-between items-center mb-4">
+                <p class="text-sm font-semibold opacity-80">{{ log.timestamp_dt|date:"M d, Y"}}</p>
+                <i class="fi fi-sr-menu-dots text-white/80"></i>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <span class="font-bold text-lg">{{ log.timestamp_dt|date:"H: i"}}</span>
+                    <div class="w-px h-8 bg-white/30"></div>
+                    <div>
+                        <p class="font-medium text-white/90 text-sm">                    
+                    {% if log.usuario %}
+                        {{ log.usuario.nome_completo }}
+                    {% elif log.visitante %}
+                        {{ log.visitante.nome_completo }}
+                    {% else %}
+                        Usuário Desconhecido
+                    {% endif %}</p>
+                        <p class="flex items-center gap-1.5 font-bold text-xs uppercase">                    
+                    {{ log.status }}
+                    {% if log.status == "Aceito" %}
+                        <i class="fi fi-sr-check"></i>
+                    {% elif log.status == "Negado" %}
+                        <i class="fi fi-sr-lock"></i>
+                    {% else %}
+                        <i class="fi fi-sr-cross-small"></i>
+                    {% endif %}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <button class="w-full mt-6 bg-gray-100 text-coapac font-bold py-2.5 rounded-lg">
+                VER TODO O REGISTRO
+            </button>
+
+            <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-coapac to-transparent pointer-events-none"></div>
+        </aside>
+    </div>
+    <script>
+        // Seu script JavaScript aqui
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateElement = document.getElementById('current-date');
+            if (dateElement) {
+                const today = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const formattedDate = today.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', ...options });
+                dateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+            }
+        });
+    </script>
+</body>
+</html>

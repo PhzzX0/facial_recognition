@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Controle de Turmas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-[#E7E7E4] text-[#386641] min-h-screen">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white p-6 flex flex-col justify-between rounded-r-3xl shadow">
+      <div>
+        <img src="https://via.placeholder.com/140x50?text=FaceIN" alt="Logo FaceIN" class="mx-auto mb-4 h-10 object-contain">
+        <div class="bg-[#386641] w-16 h-16 mx-auto rounded-full flex items-center justify-center text-white text-2xl font-bold">
+          <i class="bi bi-grid-3x3-gap"></i>
+        </div>
+        <h1 class="mt-2 text-center font-bold">COAPAC</h1>
+        <nav class="mt-8 space-y-4 text-sm text-gray-500">
+          <a href="#" class="flex items-center gap-2 hover:text-[#386641] transition-colors"><i class="bi bi-house-door"></i> Início</a>
+          <a href="#" class="flex items-center gap-2 hover:text-[#386641] transition-colors"><i class="bi bi-person"></i> Usuários</a>
+          <a href="#" class="flex items-center gap-2 font-bold text-[#386641]"><i class="bi bi-people"></i> Turmas</a>
+          <a href="#" class="flex items-center gap-2 hover:text-[#386641] transition-colors"><i class="bi bi-clock"></i> Registro</a>
+          <a href="#" class="flex items-center gap-2 hover:text-[#386641] transition-colors"><i class="bi bi-shield-lock"></i> Permissões</a>
+          <a href="#" class="flex items-center gap-2 hover:text-[#386641] transition-colors"><i class="bi bi-slash-circle"></i> Suspensões</a>
+          <a href="#" class="flex items-center gap-2 hover:text-[#386641] transition-colors"><i class="bi bi-door-open"></i> Acesso Externo</a>
+        </nav>
+      </div>
+      <div class="mt-auto">
+        <button class="bg-red-600 text-white py-2 rounded font-bold flex items-center justify-center gap-2 w-full">
+          <i class="bi bi-box-arrow-left"></i> SAIR
+        </button>
+        <div class="mt-4 flex justify-center">
+          <img src="https://via.placeholder.com/120x50?text=IN4" alt="Logo IN4" class="h-10 object-contain">
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+  <main class="flex-1 flex flex-col p-6 gap-4">
+      <!-- Header -->
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-xl font-bold">Controle de Turmas</h2>
+          <p id="data-atual" class="text-sm text-gray-500"></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="bg-[#E7E7E4] p-2 rounded"><i class="bi bi-bell-fill text-[#386641]"></i></div>
+          <span class="bg-[#386641] text-white px-4 py-2 rounded font-bold tracking-wider">9RS8YB</span>
+        </div>
+      </div>
+
+      <!-- Add button -->
+      <a class="bg-[#386641] text-white px-6 py-2 rounded font-bold w-max flex items-center gap-2">
+        <i class="bi bi-plus-lg"></i> Adicionar turma
+      </a>
+
+  <!-- Renderização das turmas agrupadas por curso -->
+      {% for curso, turmas in cursos.items %}
+      <div class="grupo-curso {% if curso == 'Informática' %}ativo{% endif %}" data-curso="{{ curso }}" style="{% if curso != 'Informática' %}display: none;{% endif %}">
+        <div class="space-y-4">
+          {% for turma in turmas %}
+          <div class="flex bg-white rounded-xl shadow overflow-hidden">
+            <div class="w-2 bg-[#386641] rounded-l-xl"></div>
+            <div class="flex-1 flex justify-between items-center p-4">
+              <div>
+                <h3 class="font-bold">
+                  {{ turma.ano }}º Ano de {{ curso }} {{ turma.turno }}
+                </h3>
+                <p class="text-sm text-gray-500">{{ turma.nome_turma }}</p>
+              </div>
+              <div class="flex gap-2 text-[#386641]">
+                <a href="#"><i class="bi bi-eye-fill"></i></a>
+                <a href="#" class="btn-delete-turma" data-id="{{ turma.id }}">
+        <i class="bi bi-trash-fill"></i></a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+
+        <!-- Filtros para mostrar turmas por curso -->
+      <div id="filtro-cursos" class="flex gap-4 mt-4 flex-wrap">
+        <button class="filtro-btn bg-[#386641] text-white px-4 py-1 rounded-full font-bold text-sm" data-curso="Informática">Informática</button>
+        <button class="filtro-btn bg-white text-[#386641] px-4 py-1 rounded-full font-bold text-sm" data-curso="Manutenção">Manutenção</button>
+        <button class="filtro-btn bg-white text-[#386641] px-4 py-1 rounded-full font-bold text-sm" data-curso="Química">Química</button>
+        <button class="filtro-btn bg-white text-[#386641] px-4 py-1 rounded-full font-bold text-sm" data-curso="Agropecuária">Agropecuária</button>
+      </div>
+
+  </main>
+
+<!-- Sidebar direita com registros (painel de atividades) -->
+<aside class="w-80 bg-[#386641] text-white p-6 rounded-l-3xl">
+  <div class="flex justify-between items-center mb-4">
+    <h4 class="font-bold text-lg">Registro</h4>
+    <i class="bi bi-journal-bookmark-fill text-xl"></i>
+  </div>
+
+  <!-- Verificação de registros -->
+  {% if registros %}
+    <!-- Data do primeiro registro do dia que estiver -->
+    <p class="text-sm mb-2">{{ registros.0.data }}</p>
+
+    <!-- Lista de registros -->
+    <div class="space-y-2 max-h-64 overflow-y-auto pr-2">
+      {% for r in registros %}
+        <div class="text-sm border-b border-white pb-1">
+          <span class="block">{{ r.horario }}</span>
+          <div>
+            <strong>{{ r.status }}</strong>
+            <i class="bi bi-lock-fill ml-1"></i>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <!-- Nenhum registro -->
+    <p class="text-sm mb-2">Nenhum registro encontrado</p>
+    <p class="text-sm">Nenhum registro hoje.</p>
+  {% endif %}
+
+  <!-- Botão para ver todos os registros -->
+  {% if not ver_todos %}
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="ver_todos" value="1">
+      <button type="submit" class="mt-6 w-full bg-white text-[#386641] py-2 font-bold rounded text-sm hover:bg-gray-100 transition">
+        VER TODO O REGISTRO
+      </button>
+    </form>
+  {% endif %}
+</aside>
+
+<!-- Script para filtro dos cursos -->
+<script>
+  const botoes = document.querySelectorAll('.filtro-btn');
+  const grupos = document.querySelectorAll('.grupo-curso');
+
+  botoes.forEach(botao => {
+    botao.addEventListener('click', () => {
+      const cursoSelecionado = botao.getAttribute('data-curso');
+
+      // Mostrar só o grupo selecionado
+      grupos.forEach(grupo => {
+        grupo.style.display = grupo.getAttribute('data-curso') === cursoSelecionado ? 'block' : 'none';
+      });
+
+      // Atualiza visual dos botões
+      botoes.forEach(btn => {
+        if (btn.getAttribute('data-curso') === cursoSelecionado) {
+          btn.classList.remove('bg-white', 'text-[#386641]');
+          btn.classList.add('bg-[#386641]', 'text-white');
+        } else {
+          btn.classList.add('bg-white', 'text-[#386641]');
+          btn.classList.remove('bg-[#386641]', 'text-white');
+        }
+      });
+    });
+  });
+</script>
+
+<!-- Script para exibir a data atual no cabeçalho -->
+<script>
+  const dataEl = document.getElementById('data-atual');
+  const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+  const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+  const hoje = new Date();
+  const diaSemana = diasSemana[hoje.getDay()];
+  const dia = String(hoje.getDate()).padStart(2, '0');
+  const mes = meses[hoje.getMonth()];
+  const ano = hoje.getFullYear();
+
+  dataEl.textContent = `${diaSemana}, ${dia} de ${mes} de ${ano}`;
+</script>
+
+<!-- Script para pegar o cookie CSRF do Django, usado para proteger requisições POST -->
+<script>
+  // Função para pegar o cookie CSRF do Django
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Verifica se o cookie começa com o nome desejado
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  const csrftoken = getCookie('csrftoken');
+
+  document.querySelectorAll('.btn-delete-turma').forEach(button => {
+    button.addEventListener('click', () => {
+      const turmaId = button.getAttribute('data-id');
+      if (!confirm('Deseja realmente deletar esta turma?')) return;
+
+      fetch(`/turmas/deletar/${turmaId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken,
+          'Content-Type': 'application/json'
+        },
+        body: null
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'ok') {
+          // Remove o elemento da lista na interface, por exemplo:
+          button.closest('.flex.bg-white').remove();
+          alert('Turma deletada com sucesso!');
+        } else {
+          alert('Erro: ' + data.mensagem);
+        }
+      })
+      .catch(error => {
+        alert('Erro na requisição: ' + error);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
