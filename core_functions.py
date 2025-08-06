@@ -42,7 +42,7 @@ def verificar_pessoa(imagem_rosto_detectado):
 
         if not registros:
             registrar_log_acesso('Não Encontrado', caminho_foto_capturada=log_img_path)
-            return
+            return {"resposta": 1}
         
         for user_id, nome, caminho_relativo_db in registros:
             caminho_absoluto_rosto = os.path.join(BASE_DIR, caminho_relativo_db)
@@ -83,14 +83,21 @@ def verificar_pessoa(imagem_rosto_detectado):
                                 print(f"  - Curso: {curso or 'Não vinculado'}")
                                 print(f"  - Turma: {turma or 'Não vinculada'}")
                             registrar_log_acesso('Aceito', user_id, log_img_path)
+                            return {"resposta": 2, "dados": {"nome": nome_completo,
+                                                             "matricula": matricula,
+                                                             "tipo": tipo,
+                                                             "situacao": situacao}}
                         print("-" * 30)
+                            
                         return
             except Exception as e:
                 print(f"Verificação falhou para {nome}. Detalhe: {e}")
 
         print("Pessoa não reconhecida no banco de dados.")
+        return {"resposta": 1}
         registrar_log_acesso('Não Encontrado', caminho_foto_capturada=log_img_path)
     finally:
+        return {"resposta": 1}
         conn.close()
 
 # --- FUNÇÕES DE GESTÃO DE UTILIZADORES ---

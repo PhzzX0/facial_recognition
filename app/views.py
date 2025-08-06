@@ -3,32 +3,76 @@ from .models import Operadores
 import hashlib
 import os
 import sqlite3
-from django.http import StreamingHttpResponse
+from django.http import StreamingHttpResponse, JsonResponse
 import cv2
-from django.http import JsonResponse
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
-
-
+import base64
+import uuid
+import numpy as np
+import json
+from core_functions import verificar_pessoa
+#def verificar_pessoa(imagem):
+    # Simula processamento leve
+    #return {"resposta": 2, "dados": {"nome": "João", "matricula": "2222222222"}}
 
 # Captura da câmera
-camera = cv2.VideoCapture(0)
+#camera = cv2.VideoCapture(0)
 
-def generate_frames():
-    while True:
-        success, frame = camera.read()
-        if not success:
-            break
-        else:
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+#def generate_frames():
+#    while True:
+#        success, frame = camera.read()
+#        if not success:
+#            break
+#        else:
+#            ret, buffer = cv2.imencode('.jpg', frame)
+#            frame = buffer.tobytes()
+#            yield (b'--frame\r\n'
+#                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
-def video_feed(request):
-    return StreamingHttpResponse(generate_frames(), content_type='multipart/x-mixed-replace; boundary=frame')
+#def video_feed(request):
+#    return StreamingHttpResponse(generate_frames(), content_type='multipart/x-mixed-replace; boundary=frame')
 
+@csrf_exempt
+def receber_imagem(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        imagem_base64 = data.get('imagem', '')
+        
+        if not imagem_base64.startswith('data:image'):
+            return JsonResponse({'erro': 'Imagem inválida'}, status=400)
+
+        # Extrai apenas os dados base64 (removendo o cabeçalho data:image/jpeg;base64,...)
+        _, base64_data = imagem_base64.split(',', 1)
+        imagem_bytes = base64.b64decode(base64_data)
+
+        # Converte os bytes para array numpy e depois para imagem OpenCV
+        np_arr = np.frombuffer(imagem_bytes, np.uint8)
+        imagem = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # BGR
+
+        # -------- PROCESSAMENTO COM OPENCV AQUI -------- #
+        resposta = verificar_pessoa(imagem)
+        # ------------------------------------------------ #
+        print(resposta)
+        if resposta["resposta"] == 1:
+            return JsonResponse({"redirect": "/acesso_negado/"})
+        elif resposta["resposta"] == 2:
+            request.session['dados'] = resposta["dados"]
+            return JsonResponse({"redirect": "/acesso_permitido/"})
+        
+
+    return JsonResponse({'erro': 'Método inválido'}, status=405)
+
+def aluno(request):
+    return render(request, "Tela_Aluno_portaria.html")
+
+def negado(request):
+    return render(request, "Acesso_Negado.html")
+
+def permitido(request):
+    dados = request.session.get('dados', {})
+    return render(request, 'Acesso_permitido.html', dados)
 
 def index(request):
 	if 'operador_id' not in request.session: # verifica se ha um usuario logado
@@ -61,16 +105,14 @@ def logout(request):
 
 
 def dashboard(request):
-	if 'operador_id' not in request.session: # verifica se ha um usuario logado
-		return redirect("login") # se nao tiver um usuario logado redireciona para a pagina de login
-	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
-	
-	#if operador.papel == "COAPAC":
-	# ...
-	#elif operador.papel == "Porteiro":
-	# return render(request, "porteiro.html", {"papel": operador.papel})
-
-	return render(request, "porteiro.html", {"papel": operador.papel}) # carrega a pagina dashboard
+    if 'operador_id' not in request.session: # verifica se ha um usuario logado
+        return redirect("login") # se nao tiver um usuario logado redireciona para a pagina de login
+    operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
+    
+    if operador.papel == "COAPAC":
+        return render(request, "inicial.html", {"papel": operador.papel})
+    elif operador.papel == "Porteiro":
+        return render(request, "porteiro.html", {"papel": operador.papel})
 
 
 def usuarios(request):
