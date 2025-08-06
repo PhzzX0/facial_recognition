@@ -88,7 +88,9 @@ def verificar_pessoa(imagem_rosto_detectado):
                             return {"resposta": 2, "dados": {"nome": nome_completo,
                                                              "matricula": matricula,
                                                              "tipo": tipo,
-                                                             "situacao": situacao}}
+                                                             "situacao": situacao,
+                                                             "curso": curso or "Não vinculado",
+                                                             "turma": turma or "Não vinculado"}}
                         print("-" * 30)
                             
                         return
