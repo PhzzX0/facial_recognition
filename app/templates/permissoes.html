@@ -59,12 +59,12 @@
                     </div>
                     <nav class="mt-10 space-y-2 text-sm">
                         <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-home"></i> Início</a>
-                        <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
-                        <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
-                        <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
+                        <a href="{% url "usuarios"%}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
+                        <a href="{% url "turmas"%}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
+                        <a href="{% url "registro"%}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
                         <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-user-key"></i> Permissões</a>
-                        <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
-                        <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-door-open"></i> Acesso Externo</a>
+                        <a href="{% url "suspensoes"%}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
+                        <a href="{% url "acessoExterno"%}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-door-open"></i> Acesso Externo</a>
                     </nav>
                 </div>
                 <div>
@@ -159,21 +159,37 @@
                     </div>
                 </div>
             </div>
-
+            {% for log in logs%}
             <div class="flex justify-between items-center mb-4">
-                <p class="text-sm font-semibold opacity-80">Jan 01, 2025</p>
+                <p class="text-sm font-semibold opacity-80">{{ log.timestamp_dt|date:"M d, Y"}}</p>
                 <i class="fi fi-sr-menu-dots text-white/80"></i>
             </div>
             <div class="space-y-4">
                 <div class="flex items-center gap-3">
-                    <span class="font-bold text-lg">00:00</span>
+                    <span class="font-bold text-lg">{{ log.timestamp_dt|date:"H: i"}}</span>
                     <div class="w-px h-8 bg-white/30"></div>
                     <div>
-                        <p class="font-medium text-white/90 text-sm">Nome do Usuário</p>
-                        <p class="flex items-center gap-1.5 font-bold text-xs uppercase">NEGADO <i class="fi fi-sr-lock"></i></p>
+                        <p class="font-medium text-white/90 text-sm">                    
+                    {% if log.usuario %}
+                        {{ log.usuario.nome_completo }}
+                    {% elif log.visitante %}
+                        {{ log.visitante.nome_completo }}
+                    {% else %}
+                        Usuário Desconhecido
+                    {% endif %}</p>
+                        <p class="flex items-center gap-1.5 font-bold text-xs uppercase">                    
+                    {{ log.status }}
+                    {% if log.status == "Aceito" %}
+                        <i class="fi fi-sr-check"></i>
+                    {% elif log.status == "Negado" %}
+                        <i class="fi fi-sr-lock"></i>
+                    {% else %}
+                        <i class="fi fi-sr-cross-small"></i>
+                    {% endif %}</p>
                     </div>
                 </div>
             </div>
+            {% endfor %}
 
             <button class="w-full mt-6 bg-gray-100 text-coapac font-bold py-2.5 rounded-lg">
                 VER TODO O REGISTRO
