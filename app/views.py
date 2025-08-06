@@ -13,27 +13,8 @@ import uuid
 import numpy as np
 import json
 from core_functions import verificar_pessoa
-#def verificar_pessoa(imagem):
-    # Simula processamento leve
-    #return {"resposta": 2, "dados": {"nome": "João", "matricula": "2222222222"}}
 
-# Captura da câmera
-#camera = cv2.VideoCapture(0)
-
-#def generate_frames():
-#    while True:
-#        success, frame = camera.read()
-#        if not success:
-#            break
-#        else:
-#            ret, buffer = cv2.imencode('.jpg', frame)
-#            frame = buffer.tobytes()
-#            yield (b'--frame\r\n'
-#                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-
-
-#def video_feed(request):
-#    return StreamingHttpResponse(generate_frames(), content_type='multipart/x-mixed-replace; boundary=frame')
+mp_face_detection = mp.solutions.face_detection
 
 @csrf_exempt
 def receber_imagem(request):
@@ -44,7 +25,7 @@ def receber_imagem(request):
         if not imagem_base64.startswith('data:image'):
             return JsonResponse({'erro': 'Imagem inválida'}, status=400)
 
-        # Extrai apenas os dados base64 (removendo o cabeçalho data:image/jpeg;base64,...)
+        # Extrai apenas os dados base64
         _, base64_data = imagem_base64.split(',', 1)
         imagem_bytes = base64.b64decode(base64_data)
 
@@ -52,16 +33,40 @@ def receber_imagem(request):
         np_arr = np.frombuffer(imagem_bytes, np.uint8)
         imagem = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)  # BGR
 
-        # -------- PROCESSAMENTO COM OPENCV AQUI -------- #
-        resposta = verificar_pessoa(imagem)
-        # ------------------------------------------------ #
-        print(resposta)
-        if resposta["resposta"] == 1:
-            return JsonResponse({"redirect": "/acesso_negado/"})
-        elif resposta["resposta"] == 2:
-            request.session['dados'] = resposta["dados"]
-            return JsonResponse({"redirect": "/acesso_permitido/"})
-        
+        # Inicializa o detector de rosto do MediaPipe
+        with mp_face_detection.FaceDetection(model_selection=0, min_detection_confidence=0.6) as face_detection:
+            rgb_frame = cv2.cvtColor(imagem, cv2.COLOR_BGR2RGB)
+            results = face_detection.process(rgb_frame)
+
+            if not results.detections:
+                return JsonResponse({'erro': 'Nenhum rosto detectado'}, status=400)
+
+            # Usa o primeiro rosto detectado
+            detection = results.detections[0]
+            bboxC = detection.location_data.relative_bounding_box
+            ih, iw, _ = imagem.shape
+            x = int(bboxC.xmin * iw)
+            y = int(bboxC.ymin * ih)
+            w = int(bboxC.width * iw)
+            h = int(bboxC.height * ih)
+            x1, y1 = max(0, x), max(0, y)
+            x2, y2 = min(iw, x + w), min(ih, y + h)
+
+            # Recorta o rosto da imagem
+            rosto = imagem[y1:y2, x1:x2]
+
+            if rosto.size == 0:
+                return JsonResponse({'erro': 'Falha ao recortar rosto'}, status=500)
+
+            # Chama a função de verificação facial
+            resposta = verificar_pessoa(rosto)
+
+            print(resposta)
+            if resposta["resposta"] == 1:
+                return JsonResponse({"redirect": "/acesso_negado/"})
+            elif resposta["resposta"] == 2:
+                request.session['dados'] = resposta["dados"]
+                return JsonResponse({"redirect": "/acesso_permitido/"})
 
     return JsonResponse({'erro': 'Método inválido'}, status=405)
 
@@ -314,6 +319,7 @@ def acessoExterno(request):
 	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
 
 	return render(request, "acessoExterno.html") # carrega a pagina acesso externo
+
 
 
 
