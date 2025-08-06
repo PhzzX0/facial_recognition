@@ -13,6 +13,7 @@ import uuid
 import numpy as np
 import json
 from core_functions import verificar_pessoa
+import mediapipe as mp
 
 mp_face_detection = mp.solutions.face_detection
 
@@ -116,7 +117,7 @@ def dashboard(request):
     operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
     
     if operador.papel == "COAPAC":
-        return render(request, "inicial.html", {"papel": operador.papel})
+        return render(request, "inicio.html", {"papel": operador.papel})
     elif operador.papel == "Porteiro":
         return render(request, "porteiro.html", {"papel": operador.papel})
 
