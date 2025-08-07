@@ -70,51 +70,169 @@
     .border-divider {
       border-right: 2px solid #e5e7eb;
     }
+    
+    /* Mobile bottom navigation */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+    
+    .mobile-bottom-nav a, .mobile-bottom-nav button {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 0;
+      color: #9ca3af;
+      font-size: 0.75rem;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    
+    .mobile-bottom-nav a.nav-active, .mobile-bottom-nav button.nav-active {
+      color: #386641;
+    }
+    
+    .mobile-bottom-nav i {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    /* Mobile sidebar */
+    .mobile-sidebar {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 85%;
+      max-width: 320px;
+      height: 100%;
+      background: white;
+      z-index: 110;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .mobile-sidebar.active {
+      left: 0;
+    }
+    
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 105;
+    }
+    
+    .overlay.active {
+      display: block;
+    }
+    
+    @media (max-width: 1023px) {
+      .mobile-bottom-nav {
+        display: flex;
+      }
+      
+      .sidebar {
+        display: none;
+      }
+      
+      main {
+        margin-bottom: 60px; /* Espaço para a barra inferior */
+      }
+    }
   </style>
 </head>
 <body class="bg-gray-100 text-coapac">
-  <div class="flex min-h-screen p-4 gap-4">
+  <div class="flex flex-col lg:flex-row min-h-screen p-4 gap-4">
     
-    <div class="flex flex-col lg:flex-row bg-white rounded-3xl shadow-lg w-full max-w-[calc(100%-22rem)] overflow-hidden">
-
-      <aside class="flex flex-col justify-between w-full lg:w-64 p-4 border-divider">
-        <div>
-          <div class="text-center">
-            <img src="FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
-            <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover">
-            </div>
-            <h1 class="mt-2 font-bold text-lg uppercase">COAPAC</h1>
+    <!-- Sidebar (desktop only) -->
+    <aside class="hidden lg:flex flex-col justify-between w-64 p-4 border-divider bg-white rounded-3xl shadow-lg">
+      <div>
+        <div class="text-center">
+          <img src="FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
+          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover">
           </div>
-          <nav class="mt-10 space-y-4 text-sm">
-            <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-home"></i> Início</a>
-            <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
-            <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
-            <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
-            <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Permissões</a>
-            <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
-            <a href="#" class="flex items-center gap-3 p-2 "><i class="fi fi-ss-user-key"></i> Acesso Externo</a>
-          </nav>
+          <h1 class="mt-2 font-bold text-lg uppercase">COAPAC</h1>
         </div>
-        <div>
-          <button class="mt-6 btn-sair">
-            <i class="bi bi-box-arrow-left"></i> SAIR
-          </button>
-          <div class="mt-6 flex justify-center">
-            <img src="Logo IN4 png verde.png" alt="Logo FaceIN" class="h-8">
-          </div>
+        <nav class="mt-10 space-y-4 text-sm">
+          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-home"></i> Início</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Permissões</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
+          <a href="#" class="flex items-center gap-3 p-2 "><i class="fi fi-ss-user-key"></i> Acesso Externo</a>
+        </nav>
+      </div>
+      <div>
+        <button class="mt-6 btn-sair">
+          <i class="bi bi-box-arrow-left"></i> SAIR
+        </button>
+        <div class="mt-6 flex justify-center">
+          <img src="Logo IN4 png verde.png" alt="Logo FaceIN" class="h-8">
         </div>
-      </aside>
+      </div>
+    </aside>
 
-      <main class="flex-1 flex flex-col p-6 space-y-6 overflow-auto">
-        <header class="flex justify-between items-center">
+    <!-- Mobile Sidebar (hidden by default) -->
+    <aside class="mobile-sidebar">
+      <div class="p-4">
+        <div class="text-center">
+          <img src="FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
+          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover">
+          </div>
+          <h1 class="mt-2 font-bold text-lg uppercase">COAPAC</h1>
+        </div>
+        <nav class="mt-10 space-y-4 text-sm">
+          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-home"></i> Início</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Permissões</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
+          <a href="#" class="flex items-center gap-3 p-2 "><i class="fi fi-ss-user-key"></i> Acesso Externo</a>
+        </nav>
+      </div>
+      <div class="p-4">
+        <button class="mt-6 btn-sair">
+          <i class="bi bi-box-arrow-left"></i> SAIR
+        </button>
+        <div class="mt-6 flex justify-center">
+          <img src="Logo IN4 png verde.png" alt="Logo FaceIN" class="h-8">
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="overlay"></div>
+
+    <!-- Main content and right sidebar container -->
+    <div class="flex flex-col lg:flex-row w-full gap-4">
+      <!-- Conteúdo principal -->
+      <main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
+        <header class="flex flex-col md:flex-row justify-between items-center gap-4" aria-label="Cabeçalho principal">
           <div>
-            <h2 class="text-2xl font-bold">Bem-vindo, COAPAC</h2>
+            <h2 class="text-xl md:text-2xl font-bold">Bem-vindo, COAPAC</h2>
             <p id="current-date" class="text-sm text-gray-500">Carregando data...</p>
           </div>
           <div class="flex items-center gap-4">
             <div class="bg-white p-3 rounded-full shadow"><i class="bi bi-bell-fill text-coapac"></i></div>
-            <span class="bg-coapac text-white px-6 py-3 rounded-lg font-bold tracking-wider">9R8SYB</span>
+            <span class="bg-coapac text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-bold tracking-wider text-sm md:text-base" aria-label="Código de identificação">9R8SYB</span>
           </div>
         </header>
 
@@ -170,17 +288,16 @@
                 </div>
             </div>
         </div>
-        
       </main>
     </div>
 
-    <aside class="relative w-80 bg-coapac text-white p-6 overflow-auto rounded-3xl shadow-lg flex-shrink-0">
+    <!-- Registro (reposicionado para baixo em mobile) -->
+    <aside class="relative w-full lg:w-80 bg-coapac text-white p-6 overflow-auto rounded-3xl shadow-lg flex-shrink-0">
       <div class="flex justify-between items-center mb-6">
         <h4 class="text-2xl font-bold">Registro</h4>
         <div class="w-9 h-11 bg-gray-100 rounded-lg flex items-center justify-center">
             <i class="fi fi-sr-folder-open text-coapac text-2xl"></i>
         </div>
-        
       </div>
       
       <div class="flex justify-between items-center mb-4">
@@ -261,10 +378,33 @@
 
       <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-coapac to-transparent pointer-events-none"></div>
     </aside>
-    
   </div>
-  
-   <script>
+
+  <!-- Mobile bottom navigation -->
+  <nav class="mobile-bottom-nav">
+    <a href="#" class="nav-active">
+      <i class="fi fi-sr-home"></i>
+      <span>Início</span>
+    </a>
+    <a href="#">
+      <i class="fi fi-sr-user"></i>
+      <span>Usuários</span>
+    </a>
+    <a href="#">
+      <i class="fi fi-sr-users-alt"></i>
+      <span>Turmas</span>
+    </a>
+    <a href="#">
+      <i class="fi fi-sr-folder-open"></i>
+      <span>Registro</span>
+    </a>
+    <button id="menu-button">
+      <i class="fi fi-sr-menu-burger"></i>
+      <span>Menu</span>
+    </button>
+  </nav>
+
+  <script>
     document.addEventListener('DOMContentLoaded', function() {
         const dateElement = document.getElementById('current-date');
         if (dateElement) {
@@ -285,6 +425,29 @@
                 this.classList.add('nav-active');
                 this.querySelector('i').classList.add('text-coapac');
             });
+        });
+
+        // Adiciona classe ativa ao clicar nos itens do menu mobile
+        document.querySelectorAll('.mobile-bottom-nav a').forEach(item => {
+          item.addEventListener('click', function() {
+            document.querySelectorAll('.mobile-bottom-nav a').forEach(i => i.classList.remove('nav-active'));
+            this.classList.add('nav-active');
+          });
+        });
+
+        // Controla abertura/fechamento do menu lateral mobile
+        const menuButton = document.getElementById('menu-button');
+        const mobileSidebar = document.querySelector('.mobile-sidebar');
+        const overlay = document.querySelector('.overlay');
+        
+        menuButton.addEventListener('click', function() {
+          mobileSidebar.classList.toggle('active');
+          overlay.classList.toggle('active');
+        });
+        
+        overlay.addEventListener('click', function() {
+          mobileSidebar.classList.remove('active');
+          overlay.classList.remove('active');
         });
     });
    </script>
