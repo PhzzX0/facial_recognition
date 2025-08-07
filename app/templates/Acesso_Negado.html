@@ -221,19 +221,20 @@
         </div>
 
         <div class="info-panel">
+            {% if dados == {} %}
             <div class="info-box instruction-box">
                 ROSTO NÃO RECONHECIDO
             </div>
-
-            <!-- <div class="info-box user-details-box">
+            {% else %}
+            <div class="info-box user-details-box">
                 <img class="avatar" src="avatar-negado.jpg" alt="Avatar do usuário">
                 <div class="user-info">
-                    <p><strong>NOME:</strong><br>MACACO PREGO DA SILVA</p>
-                    <p><strong>MATRÍCULA:</strong><br>20221084010000</p>
-                    <p><strong>TURMA:</strong><br>4º ANO DE INFORMÁTICA</p>
-                    <p><strong>SITUAÇÃO:</strong><br>NÃO AUTORIZADO</p>
+                    <p><strong>NOME:</strong><br>{{ nome }}</p>
+                    <p><strong>SITUAÇÃO:</strong><br>{{ situacao }}</p>
                 </div>
-            </div> -->
+            </div>
+            {% endif %}
+            
 
             <div class="info-box status-box">
                 ACESSO <span class="status-text">NEGADO</span>

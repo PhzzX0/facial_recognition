@@ -65,6 +65,7 @@ def receber_imagem(request):
 
             print(resposta)
             if resposta["resposta"] == 1:
+                if resposta["dados"]: request.session['dados'] = resposta["dados"]
                 return JsonResponse({"redirect": "/acesso_negado/"})
             elif resposta["resposta"] == 2:
                 request.session['dados'] = resposta["dados"]
@@ -76,7 +77,8 @@ def aluno(request):
     return render(request, "Tela_Aluno_portaria.html")
 
 def negado(request):
-    return render(request, "Acesso_Negado.html")
+    dados = request.session.get('dados', {})
+    return render(request, "Acesso_Negado.html", dados)
 
 def permitido(request):
     dados = request.session.get('dados', {})

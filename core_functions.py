@@ -3,6 +3,7 @@ import os
 import cv2
 from datetime import datetime
 from deepface import DeepFace
+import hashlib
 # from catraca import enviar_comando (tira o comentário se quiser rodar o esp plmds)
 
 # --- CONFIGURAÇÕES GLOBAIS ---
@@ -73,6 +74,8 @@ def verificar_pessoa(imagem_rosto_detectado):
                         if situacao == 'Suspenso':
                             print(f"ACESSO NEGADO: {nome_completo}")
                             print(f"  - Motivo: Utilizador com situação '{situacao}'")
+                            return {"resposta": 1, "dados": {"nome": nome_completo,
+                                                             "situacao": situacao}}
                             registrar_log_acesso('Negado', user_id, log_img_path)
                         else:
                             # CORREÇÃO: Adicionados os prints de detalhes
@@ -86,7 +89,7 @@ def verificar_pessoa(imagem_rosto_detectado):
                             registrar_log_acesso('Aceito', user_id, log_img_path)
                             # enviar_comando('1') (tira o comentário se quiser rodar o esp plmds)
                             return {"resposta": 2, "dados": {"nome": nome_completo,
-                                                             "matricula": matricula,
+                                                             "matricula": matricula or "N/A",
                                                              "tipo": tipo,
                                                              "situacao": situacao,
                                                              "curso": curso or "Não vinculado",
@@ -104,6 +107,32 @@ def verificar_pessoa(imagem_rosto_detectado):
         conn.close()
 
 # --- FUNÇÕES DE GESTÃO DE UTILIZADORES ---
+
+
+def adicionar_operador(nome, login, senha, papel):
+    # Converte a senha para hash SHA-256
+    senha_hash = hashlib.sha256(senha.encode('utf-8')).hexdigest()
+
+    # Conecta ao banco de dados (ajuste o caminho conforme necessário)
+    conn = sqlite3.connect('database.db')  # ou o caminho do seu banco
+    cursor = conn.cursor()
+
+    try:
+        # Insere o operador na tabela
+        cursor.execute('''
+            INSERT INTO app_Operadores (nome, login, senha_hash, papel)
+            VALUES (?, ?, ?, ?)
+        ''', (nome, login, senha_hash, papel))
+
+        # Salva as alterações
+        conn.commit()
+        print(f"Operador '{login}' adicionado com sucesso.")
+    
+    except sqlite3.IntegrityError as e:
+        print(f"Erro ao adicionar operador: {e}")
+
+    finally:
+        conn.close()
 
 def cadastrar_usuario(nome, matricula, tipo, nome_ficheiro_foto):
     caminho_relativo = os.path.join('rostos_cadastrados', nome_ficheiro_foto)
@@ -627,3 +656,6 @@ def contar_sancoes_ativas():
     finally:
         conn.close()
 
+#if __name__ == "__main__":
+#    adicionar_operador("Coapac", "coapac", "coapac", "COAPAC")
+#    adicionar_operador("Porteiro", "porteiro", "porteiro", "Porteiro")
