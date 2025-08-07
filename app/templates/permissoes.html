@@ -6,7 +6,7 @@
   <title>FaceIN - Controle de Permissões</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     body { font-family: 'Poppins', sans-serif; }
     .bg-coapac { background-color: #386641; }
@@ -33,7 +33,7 @@
       font-weight: 700;
     }
     .border-divider { border-right: 2px solid #e5e7eb; }
-    
+
     /* Mobile bottom navigation */
     .mobile-bottom-nav {
       display: none;
@@ -45,7 +45,7 @@
       box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
       z-index: 100;
     }
-    
+
     .mobile-bottom-nav a, .mobile-bottom-nav button {
       flex: 1;
       display: flex;
@@ -59,16 +59,16 @@
       background: none;
       cursor: pointer;
     }
-    
+
     .mobile-bottom-nav a.nav-active, .mobile-bottom-nav button.nav-active {
       color: #386641;
     }
-    
+
     .mobile-bottom-nav i {
       font-size: 1.25rem;
       margin-bottom: 0.25rem;
     }
-    
+
     /* Mobile sidebar */
     .mobile-sidebar {
       position: fixed;
@@ -83,11 +83,11 @@
       overflow-y: auto;
       box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     }
-    
+
     .mobile-sidebar.active {
       left: 0;
     }
-    
+
     .overlay {
       display: none;
       position: fixed;
@@ -98,20 +98,20 @@
       background: rgba(0,0,0,0.5);
       z-index: 105;
     }
-    
+
     .overlay.active {
       display: block;
     }
-    
+
     @media (max-width: 1023px) {
       .mobile-bottom-nav {
         display: flex;
       }
-      
+
       .sidebar {
         display: none;
       }
-      
+
       main {
         margin-bottom: 60px; /* Espaço para a barra inferior */
       }
@@ -125,9 +125,9 @@
     <aside class="hidden lg:flex flex-col justify-between w-full lg:w-64 p-4 border-divider bg-white rounded-3xl shadow-lg">
       <div>
         <div class="text-center">
-          <img src="FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32" loading="lazy">
+          <img src="FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32" loading="lazy" />
           <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover" loading="lazy" />
           </div>
           <h1 class="mt-2 font-bold text-lg uppercase">COAPAC</h1>
         </div>
@@ -142,11 +142,11 @@
         </nav>
       </div>
       <div>
-        <button class="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center gap-2">
+        <button id="btn-sair" class="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center gap-2">
           <i class="fi fi-sr-exit"></i> SAIR
         </button>
         <div class="mt-6 flex justify-center">
-          <img src="Logo IN4 png verde.png" alt="Logo IN4" class="h-8" loading="lazy">
+          <img src="Logo IN4 png verde.png" alt="Logo IN4" class="h-8" loading="lazy" />
         </div>
       </div>
     </aside>
@@ -155,9 +155,9 @@
     <aside class="mobile-sidebar">
       <div class="p-4">
         <div class="text-center">
-          <img src="FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32" loading="lazy">
+          <img src="FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32" loading="lazy" />
           <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover" loading="lazy" />
           </div>
           <h1 class="mt-2 font-bold text-lg uppercase">COAPAC</h1>
         </div>
@@ -172,11 +172,11 @@
         </nav>
       </div>
       <div class="p-4">
-        <button class="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center gap-2">
+        <button id="btn-sair-mobile" class="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center gap-2">
           <i class="fi fi-sr-exit"></i> SAIR
         </button>
         <div class="mt-6 flex justify-center">
-          <img src="Logo IN4 png verde.png" alt="Logo IN4" class="h-8" loading="lazy">
+          <img src="Logo IN4 png verde.png" alt="Logo IN4" class="h-8" loading="lazy" />
         </div>
       </div>
     </aside>
@@ -201,161 +201,250 @@
 
         <section class="bg-coapac text-white p-6 rounded-2xl shadow-lg">
           <h3 class="font-bold text-lg mb-4">Cadastrar nova permissão</h3>
-          <form class="space-y-4">
+          <form id="form-permission" class="space-y-4" novalidate>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-sm font-semibold mb-1">Nome:</label>
-                <input type="text" class="form-input" aria-label="Nome" value="Fulano de tal">
+                <label for="nome" class="block text-sm font-semibold mb-1">Nome:</label>
+                <input type="text" id="nome" name="nome" class="form-input" aria-label="Nome" placeholder="Digite o nome" />
+                <p class="text-red-300 text-xs mt-1 hidden" id="error-nome">Campo obrigatório</p>
               </div>
               <div>
-                <label class="block text-sm font-semibold mb-1">Matrícula:</label>
-                <input type="text" class="form-input" aria-label="Matrícula" value="XXXXXXXXXX">
+                <label for="matricula" class="block text-sm font-semibold mb-1">Matrícula:</label>
+                <input type="text" id="matricula" name="matricula" class="form-input" aria-label="Matrícula" placeholder="Digite a matrícula" />
+                <p class="text-red-300 text-xs mt-1 hidden" id="error-matricula">Campo obrigatório</p>
               </div>
             </div>
             <div>
-              <label class="block text-sm font-semibold mb-1">Justificativa:</label>
-              <input type="text" class="form-input" aria-label="Justificativa" value="Pai veio buscar porque estava doente">
+              <label for="justificativa" class="block text-sm font-semibold mb-1">Justificativa:</label>
+              <input type="text" id="justificativa" name="justificativa" class="form-input" aria-label="Justificativa" placeholder="Digite a justificativa" />
+              <p class="text-red-300 text-xs mt-1 hidden" id="error-justificativa">Campo obrigatório</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label class="block text-sm font-semibold mb-1">Data:</label>
-                <input type="date" class="form-input" aria-label="Data" value="2025-07-18">
+                <label for="data" class="block text-sm font-semibold mb-1">Data:</label>
+                <input type="date" id="data" name="data" class="form-input" aria-label="Data" />
+                <p class="text-red-300 text-xs mt-1 hidden" id="error-data">Campo obrigatório</p>
               </div>
               <div>
-                <label class="block text-sm font-semibold mb-1">Horário:</label>
-                <input type="time" class="form-input" aria-label="Horário" value="16:00">
+                <label for="horario" class="block text-sm font-semibold mb-1">Horário:</label>
+                <input type="time" id="horario" name="horario" class="form-input" aria-label="Horário" />
+                <p class="text-red-300 text-xs mt-1 hidden" id="error-horario">Campo obrigatório</p>
               </div>
               <div>
-                <label class="block text-sm font-semibold mb-1">Liberado por:</label>
-                <input type="text" class="form-input" aria-label="Liberado por" value="Luciana Bertini">
+                <label for="liberadoPor" class="block text-sm font-semibold mb-1">Liberado por:</label>
+                <input type="text" id="liberadoPor" name="liberadoPor" class="form-input" aria-label="Liberado por" placeholder="Nome de quem liberou" />
+                <p class="text-red-300 text-xs mt-1 hidden" id="error-liberadoPor">Campo obrigatório</p>
               </div>
             </div>
             <div class="flex justify-end pt-4">
-              <button type="submit" class="bg-gray-100 text-coapac font-bold py-2 px-6 rounded-lg">
-                LIBERAR ACESSO
+              <button type="submit" class="bg-gray-100 text-coapac font-bold py-2 px-6 rounded-lg shadow hover:bg-gray-200 transition">
+                Cadastrar permissão
               </button>
             </div>
           </form>
-        </section>
+          <div class="flex justify-end pt-2">
+            <button id="btn-ver-permissoes" class="bg-gray-200 text-coapac font-bold py-2 px-6 rounded-lg shadow hover:bg-gray-300 transition">
+              Ver permissões
+            </button>
+          </div>
 
-        <div class="text-center">
-          <button class="bg-coapac text-white font-bold py-3 px-8 rounded-lg shadow-md">
-            VER PERMISSÕES
-          </button>
-        </div>
+          <!-- Lista dinâmica de permissões (oculta inicialmente) -->
+          <div id="lista-permissoes" class="mt-6 max-h-64 overflow-auto hidden">
+            <h4 class="text-white font-semibold mb-3">Permissões cadastradas:</h4>
+            <ul class="space-y-2 text-sm"></ul>
+          </div>
+        </section>
       </main>
 
-      <!-- Registro (reposicionado para baixo em mobile) -->
-      <aside class="w-full lg:w-80 bg-coapac text-white p-6 overflow-auto rounded-3xl shadow-lg flex-shrink-0">
-        <div class="flex justify-between items-center mb-6">
-          <h4 class="text-2xl font-bold">Registros</h4>
-          <div class="w-11 h-11 bg-gray-100 rounded-lg flex items-center justify-center">
-            <i class="fi fi-sr-folder-open text-coapac text-2xl"></i>
-          </div>
-        </div>
-
-        <div class="space-y-6">
-          <div>
-            <div class="flex justify-between items-center mb-2">
-              <p class="text-sm font-semibold opacity-80">Jul 18, 2025</p>
-              <i class="fi fi-sr-menu-dots text-white/80"></i>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="font-bold text-lg">16:00</span>
-              <div class="w-px h-8 bg-white/30"></div>
-              <div>
-                <p class="font-medium text-white/90 text-sm">Fulano de Tal</p>
-                <p class="flex items-center gap-1.5 font-bold text-xs uppercase">LIBERADO <i class="fi fi-sr-lock-open-alt"></i></p>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div class="flex justify-between items-center mb-2">
-              <p class="text-sm font-semibold opacity-80">Jan 01, 2025</p>
-              <i class="fi fi-sr-menu-dots text-white/80"></i>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="font-bold text-lg">00:00</span>
-              <div class="w-px h-8 bg-white/30"></div>
-              <div>
-                <p class="font-medium text-white/90 text-sm">Nome do Usuário</p>
-                <p class="flex items-center gap-1.5 font-bold text-xs uppercase">NEGADO <i class="fi fi-sr-lock"></i></p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <button class="w-full mt-6 bg-gray-100 text-coapac font-bold py-2.5 rounded-lg">
-          VER TODO O REGISTRO
-        </button>
+      <!-- Sidebar direita para registros -->
+      <aside class="hidden lg:flex flex-col w-72 p-6 bg-white rounded-3xl shadow-lg overflow-auto max-h-[80vh]">
+        <h3 class="font-bold text-lg mb-4">Registro</h3>
+        <p class="text-gray-500 text-sm mb-6">Aqui ficam os registros das permissões cadastradas.</p>
+        <ul id="registro-list" class="space-y-3 text-sm text-coapac">
+          <!-- Entradas do registro vão aparecer aqui -->
+        </ul>
       </aside>
     </div>
   </div>
 
-  <!-- Mobile bottom navigation -->
-  <nav class="mobile-bottom-nav">
-    <a href="#">
+  <!-- Botão para abrir o menu mobile -->
+  <button id="btn-open-menu" aria-label="Abrir menu" class="fixed top-4 left-4 z-120 lg:hidden bg-white rounded-full p-2 shadow">
+    <i class="fi fi-rr-menu-burger text-coapac text-xl"></i>
+  </button>
+
+  <!-- Navegação inferior mobile -->
+  <nav class="mobile-bottom-nav lg:hidden" role="navigation" aria-label="Navegação inferior">
+    <a href="#" class="nav-active" aria-current="page">
       <i class="fi fi-sr-home"></i>
       <span>Início</span>
-    </a>
-    <a href="#">
-      <i class="fi fi-sr-user"></i>
-      <span>Usuários</span>
     </a>
     <a href="#">
       <i class="fi fi-sr-users-alt"></i>
       <span>Turmas</span>
     </a>
-    <a href="#">
-      <i class="fi fi-sr-folder-open"></i>
-      <span>Registro</span>
-    </a>
-    <button id="menu-button">
-      <i class="fi fi-sr-menu-burger"></i>
-      <span>Menu</span>
+    <button id="btn-permissoes-mobile">
+      <i class="fi fi-sr-user-key"></i>
+      <span>Permissões</span>
     </button>
+    <a href="#">
+      <i class="fi fi-sr-user-lock"></i>
+      <span>Suspensões</span>
+    </a>
   </nav>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const dateElement = document.getElementById('current-date');
-      if (dateElement) {
-        const today = new Date();
-        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-        const formattedDate = today.toLocaleDateString('pt-BR', {
-          timeZone: 'America/Sao_Paulo',
-          ...options
-        });
-        dateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
-      }
-
-      // Adiciona classe ativa ao clicar nos itens do menu mobile
-      document.querySelectorAll('.mobile-bottom-nav a').forEach(item => {
-        item.addEventListener('click', function() {
-          document.querySelectorAll('.mobile-bottom-nav a').forEach(i => i.classList.remove('nav-active'));
-          this.classList.add('nav-active');
-        });
+    document.addEventListener('DOMContentLoaded', () => {
+      // Exibir data atual formatada
+      const currentDateEl = document.getElementById('current-date');
+      const dataAtual = new Date();
+      currentDateEl.textContent = dataAtual.toLocaleDateString('pt-BR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
       });
 
-      // Controla abertura/fechamento do menu lateral mobile
-      const menuButton = document.getElementById('menu-button');
+      // Sidebar móvel controle
       const mobileSidebar = document.querySelector('.mobile-sidebar');
       const overlay = document.querySelector('.overlay');
-      
-      if (menuButton) {
-        menuButton.addEventListener('click', function() {
-          mobileSidebar.classList.toggle('active');
-          overlay.classList.toggle('active');
-        });
-      }
-      
-      if (overlay) {
-        overlay.addEventListener('click', function() {
+      const btnOpenMenu = document.getElementById('btn-open-menu');
+      btnOpenMenu.addEventListener('click', () => {
+        mobileSidebar.classList.add('active');
+        overlay.classList.add('active');
+      });
+      overlay.addEventListener('click', () => {
+        mobileSidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+
+      // Fechar mobile sidebar ao clicar nos links (se quiser)
+      mobileSidebar.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
           mobileSidebar.classList.remove('active');
           overlay.classList.remove('active');
         });
+      });
+
+      // Validação do formulário e salvamento
+      const form = document.getElementById('form-permission');
+      const listaPermissoesEl = document.getElementById('lista-permissoes');
+      const listaUL = listaPermissoesEl.querySelector('ul');
+      const registroList = document.getElementById('registro-list');
+
+      // Erros por campo
+      const campos = [
+        { id: 'nome', name: 'Nome' },
+        { id: 'matricula', name: 'Matrícula' },
+        { id: 'justificativa', name: 'Justificativa' },
+        { id: 'data', name: 'Data' },
+        { id: 'horario', name: 'Horário' },
+        { id: 'liberadoPor', name: 'Liberado por' },
+      ];
+
+      function validarFormulario() {
+        let valido = true;
+        campos.forEach(({id}) => {
+          const input = document.getElementById(id);
+          const error = document.getElementById(`error-${id}`);
+          if (!input.value.trim()) {
+            error.classList.remove('hidden');
+            valido = false;
+          } else {
+            error.classList.add('hidden');
+          }
+        });
+        return valido;
       }
+
+      // Armazenar permissões no array
+      const permissoes = [];
+
+      function renderizarLista() {
+        // Limpar listas
+        listaUL.innerHTML = '';
+        registroList.innerHTML = '';
+
+        if(permissoes.length === 0){
+          listaUL.innerHTML = '<li class="text-white/70 italic">Nenhuma permissão cadastrada.</li>';
+          registroList.innerHTML = '<li class="text-coapac/70 italic">Nenhum registro.</li>';
+          return;
+        }
+
+        permissoes.forEach((p, i) => {
+          // Lista permissões (white bg)
+          const li = document.createElement('li');
+          li.className = "bg-white rounded-lg p-3 shadow text-coapac";
+          li.innerHTML = `
+            <strong>${p.nome}</strong> (${p.matricula})<br />
+            <em>${p.justificativa}</em><br />
+            Data: ${p.data} às ${p.horario}<br />
+            Liberado por: ${p.liberadoPor}
+          `;
+          listaUL.appendChild(li);
+
+          // Registro sidebar direita
+          const regLi = document.createElement('li');
+          regLi.textContent = `${p.data} - ${p.nome} (${p.matricula}) - ${p.justificativa}`;
+          registroList.appendChild(regLi);
+        });
+      }
+
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        if (!validarFormulario()) {
+          alert('Por favor, preencha todos os campos obrigatórios!');
+          return;
+        }
+
+        const novaPermissao = {};
+        campos.forEach(({id}) => {
+          novaPermissao[id] = document.getElementById(id).value.trim();
+        });
+
+        permissoes.push(novaPermissao);
+        renderizarLista();
+        form.reset();
+        listaPermissoesEl.classList.remove('hidden');
+        listaPermissoesEl.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // Botão ver permissões
+      const btnVerPermissoes = document.getElementById('btn-ver-permissoes');
+      btnVerPermissoes.addEventListener('click', () => {
+        if(listaPermissoesEl.classList.contains('hidden')){
+          listaPermissoesEl.classList.remove('hidden');
+          btnVerPermissoes.textContent = 'Esconder permissões';
+        } else {
+          listaPermissoesEl.classList.add('hidden');
+          btnVerPermissoes.textContent = 'Ver permissões';
+        }
+      });
+
+      // Botão permissão mobile abre lista (mesma função)
+      const btnPermissoesMobile = document.getElementById('btn-permissoes-mobile');
+      btnPermissoesMobile.addEventListener('click', () => {
+        if(listaPermissoesEl.classList.contains('hidden')){
+          listaPermissoesEl.classList.remove('hidden');
+          btnVerPermissoes.textContent = 'Esconder permissões';
+          // fechar menu móvel se aberto
+          mobileSidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        } else {
+          listaPermissoesEl.classList.add('hidden');
+          btnVerPermissoes.textContent = 'Ver permissões';
+        }
+      });
+
+      // Botão sair (desktop/mobile) só alerta por enquanto
+      document.getElementById('btn-sair').addEventListener('click', () => {
+        alert('Saindo...');
+      });
+      document.getElementById('btn-sair-mobile').addEventListener('click', () => {
+        alert('Saindo...');
+      });
+
+      // Iniciar renderização vazia
+      renderizarLista();
     });
   </script>
 </body>
