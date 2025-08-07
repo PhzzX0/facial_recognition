@@ -64,10 +64,8 @@ def receber_imagem(request):
 
             # Chama a função de verificação facial
             resposta = verificar_pessoa(rosto)
-
-            print(resposta)
             if resposta["resposta"] == 1:
-                if resposta["dados"]: request.session['dados'] = resposta["dados"]
+                request.session['dados'] = resposta["dados"]
                 return JsonResponse({"redirect": "/acesso_negado/"})
             elif resposta["resposta"] == 2:
                 request.session['dados'] = resposta["dados"]
@@ -80,10 +78,12 @@ def aluno(request):
 
 def negado(request):
     dados = request.session.get('dados', {})
+    print(dados)
     return render(request, "Acesso_Negado.html", dados)
 
 def permitido(request):
     dados = request.session.get('dados', {})
+    print(dados)
     return render(request, 'Acesso_permitido.html', dados)
 
 def index(request):
@@ -468,6 +468,7 @@ def acessoExterno(request):
 	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
 
 	return render(request, "acessoExterno.html") # carrega a pagina acesso externo
+
 
 
 
