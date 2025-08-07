@@ -15,6 +15,8 @@ import json
 from core_functions import verificar_pessoa
 import mediapipe as mp
 import json
+from datetime import date
+
 
 mp_face_detection = mp.solutions.face_detection
 
@@ -274,8 +276,14 @@ def registro(request):
 	if 'operador_id' not in request.session: # verifica se ha um usuario logado
 		return redirect("login") # se nao tiver um usuario logado redireciona para a pagina de login
 	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
-
-	return render(request, "registro.html") # carrega a pagina registro
+	
+	# Obtém a data atual no formato YYYY-MM-DD
+	data_atual = date.today().isoformat()
+		
+	# Chama a função com a data atual
+	logs_de_hoje = buscar_logs_filtrados(data_atual)
+	
+	return render(request, "registro.html", logs_de_hoje) # carrega a pagina registro
 
 # ------------------ PERMISSÕES ESPECIAIS ------------------
 
@@ -460,6 +468,7 @@ def acessoExterno(request):
 	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
 
 	return render(request, "acessoExterno.html") # carrega a pagina acesso externo
+
 
 
 
