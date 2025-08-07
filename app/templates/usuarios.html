@@ -1,10 +1,482 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-	<title>FaceIN - Usuários</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestão de Usuários - COAPAC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.3.0/uicons-solid-rounded/css/uicons-solid-rounded.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f3f4f6;
+    }
+    .bg-coapac {
+      background-color: #386641;
+    }
+    .text-coapac {
+      color: #386641;
+    }
+    .border-coapac {
+      border-color: #386641;
+    }
+    .bg-gray-light {
+      background-color: #f9faf7;
+    }
+    .section-box {
+      background-color: #386641;
+      color: white;
+      padding: 1.5rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .input-base {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      background-color: #f9faf7;
+      color: #386641;
+      font-weight: 600;
+      border: none;
+    }
+    .btn-primary {
+      background-color: #f9faf7;
+      color: #386641;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .btn-danger {
+      background-color: #dc2626;
+      color: white;
+      padding: 0.5rem;
+      border-radius: 9999px;
+      width: 100%;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    nav a {
+      color: #9ca3af;
+      transition: color 0.3s ease;
+      font-weight: 600;
+    }
+    nav a:hover {
+      color: #386641;
+    }
+    .nav-active {
+      color: #386641;
+      font-weight: 700;
+    }
+    .border-divider {
+      border-right: 2px solid #e5e7eb;
+    }
+    .card {
+      background-color: #386641;
+      color: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .card-header {
+      background-color: #2d5632;
+      color: white;
+      padding: 1rem;
+      font-weight: 700;
+    }
+    .card-body {
+      padding: 1.5rem;
+    }
+    
+    /* Mobile bottom navigation */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+    
+    .mobile-bottom-nav a, .mobile-bottom-nav button {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 0;
+      color: #9ca3af;
+      font-size: 0.75rem;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    
+    .mobile-bottom-nav a.nav-active, .mobile-bottom-nav button.nav-active {
+      color: #386641;
+    }
+    
+    .mobile-bottom-nav i {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    /* Mobile sidebar */
+    .mobile-sidebar {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 85%;
+      max-width: 320px;
+      height: 100%;
+      background: white;
+      z-index: 110;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .mobile-sidebar.active {
+      left: 0;
+    }
+    
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 105;
+    }
+    
+    .overlay.active {
+      display: block;
+    }
+    
+    @media (max-width: 1023px) {
+      .mobile-bottom-nav {
+        display: flex;
+      }
+      
+      .sidebar {
+        display: none;
+      }
+      
+      main {
+        margin-bottom: 60px;
+      }
+    }
+  </style>
 </head>
-<body>
-	<h1>Pagina usuários</h1>
-	<a href="/dashboard">voltar</a>
+<body class="bg-gray-100 text-coapac">
+  <div class="flex flex-col lg:flex-row min-h-screen p-4 gap-4">
+    
+    <!-- Sidebar (desktop only) -->
+    <aside class="hidden lg:flex flex-col justify-between w-64 p-4 border-divider bg-white rounded-3xl shadow-lg">
+      <div>
+        <div class="text-center">
+          <img src="img/FaceIN_Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
+          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden bg-coapac flex items-center justify-center">
+            <img src="img/user_avatar.png" alt="Foto do usuário" class="w-full h-full object-cover">
+          </div>
+          <h1 class="mt-2 font-bold text-lg uppercase text-coapac">COAPAC</h1>
+        </div>
+        <nav class="mt-10 space-y-4 text-sm">
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-home"></i> Início</a>
+          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-user"></i> Usuários</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-key"></i> Permissões</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-door-open"></i> Acesso Externo</a>
+        </nav>
+      </div>
+      <div>
+        <button class="btn-danger">
+          <i class="fi fi-sr-exit"></i> SAIR
+        </button>
+        <div class="mt-6 flex justify-center">
+          <img src="img/Logo_IN4.png" alt="Logo IN4" class="h-8">
+        </div>
+      </div>
+    </aside>
+
+    <!-- Mobile Sidebar -->
+    <aside class="mobile-sidebar">
+      <div class="p-4">
+        <div class="text-center">
+          <img src="img/FaceIN_Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
+          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden bg-coapac flex items-center justify-center">
+            <img src="img/user_avatar.png" alt="Foto do usuário" class="w-full h-full object-cover">
+          </div>
+          <h1 class="mt-2 font-bold text-lg uppercase text-coapac">COAPAC</h1>
+        </div>
+        <nav class="mt-10 space-y-4 text-sm">
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-home"></i> Início</a>
+          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-user"></i> Usuários</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-key"></i> Permissões</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-door-open"></i> Acesso Externo</a>
+        </nav>
+      </div>
+      <div class="p-4">
+        <button class="btn-danger">
+          <i class="fi fi-sr-exit"></i> SAIR
+        </button>
+        <div class="mt-6 flex justify-center">
+          <img src="img/Logo_IN4.png" alt="Logo IN4" class="h-8">
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="overlay"></div>
+
+    <!-- Main content and right sidebar container -->
+    <div class="flex flex-col lg:flex-row w-full gap-4">
+      <!-- Conteúdo principal -->
+      <main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
+        <header class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold">Gestão de Usuários</h2>
+            <p id="current-date" class="text-sm text-gray-500">Domingo, 10 de Janeiro de 2025</p>
+          </div>
+          <div class="flex items-center gap-4">
+            <button class="bg-white p-3 rounded-full shadow">
+              <i class="fi fi-sr-bell text-coapac"></i>
+            </button>
+            <span class="bg-coapac text-white px-6 py-3 rounded-lg font-bold tracking-wider">9RS8YB</span>
+          </div>
+        </header>
+
+        <div class="flex flex-col md:flex-row gap-4 items-center">
+          <button class="btn-primary flex items-center gap-2">
+            <i class="fi fi-sr-filter"></i> Filtrar por...
+          </button>
+        </div>
+
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Card de Usuário 1 -->
+          <div class="card">
+            <div class="flex items-center gap-4 p-4">
+              <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center">
+                <img src="img/user1.jpg" alt="Gorivaldo de Assis" class="w-full h-full rounded-full object-cover">
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-white">Gorivaldo de Assis</h3>
+                <p class="text-sm text-gray-200">Matrícula: 00070071</p>
+                <p class="text-sm text-green-300 font-bold">Normal</p>
+              </div>
+              <button class="bg-white text-coapac p-2 rounded-lg">
+                <i class="fi fi-sr-eye"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Card de Usuário 2 -->
+          <div class="card">
+            <div class="flex items-center gap-4 p-4">
+              <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center">
+                <img src="img/user2.jpg" alt="Ana Beatriz Silva" class="w-full h-full rounded-full object-cover">
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-white">Ana Beatriz Silva</h3>
+                <p class="text-sm text-gray-200">Matrícula: 00081234</p>
+                <p class="text-sm text-green-300 font-bold">Normal</p>
+              </div>
+              <button class="bg-white text-coapac p-2 rounded-lg">
+                <i class="fi fi-sr-eye"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Card de Usuário 3 -->
+          <div class="card">
+            <div class="flex items-center gap-4 p-4">
+              <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center">
+                <img src="img/user3.jpg" alt="João Pedro Lima" class="w-full h-full rounded-full object-cover">
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-white">João Pedro Lima</h3>
+                <p class="text-sm text-gray-200">Matrícula: 00091235</p>
+                <p class="text-sm text-red-300 font-bold">Suspenso</p>
+              </div>
+              <button class="bg-white text-coapac p-2 rounded-lg">
+                <i class="fi fi-sr-eye"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Card de Usuário 4 -->
+          <div class="card">
+            <div class="flex items-center gap-4 p-4">
+              <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center">
+                <img src="img/user4.jpg" alt="Maria Clara Santos" class="w-full h-full rounded-full object-cover">
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-white">Maria Clara Santos</h3>
+                <p class="text-sm text-gray-200">Matrícula: 00045678</p>
+                <p class="text-sm text-green-300 font-bold">Normal</p>
+              </div>
+              <button class="bg-white text-coapac p-2 rounded-lg">
+                <i class="fi fi-sr-eye"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Card de Usuário 5 -->
+          <div class="card">
+            <div class="flex items-center gap-4 p-4">
+              <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center">
+                <img src="img/user5.jpg" alt="Lucas Ferreira" class="w-full h-full rounded-full object-cover">
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-white">Lucas Ferreira</h3>
+                <p class="text-sm text-gray-200">Matrícula: 00056789</p>
+                <p class="text-sm text-yellow-300 font-bold">Advertido</p>
+              </div>
+              <button class="bg-white text-coapac p-2 rounded-lg">
+                <i class="fi fi-sr-eye"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Card de Usuário 6 -->
+          <div class="card">
+            <div class="flex items-center gap-4 p-4">
+              <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center">
+                <img src="img/user6.jpg" alt="Carla Menezes" class="w-full h-full rounded-full object-cover">
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-white">Carla Menezes</h3>
+                <p class="text-sm text-gray-200">Matrícula: 00067890</p>
+                <p class="text-sm text-green-300 font-bold">Normal</p>
+              </div>
+              <button class="bg-white text-coapac p-2 rounded-lg">
+                <i class="fi fi-sr-eye"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Sidebar Direita (Perfil) -->
+      <aside class="w-full lg:w-80 bg-coapac text-white p-6 rounded-3xl shadow-lg flex-shrink-0">
+        <div class="flex justify-between items-center mb-6">
+          <h4 class="text-xl font-bold">Perfil do Usuário</h4>
+          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+            <i class="fi fi-sr-user text-coapac text-xl"></i>
+          </div>
+        </div>
+        
+        <div class="flex flex-col items-center mb-6">
+          <div class="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-4 overflow-hidden">
+            <img src="img/user1.jpg" alt="Gorivaldo de Assis" class="w-full h-full object-cover">
+          </div>
+          <h3 class="text-lg font-bold">Gorivaldo de Assis</h3>
+          <p class="text-sm opacity-80">Matrícula: 00070071</p>
+        </div>
+        
+        <div class="space-y-4 mb-6">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Situação:</label>
+            <div class="bg-green-600 text-white font-bold py-1 px-3 rounded-full text-sm inline-block">
+              Normal
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold mb-1">Turma:</label>
+            <p>3º ano de Informática - Matutino</p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold mb-1">Último acesso:</label>
+            <p>18/07/2025 às 16:00</p>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-2">
+          <button class="bg-white text-coapac font-bold py-2 rounded-lg">
+            Editar
+          </button>
+          <button class="bg-yellow-500 text-white font-bold py-2 rounded-lg">
+            Advertir
+          </button>
+          <button class="bg-red-500 text-white font-bold py-2 rounded-lg">
+            Suspender
+          </button>
+          <button class="bg-green-500 text-white font-bold py-2 rounded-lg">
+            Registrar
+          </button>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Mobile bottom navigation -->
+  <nav class="mobile-bottom-nav">
+    <a href="#">
+      <i class="fi fi-sr-home"></i>
+      <span>Início</span>
+    </a>
+    <a href="#" class="nav-active">
+      <i class="fi fi-sr-user"></i>
+      <span>Usuários</span>
+    </a>
+    <a href="#">
+      <i class="fi fi-sr-users-alt"></i>
+      <span>Turmas</span>
+    </a>
+    <a href="#">
+      <i class="fi fi-sr-folder-open"></i>
+      <span>Registros</span>
+    </a>
+    <button id="menu-button">
+      <i class="fi fi-sr-menu-burger"></i>
+      <span>Menu</span>
+    </button>
+  </nav>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Atualiza data atual
+      const dateElement = document.getElementById('current-date');
+      if (dateElement) {
+        const today = new Date();
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        dateElement.textContent = today.toLocaleDateString('pt-BR', options);
+      }
+
+      // Controla menu mobile
+      const menuButton = document.getElementById('menu-button');
+      const mobileSidebar = document.querySelector('.mobile-sidebar');
+      const overlay = document.querySelector('.overlay');
+      
+      if (menuButton) {
+        menuButton.addEventListener('click', function() {
+          mobileSidebar.classList.toggle('active');
+          overlay.classList.toggle('active');
+        });
+      }
+      
+      if (overlay) {
+        overlay.addEventListener('click', function() {
+          mobileSidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        });
+      }
+    });
+  </script>
 </body>
 </html>
