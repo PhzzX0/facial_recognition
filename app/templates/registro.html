@@ -2,514 +2,468 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Painel Porteiro</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: #f3f4ef;
-      color: #244a1e;
-      margin: 0;
-      height: 100vh;
-      overflow: hidden;
+      background-color: #f3f4f6;
     }
-    /* Sidebar esquerda */
-    aside.sidebar-left {
-      width: 18rem;
-      background: #f3f4ef;
-      border-right: 1px solid #b6c0b0;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 2rem 1.5rem;
-      user-select: none;
+    .bg-coapac {
+      background-color: #386641;
     }
-    .text-facein {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #244a1e;
-      letter-spacing: 0.15em;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      justify-content: center;
-      margin-bottom: 1rem;
-      user-select: none;
+    .text-coapac {
+      color: #386641;
     }
-    .text-facein .focus-icon {
-      position: relative;
-      width: 1.5em;
-      height: 1.5em;
-      font-size: 1.5em;
-      line-height: 1.5em;
-      color: #244a1e;
-      user-select: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+    .border-coapac {
+      border-color: #386641;
     }
-    .text-facein .focus-icon span {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 0.35em;
-      filter: invert(34%) sepia(74%) saturate(668%) hue-rotate(86deg) brightness(81%) contrast(85%);
-      user-select: none;
-      pointer-events: none;
-    }
-    .circle-img-container {
-      background-color: #244a1e;
-      border: 4px solid #f3f4ef;
-      border-radius: 50%;
-      width: 5rem;
-      height: 5rem;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 1rem;
-    }
-    .circle-img-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .sidebar-left .title-porteiro {
-      font-weight: 700;
-      font-size: 1.25rem;
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    nav.sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-      font-weight: 600;
-      font-size: 1rem;
-    }
-    nav.sidebar-nav a {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      color: #244a1e;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    nav.sidebar-nav a.disabled {
-      color: #b6c0b0;
-      cursor: not-allowed;
-    }
-    .btn-sair {
-      background-color: #b92a2a;
-      color: white;
-      font-weight: 700;
-      padding: 0.5rem 1.5rem;
-      border-radius: 0.5rem;
-      width: 100%;
-      cursor: pointer;
-      border: none;
-      transition: background-color 0.3s;
-      user-select: none;
-    }
-    .btn-sair:hover {
-      background-color: #7e1c1c;
-    }
-    .footer-in4 {
-      text-align: center;
-      font-weight: 700;
-      font-size: 1.25rem;
-      color: #244a1e;
-      margin-top: 0.5rem;
-      user-select: none;
-    }
-
-    /* Conteúdo principal */
-    main.content-main {
-      flex-grow: 1;
-      background-color: #f3f4ef;
-      padding: 2.5rem 2rem;
-      border-top-right-radius: 3rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-      overflow-y: auto;
-    }
-
-    /* Header principal */
-    header.main-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      user-select: none;
-    }
-    header.main-header h1 {
-      font-weight: 800;
-      font-size: 2.25rem;
-      color: #244a1e;
-      margin: 0;
-    }
-    header.main-header p.data-atual {
-      margin: 0.25rem 0 0;
-      font-weight: 400;
-      font-size: 0.875rem;
-      color: #5a5a5a;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-    .header-right button {
-      background-color: #e0e3d9;
-      padding: 0.5rem;
-      border-radius: 0.5rem;
-      border: none;
-      cursor: pointer;
-    }
-    .header-right button i {
-      color: #244a1e;
-      font-size: 1.5rem;
-    }
-    .codigo {
-      background-color: #244a1e;
-      color: white;
-      font-weight: 700;
-      padding: 0.5rem 1.5rem;
-      border-radius: 0.5rem;
-      letter-spacing: 0.2em;
-      user-select: none;
-      font-size: 1.25rem;
-    }
-
-    section.manage-funcao {
-      display: flex;
-      gap: 3.5rem;
-      user-select: none;
-    }
-
-    .gerenciar-acesso {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .gerenciar-acesso h2 {
-      font-weight: 800;
-      font-size: 1.25rem;
-      margin-bottom: 1.5rem;
-      color: #244a1e;
-      user-select: none;
-    }
-    .card-gerenciar {
-      display: flex;
-      min-height: 80px;
-      border-radius: 0.75rem;
-      box-shadow: 0 8px 15px rgba(36,74,30,0.1);
+    .bg-gray-light {
       background-color: #f9faf7;
-      overflow: hidden;
-      cursor: pointer;
     }
-    .card-bar-gerenciar {
-      width: 12px;
-      background-color: #244a1e;
-      border-top-left-radius: 0.75rem;
-      border-bottom-left-radius: 0.75rem;
+    .section-box {
+      background-color: #386641;
+      color: #f9faf7;
+      padding: 1.5rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
-    .card-content {
-      padding: 1rem 1.5rem;
-      flex-grow: 1;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    .input-base {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 0.5rem;
+      background-color: #f9faf7;
+      color: #386641;
+      font-weight: 600;
+      border: none;
     }
-    .card-content i {
-      font-size: 2rem;
-      color: #244a1e;
-      flex-shrink: 0;
-    }
-    .card-content strong {
-      color: #244a1e;
+    .btn-primary {
+      background-color: #f9faf7;
+      color: #386641;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
       font-weight: 700;
-      font-size: 1.125rem;
-      display: block;
-      margin-bottom: 0.2rem;
-      user-select: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .card-content p {
-      font-size: 0.875rem;
-      color: #515151;
-      margin: 0;
-      line-height: 1.2;
-      user-select: none;
-    }
-
-    .funcao-box {
-      flex: 1;
-      background-color: #244a1e;
-      border-radius: 1rem;
-      color: white;
+    .btn-danger {
+      background-color: #dc2626;
+      color: #f9faf7;
+      padding: 0.5rem;
+      border-radius: 9999px;
+      width: 100%;
       font-weight: 700;
-      font-size: 1.25rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
-      text-align: center;
-      user-select: none;
+      gap: 0.5rem;
     }
-
-    aside.sidebar-right {
-      width: 18rem;
-      background-color: #244a1e;
-      border-top-right-radius: 3rem;
-      padding: 2rem 1.5rem;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      user-select: none;
+    nav a {
+      color: #9ca3af;
+      transition: color 0.3s ease;
+      font-weight: 600;
+    }
+    nav a:hover {
+      color: #386641;
+    }
+    .nav-active {
+      color: #386641;
+      font-weight: 700;
+    }
+    .border-divider {
+      border-right: 2px solid #e5e7eb;
+    }
+    .card {
+      background-color: #f9faf7;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       overflow: hidden;
     }
-    .registro-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      font-weight: 700;
-      font-size: 1.25rem;
-    }
-    .registro-data {
-      font-size: 0.875rem;
-      opacity: 0.75;
-    }
-    .registro-scroll {
-      flex-grow: 1;
-      overflow-y: auto;
-      padding-right: 0.75rem;
-      max-height: 440px;
-    }
-    .registro-item {
-      margin-bottom: 1.5rem;
-    }
-    .registro-item time {
-      font-weight: 700;
-      margin-right: 1rem;
-      display: inline-block;
-      min-width: 4.5rem;
-    }
-    .registro-item strong {
-      font-weight: 700;
+    .card-header {
+      background-color: #386641;
       color: white;
-      margin-right: 0.3rem;
-    }
-    .registro-item p {
-      margin: 0.15rem 0 0 5.5rem;
-      font-size: 0.85rem;
-      opacity: 0.8;
-      user-select: none;
-    }
-    .registro-icons {
-      vertical-align: middle;
-      margin-left: 0.3rem;
-    }
-    .btn-ver-registro {
-      margin-top: 1rem;
-      background-color: #f3f4ef;
-      color: #244a1e;
+      padding: 1rem;
       font-weight: 700;
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      border: none;
-      cursor: pointer;
-      user-select: none;
-      transition: background-color 0.3s;
     }
-    .btn-ver-registro:hover {
-      background-color: #e0e3d9;
+    .card-body {
+      padding: 1.5rem;
+    }
+    
+    /* Mobile bottom navigation */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+    
+    .mobile-bottom-nav a, .mobile-bottom-nav button {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 0;
+      color: #9ca3af;
+      font-size: 0.75rem;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    
+    .mobile-bottom-nav a.nav-active, .mobile-bottom-nav button.nav-active {
+      color: #386641;
+    }
+    
+    .mobile-bottom-nav i {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    /* Mobile sidebar */
+    .mobile-sidebar {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 85%;
+      max-width: 320px;
+      height: 100%;
+      background: white;
+      z-index: 110;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .mobile-sidebar.active {
+      left: 0;
+    }
+    
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 105;
+    }
+    
+    .overlay.active {
+      display: block;
+    }
+    
+    @media (max-width: 1023px) {
+      .mobile-bottom-nav {
+        display: flex;
+      }
+      
+      .sidebar {
+        display: none;
+      }
+      
+      main {
+        margin-bottom: 60px;
+      }
     }
   </style>
 </head>
-<body>
-  <div class="flex h-screen">
-    <aside class="sidebar-left" aria-label="Menu lateral">
+<body class="bg-gray-100 text-coapac">
+  <div class="flex flex-col lg:flex-row min-h-screen p-4 gap-4">
+    
+    <!-- Sidebar (desktop only) -->
+    <aside class="hidden lg:flex flex-col justify-between w-64 p-4 border-divider bg-white rounded-3xl shadow-lg">
       <div>
-        <div class="text-facein" aria-label="Símbolo de foco com emoji de rosto">
-          <span class="focus-icon">⛶<span>😃</span></span>FaceIN
+        <div class="text-center">
+          <div class="text-facein text-2xl font-bold mb-4">FaceIN</div>
+          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden bg-coapac flex items-center justify-center">
+            <i class="bi bi-person-fill text-white text-3xl"></i>
+          </div>
+          <h1 class="mt-2 font-bold text-lg uppercase">PORTEIRO</h1>
         </div>
-        <div class="circle-img-container">
-          <img src="123.png" alt="Logo IF" />
-        </div>
-        <div class="title-porteiro">PORTEIRO</div>
-
-        <nav class="sidebar-nav" aria-label="Navegação principal">
-          <a href="#" class="enabled" tabindex="0"><i class="bi bi-house-fill"></i> Inicio</a>
-          <a href="#" class="disabled" tabindex="-1" aria-disabled="true"><i class="bi bi-person-fill"></i> Usuários</a>
-          <a href="#" class="disabled" tabindex="-1" aria-disabled="true"><i class="bi bi-people-fill"></i> Turmas</a>
-          <a href="#" class="disabled" tabindex="-1" aria-disabled="true"><i class="bi bi-shield-lock-fill"></i> Permissões</a>
-          <a href="#" class="disabled" tabindex="-1" aria-disabled="true"><i class="bi bi-door-open-fill"></i> Acesso Externo</a>
+        <nav class="mt-10 space-y-4 text-sm">
+          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="bi bi-house-fill"></i> Início</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-person-fill"></i> Usuários</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-people-fill"></i> Turmas</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-shield-lock-fill"></i> Permissões</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-door-open-fill"></i> Acesso Externo</a>
         </nav>
       </div>
-
       <div>
-        <button class="btn-sair" type="button">SAIR</button>
-        <div class="footer-in4">in4</div>
+        <button class="btn-danger">
+          <i class="bi bi-box-arrow-left"></i> SAIR
+        </button>
+        <div class="mt-6 flex justify-center">
+          <div class="text-coapac font-bold text-xl">in4</div>
+        </div>
       </div>
     </aside>
 
-    <!-- Conteúdo principal -->
-    <main class="content-main" role="main">
-      <header class="main-header">
-        <div>
-          <h1>Registros</h1>
-          <p class="data-atual" id="data-atual">Domingo, 10 de Janeiro de 2025</p>
+    <!-- Mobile Sidebar -->
+    <aside class="mobile-sidebar">
+      <div class="p-4">
+        <div class="text-center">
+          <div class="text-facein text-2xl font-bold mb-4">FaceIN</div>
+          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden bg-coapac flex items-center justify-center">
+            <i class="bi bi-person-fill text-white text-3xl"></i>
+          </div>
+          <h1 class="mt-2 font-bold text-lg uppercase">PORTEIRO</h1>
         </div>
-        <div class="header-right">
-          <button aria-label="Notificações">
-            <i class="bi bi-bell-fill"></i>
+        <nav class="mt-10 space-y-4 text-sm">
+          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="bi bi-house-fill"></i> Início</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-person-fill"></i> Usuários</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-people-fill"></i> Turmas</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-shield-lock-fill"></i> Permissões</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-door-open-fill"></i> Acesso Externo</a>
+        </nav>
+      </div>
+      <div class="p-4">
+        <button class="btn-danger">
+          <i class="bi bi-box-arrow-left"></i> SAIR
+        </button>
+        <div class="mt-6 flex justify-center">
+          <div class="text-coapac font-bold text-xl">in4</div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="overlay"></div>
+
+    <!-- Main content and right sidebar container -->
+    <div class="flex flex-col lg:flex-row w-full gap-4">
+      <!-- Conteúdo principal -->
+      <main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
+        <header class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold">Registros de Acesso</h2>
+            <p id="current-date" class="text-sm text-gray-500">Domingo, 10 de Janeiro de 2025</p>
+          </div>
+          <div class="flex items-center gap-4">
+            <button class="bg-white p-3 rounded-full shadow">
+              <i class="bi bi-bell-fill text-coapac"></i>
+            </button>
+            <span class="bg-coapac text-white px-6 py-3 rounded-lg font-bold tracking-wider">9RS8YB</span>
+          </div>
+        </header>
+
+        <div class="flex flex-col md:flex-row gap-4 items-center">
+          <input type="date" id="seletor-data" class="hidden" onchange="atualizarDataSelecionada()" />
+          <button onclick="document.getElementById('seletor-data').showPicker()" class="btn-primary">
+            Quarta, 16 de Julho de 2025
           </button>
-          <div class="codigo" aria-label="Código de acesso">9RS8YB</div>
+          <button class="bg-white p-3 rounded-full shadow" onclick="imprimirRegistros()">
+            <i class="bi bi-printer text-coapac"></i>
+          </button>
         </div>
-      </header>
 
-  <div class="mb-6">
-    <input 
-      type="date" 
-      id="seletor-data" 
-      class="hidden" 
-      onchange="atualizarDataSelecionada()" 
-    />
-    <button 
-      onclick="document.getElementById('seletor-data').showPicker()" 
-      class="bg-[#244a1e] text-white text-lg font-semibold rounded-md px-6 py-2 shadow-sm hover:brightness-110 transition"
-      id="botao-data"
-    >
-      Quarta, 16 de Julho de 2025
+        <section class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <!-- Registro 1 -->
+          <div class="card">
+            <div class="flex items-center gap-4 p-4">
+              <div class="bg-coapac text-white font-bold text-lg px-6 py-4 rounded-xl">16:00</div>
+              <div class="flex-1">
+                <p class="text-gray-700">Fulano de Tal</p>
+                <p class="font-bold text-coapac">LIBERADO <i class="fas fa-lock-open ml-2"></i></p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Registro 2 -->
+          <div class="card">
+            <div class="flex items-center gap-4 p-4">
+              <div class="bg-coapac text-white font-bold text-lg px-6 py-4 rounded-xl">16:00</div>
+              <div class="flex-1">
+                <p class="text-gray-700">Fulano de Tal</p>
+                <p class="font-bold text-coapac">LIBERADO <i class="fas fa-lock-open ml-2"></i></p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Registro 3 -->
+          <div class="card">
+            <div class="flex items-center gap-4 p-4">
+              <div class="bg-coapac text-white font-bold text-lg px-6 py-4 rounded-xl">16:00</div>
+              <div class="flex-1">
+                <p class="text-gray-700">Fulano de Tal</p>
+                <p class="font-bold text-coapac">LIBERADO <i class="fas fa-lock-open ml-2"></i></p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Registro 4 -->
+          <div class="card">
+            <div class="flex items-center gap-4 p-4">
+              <div class="bg-coapac text-white font-bold text-lg px-6 py-4 rounded-xl">16:00</div>
+              <div class="flex-1">
+                <p class="text-gray-700">Fulano de Tal</p>
+                <p class="font-bold text-coapac">LIBERADO <i class="fas fa-lock-open ml-2"></i></p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Card de Gerenciamento 1 -->
+          <div class="card">
+            <div class="card-header">Gerenciar Acessos</div>
+            <div class="card-body">
+              <p class="text-gray-600">Gerencie os acessos dos visitantes</p>
+            </div>
+          </div>
+          
+          <!-- Card de Gerenciamento 2 -->
+          <div class="card">
+            <div class="card-header">Relatórios</div>
+            <div class="card-body">
+              <p class="text-gray-600">Visualize relatórios de acesso</p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <!-- Sidebar Direita (Registros) -->
+      <aside class="w-full lg:w-80 bg-coapac text-white p-6 rounded-3xl shadow-lg flex-shrink-0">
+        <div class="flex justify-between items-center mb-6">
+          <h4 class="text-xl font-bold">Registros Recentes</h4>
+          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+            <i class="bi bi-clock-history text-coapac text-xl"></i>
+          </div>
+        </div>
+        
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <span class="font-bold">16:00</span>
+            <div class="w-px h-8 bg-white/30"></div>
+            <div>
+              <p class="font-medium">Fulano de Tal</p>
+              <p class="flex items-center gap-1.5 text-sm uppercase">
+                LIBERADO <i class="fas fa-lock-open"></i>
+              </p>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-3">
+            <span class="font-bold">15:30</span>
+            <div class="w-px h-8 bg-white/30"></div>
+            <div>
+              <p class="font-medium">Ciclano Silva</p>
+              <p class="flex items-center gap-1.5 text-sm uppercase">
+                LIBERADO <i class="fas fa-lock-open"></i>
+              </p>
+            </div>
+          </div>
+          
+          <div class="flex items-center gap-3">
+            <span class="font-bold">14:45</span>
+            <div class="w-px h-8 bg-white/30"></div>
+            <div>
+              <p class="font-medium">Beltrano Souza</p>
+              <p class="flex items-center gap-1.5 text-sm uppercase">
+                NEGADO <i class="fas fa-lock"></i>
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <button class="btn-primary mt-6 w-full">
+          VER TODO O REGISTRO
+        </button>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Mobile bottom navigation -->
+  <nav class="mobile-bottom-nav">
+    <a href="#" class="nav-active">
+      <i class="bi bi-house-fill"></i>
+      <span>Início</span>
+    </a>
+    <a href="#">
+      <i class="bi bi-person-fill"></i>
+      <span>Usuários</span>
+    </a>
+    <a href="#">
+      <i class="bi bi-people-fill"></i>
+      <span>Turmas</span>
+    </a>
+    <a href="#">
+      <i class="bi bi-clock-history"></i>
+      <span>Registros</span>
+    </a>
+    <button id="menu-button">
+      <i class="bi bi-list"></i>
+      <span>Menu</span>
     </button>
-
-<button 
-  aria-label="Imprimir registros"
-  class="bg-[#f3f4ef] p-3 rounded-full text-white shadow-sm transition py-2.5"
-  onclick="imprimirRegistros()"
-  title="Imprimir registros">
-  <i style= "color: #244a1e" class="bi bi-printer text-base"></i>
-</button>
-  </div>
-
-<section class="w-full flex flex-col"> 
-
-  <!-- Grid de registros -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-5xl justify-start">
-    <!-- Registro -->
-    <div class="flex gap-6">
-      <div class="bg-[#244a1e] text-white font-bold text-lg px-6 py-4 rounded-xl">16:00</div>
-      <div class="flex flex-col text-left">
-        <p class="text-base text-gray-700">Fulano de Tal</p>
-        <p class="font-bold text-[#244a1e] text-lg">LIBERADO</p>
-      </div>
-      <i class="fas fa-lock-open text-[#244a1e] text-xl ml-2"></i>
-    </div>
-
-    <!-- Repetindo os registros -->
-    <div class="flex items-center gap-6">
-      <div class="bg-[#244a1e] text-white font-bold text-lg px-6 py-4 rounded-xl">16:00</div>
-      <div class="flex flex-col text-left">
-        <p class="text-base text-gray-700">Fulano de Tal</p>
-        <p class="font-bold text-[#244a1e] text-lg">LIBERADO</p>
-      </div>
-      <i class="fas fa-lock-open text-[#244a1e] text-xl ml-2"></i>
-    </div>
-
-    <div class="flex items-center gap-6">
-      <div class="bg-[#244a1e] text-white font-bold text-lg px-6 py-4 rounded-xl">16:00</div>
-      <div class="flex flex-col text-left">
-        <p class="text-base text-gray-700">Fulano de Tal</p>
-        <p class="font-bold text-[#244a1e] text-lg">LIBERADO</p>
-      </div>
-      <i class="fas fa-lock-open text-[#244a1e] text-xl ml-2"></i>
-    </div>
-
-    <div class="flex items-center gap-6">
-      <div class="bg-[#244a1e] text-white font-bold text-lg px-6 py-4 rounded-xl">16:00</div>
-      <div class="flex flex-col text-left">
-        <p class="text-base text-gray-700">Fulano de Tal</p>
-        <p class="font-bold text-[#244a1e] text-lg">LIBERADO</p>
-      </div>
-      <i class="fas fa-lock-open text-[#244a1e] text-xl ml-2"></i>
-    </div>
-  </div>
-</section>
-
-<section class="manage-funcao">
-  <div class="gerenciar-acesso" aria-label="Gerenciar Acesso">
-    <div class=" " role="button" tabindex="0">
-      <div class="card-bar-gerenciar"></div>
-        <div class="card-content">
-        </div>
-      </div>
-
-    <div class=" " role="button" tabindex="0">
-      <div class="card-bar-gerenciar"></div>
-    </div>
-
-    <div class=" " tabindex="0">
-      <div class="card-bar-gerenciar"></div>
-        <div class="card-content">
-        </div>
-      </div>
-    </div>
-</section>
-    </main>
-
-    <!-- Registro de Acessos -->
-    <aside class="sidebar-right" aria-label="Registro de acessos">
-      <header class="registro-header">
-      </header>
-      <div class="registro-scroll" tabindex="0" aria-live="polite">
-        <div class="registro-item">
-        </div>
-        <div class="registro-item">
-        </div>
-      </div>
-    </aside>
-  </div>
+  </nav>
 
   <script>
-  const meses = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-  ];
-  const diasSemana = [
-    "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"
-  ];
+    const meses = [
+      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    ];
+    const diasSemana = [
+      "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"
+    ];
 
-  function atualizarDataSelecionada() {
-    const input = document.getElementById("seletor-data");
-    const botao = document.getElementById("botao-data");
-    const dataSelecionada = new Date(input.value + "T00:00:00");
+    function atualizarDataSelecionada() {
+      const input = document.getElementById("seletor-data");
+      const botao = document.getElementById("botao-data");
+      const dataSelecionada = new Date(input.value + "T00:00:00");
 
-    if (!isNaN(dataSelecionada)) {
-      const diaSemana = diasSemana[dataSelecionada.getDay()];
-      const dia = dataSelecionada.getDate().toString().padStart(2, "0");
-      const mes = meses[dataSelecionada.getMonth()];
-      const ano = dataSelecionada.getFullYear();
+      if (!isNaN(dataSelecionada)) {
+        const diaSemana = diasSemana[dataSelecionada.getDay()];
+        const dia = dataSelecionada.getDate().toString().padStart(2, "0");
+        const mes = meses[dataSelecionada.getMonth()];
+        const ano = dataSelecionada.getFullYear();
 
-      botao.textContent = `${diaSemana}, ${dia} de ${mes} de ${ano}`;
+        botao.textContent = `${diaSemana}, ${dia} de ${mes} de ${ano}`;
+      }
     }
-  }
 
-  // Opcional: Atualizar com a data atual ao carregar a página
-  window.onload = () => {
-    const hoje = new Date();
-    const input = document.getElementById("seletor-data");
-    input.value = hoje.toISOString().split("T")[0];
-    atualizarDataSelecionada();
-  };
-</script>
+    function imprimirRegistros() {
+      window.print();
+    }
 
+    // Atualiza data atual
+    document.addEventListener('DOMContentLoaded', function() {
+      const hoje = new Date();
+      const dataAtualElement = document.getElementById("current-date");
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      dataAtualElement.textContent = hoje.toLocaleDateString('pt-BR', options);
+      
+      // Inicializa seletor de data
+      const input = document.getElementById("seletor-data");
+      input.value = hoje.toISOString().split("T")[0];
+      atualizarDataSelecionada();
+    });
+
+    // Controla menu mobile
+    const menuButton = document.getElementById('menu-button');
+    const mobileSidebar = document.querySelector('.mobile-sidebar');
+    const overlay = document.querySelector('.overlay');
+    
+    if (menuButton) {
+      menuButton.addEventListener('click', function() {
+        mobileSidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+      });
+    }
+    
+    if (overlay) {
+      overlay.addEventListener('click', function() {
+        mobileSidebar.classList.remove('active');
+        overlay.classList.remove('active');
+      });
+    }
+  </script>
 </body>
 </html>
