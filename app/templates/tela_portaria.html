@@ -1,173 +1,241 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>FaceIN - Portaria</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #E7E7E4; /* Fundo branco/claro para a página */
-            color: #386641; /* Cor padrão para o texto principal, como no dashboard */
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        /* Cores da marca */
-        .bg-brand-green { background-color: #386641; }
-        .text-white-light { color: #E7E7E4; } /* Usado para textos claros em fundo escuro */
-
-        /* Estilo do cabeçalho */
-        .header-content {
-            background-color: #386641; /* Fundo verde do cabeçalho */
-            color: #E7E7E4; /* Texto branco/claro no cabeçalho */
-            padding: 1.5rem 2rem; /* Espaçamento interno */
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            flex-shrink: 0; /* Não permite que o cabeçalho encolha */
-        }
-        .header-left h1 {
-            font-size: 1.5rem; /* INSTITUTO FEDERAL */
-            font-weight: 600;
-            line-height: 1.2;
-        }
-        .header-left p {
-            font-size: 0.9rem; /* Rio Grande do Norte - Campus Apodi */
-            opacity: 0.9;
-        }
-        .header-right img {
-            height: 3rem; /* Tamanho da logo FaceIN no cabeçalho */
-        }
-        
-        .main-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-grow: 1;
-        }
-
-        /* Container da câmera */
-        .camera-outer-container {
-            background-color: #000; /* Fundo preto para o espaço da câmera */
-            border-radius: 1.5rem; /* Bordas arredondadas */
-            overflow: hidden; /* Garante que qualquer conteúdo dentro respeite as bordas */
-            display: flex;
-            flex-direction: column; /* Para empilhar o placeholder e a barra de instrução */
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Sombra para destacar */
-            flex-grow: 1; /* Permite que o container da câmera ocupe o espaço disponível */
-        }
-        .camera-placeholder {
-            flex-grow: 1; /* Ocupa o espaço superior dentro do container */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-        .camera-placeholder-text {
-            color: #E7E7E4; /* Cor do texto no placeholder */
-            font-size: 1.8rem;
-            text-align: center;
-            line-height: 1.2;
-            padding: 1rem;
-        }
-        .instruction-bar {
-            background-color: #386641; /* Cor verde para a barra de instrução */
-            color: #E7E7E4; /* Texto branco/claro na barra */
-            padding: 1rem 2rem;
-            font-weight: 600;
-            font-size: 1.5rem;
-            text-align: center;
-            width: 100%; /* Ocupa toda a largura do container */
-            position: absolute; /* Para que fique na parte inferior */
-            bottom: 0;
-        }
-
-        /* Layout para Telas Horizontais (Portaria - Desktop/Tablet Landscape) */
-        @media (min-aspect-ratio: 1/1) {
-            .main-content {
-                padding: 2rem;
-            }
-            .camera-outer-container {
-                width: 70vw; /* Largura base para a câmera */
-                max-width: 800px; /* Largura máxima */
-                height: calc(70vw * 9 / 16); /* Proporção 16:9 */
-                max-height: 450px;
-            }
-            .instruction-bar {
-                font-size: 1.5rem;
-            }
-        }
-
-        /* Layout para Telas Verticais (Celular/Tablet Portrait) */
-        @media (max-aspect-ratio: 1/1) {
-            .main-content {
-                padding: 1.5rem;
-            }
-            .camera-outer-container {
-                width: 90vw; /* Largura maior em verticais */
-                height: calc(90vw * 4 / 3); /* Proporção 4:3 */
-                max-height: 400px;
-            }
-            .instruction-bar {
-                font-size: 1.2rem;
-            }
-        }
-
-        /* Rodapé */
-        .footer-content {
-            font-size: 0.8rem; /* Aumentado */
-            color: #555;
-            padding: 1rem; /* Aumentado */
-            display: flex;
-            justify-content: center; /* Centralizado */
-            align-items: center;
-            width: 100%;
-            flex-shrink: 0;
-            gap: 0.5rem; /* Aumentado */
-        }
-        .footer-logo {
-            height: 1.1rem; /* Aumentado */
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FaceIN - Acesso</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+  
+    body {
+      background-color: #fff;
+    }
+  
+    header {
+      background-color: #065f46;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  
+    header p {
+      font-size: 0.875rem;
+    }
+  
+    header img {
+      height: 24px;
+      filter: invert(1);
+    }
+  
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 1.5rem;
+    }
+  
+    @media (min-width: 1024px) {
+      main {
+        flex-direction: row;
+      }
+    }
+  
+    .camera, .dados {
+      width: 100%;
+    }
+  
+    .camera {
+      background-color: #f3f4f6;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+  
+    .camera img.bg {
+      width: 100%;
+      border-radius: 24px;
+      display: block;
+    }
+  
+    .camera img.icone {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 96px;
+      opacity: 0.8;
+      animation: pulse 2s infinite;
+    }
+  
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    }
+  
+    .dados {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .box {
+      background-color: #f3f4f6;
+      padding: 1rem;
+      border-radius: 16px;
+    }
+  
+    .alerta {
+      background-color: #065f46;
+      color: white;
+      text-align: center;
+      padding: 0.75rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+  
+    .perfil {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background-color: #065f46;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 1rem;
+    }
+  
+    .perfil img {
+      width: 250px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+  
+    .perfil p {
+      font-size: 1rem;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+  
+    @media (min-width: 768px) {
+      .perfil {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+      }
+  
+      .perfil p {
+        font-size: 1.25rem;
+      }
+  
+      .perfil img {
+        width: 300px;
+        height: 300px;
+      }
+    }
+  
+    .situacao {
+      text-align: center;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #374151;
+    }
+  
+    .situacao span {
+      font-weight: 600;
+    }
+  
+    .acesso {
+      background-color: #065f46;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      border-radius: 12px;
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+  
+    .acesso span {
+      color: #a3e635;
+    }
+  
+    footer {
+      text-align: right;
+      font-size: 0.875rem;
+      color: #6b7280;
+      padding: 1rem 1.5rem;
+    }
+  
+    footer strong {
+      color: rgb(0, 0, 0);
+    }
+  </style>
+  
 </head>
-<body class="flex flex-col min-h-screen">
-    <header class="header-content">
-        <div class="header-left">
-            <h1>INSTITUTO FEDERAL</h1>
-            <p>Rio Grande do Norte - Campus Apodi</p>
-        </div>
-        <div class="header-right">
-            <img src="https://i.ibb.co/QnC4d62/Face-IN-Logo-branca.png" alt="Logo FaceIN" />
-        </div>
-    </header>
 
-    <main class="flex-1 flex items-center justify-center main-content">
-        <div class="camera-outer-container">
-            <div class="camera-placeholder">
-                <div class="camera-placeholder-text">
-                    <p>ESPAÇO PARA A CÂMERA</p>
-                    <p>Integrar o feed de vídeo aqui.</p>
-                </div>
-                </div>
-            
-            <div class="instruction-bar">
-                Aproxime o rosto da câmera!
-            </div>
-        </div>
-    </main>
+<body>
+  <!-- Header -->
+  <header>
+    <div>
+      <h1>Instituto Federal</h1>
+      <p>Rio Grande do Norte - Campus Apodi</p>
+    </div>
+    <div >
+      <img src="FaceIN Logo.png" alt="Logo do sistema FaceIN" style="height: 24px; filter: brightness(0) invert(1);">
+    </div>
+  </header>
 
-    <footer class="footer-content">
-        <span>desenvolvido por</span>
-        <img src="https://i.ibb.co/St2Q77s/Logo-IN4-png2.png" alt="Logo da empresa IN4" class="footer-logo" />
-    </footer>
+  <!-- Main content -->
+  <main>
+    <!-- Câmera -->
+    <div class="camera">
+      <img src="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9" alt="Imagem da Câmera" class="bg" />
+      <img src="" alt="Reconhecimento facial" class="icone" />
+    </div>
+
+    <!-- Dados do usuário -->
+    <div class="dados">
+      <!-- Alerta -->
+      <div class="alerta">APROXIME O ROSTO DA CÂMERA</div>
+
+      <!-- Perfil -->
+      <div class="box perfil">
+        <img src="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9" alt="Foto identificada" />
+        <div>
+          <p><strong>NOME:</strong> MACACO PREGO DA SILVA</p>
+          <p><strong>MATRÍCULA:</strong> 20221084010000</p>
+          <p><strong>TURMA:</strong> 4º ANO DE INFORMÁTICA</p>
+          <p> SITUAÇÃO: <span>SEM RESTRIÇÕES</span></p>
+        </div>
+      </div>
+
+    
+
+      <!-- Acesso liberado -->
+      <div class="acesso">
+        ACESSO <span>LIBERADO</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    desenvolvido por <strong>in4</strong>
+  </footer>
 </body>
 </html>
