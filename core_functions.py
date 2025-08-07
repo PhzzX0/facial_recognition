@@ -332,7 +332,31 @@ def listar_logs_recentes(limite=5):
     finally:
         conn.close()
 
-
+def buscar_logs_filtrados(data_filtro):
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+    
+    sql = """
+        SELECT
+            L.id,
+            L.timestamp_acesso,
+            L.status,
+            U.nome_completo
+        FROM app_LogsAcesso L
+        LEFT JOIN app_Usuarios U ON L.usuario_id = U.id
+        WHERE date(L.timestamp_acesso) = ?
+        ORDER BY L.timestamp_acesso DESC
+    """
+    try:
+        c.execute(sql, (data_filtro,))
+        logs = [dict(row) for row in c.fetchall()]
+        return logs
+    except Exception as e:
+        print(f"Falha ao buscar logs filtrados: {e}")
+        return []
+    finally:
+        conn.close()
 
 def criar_curso(nome_curso):
     conn = sqlite3.connect(db_path)
@@ -658,4 +682,5 @@ def contar_sancoes_ativas():
 
 #if __name__ == "__main__":
 #    adicionar_operador("Coapac", "coapac", "coapac", "COAPAC")
+
 #    adicionar_operador("Porteiro", "porteiro", "porteiro", "Porteiro")
