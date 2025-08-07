@@ -5,17 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cadastro de Visitantes</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'> <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Poppins', sans-serif; }
-
     .bg-coapac { background-color: #386641; }
     .text-coapac { color: #386641; }
     .section-box {
       background-color: #386641;
       color: #E7E7E4;
-      padding: 2.5rem;
+      padding: 1.5rem;
       border-radius: 1.5rem;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       width: 100%;
@@ -43,6 +45,10 @@
       border-radius: 9999px;
       width: 100%;
       font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
     .btn-ver-todos {
       margin-top: 1.5rem;
@@ -55,8 +61,9 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     nav a {
-      color: #6b7280; /* cinza padrão */
+      color: #9ca3af;
       transition: color 0.3s ease;
+      font-weight: 600;
     }
     nav a:hover {
       color: #386641;
@@ -66,132 +73,357 @@
       font-weight: 700;
     }
     .border-divider {
-      border-right: 2px solid #386641;
+      border-right: 2px solid #e5e7eb;
+    }
+    
+    /* Mobile bottom navigation */
+    .mobile-bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+      z-index: 100;
+    }
+    
+    .mobile-bottom-nav a, .mobile-bottom-nav button {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 0;
+      color: #9ca3af;
+      font-size: 0.75rem;
+      border: none;
+      background: none;
+      cursor: pointer;
+    }
+    
+    .mobile-bottom-nav a.nav-active, .mobile-bottom-nav button.nav-active {
+      color: #386641;
+    }
+    
+    .mobile-bottom-nav i {
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+    
+    /* Mobile sidebar */
+    .mobile-sidebar {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 85%;
+      max-width: 320px;
+      height: 100%;
+      background: white;
+      z-index: 110;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .mobile-sidebar.active {
+      left: 0;
+    }
+    
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 105;
+    }
+    
+    .overlay.active {
+      display: block;
+    }
+    
+    @media (max-width: 1023px) {
+      .mobile-bottom-nav {
+        display: flex;
+      }
+      
+      .sidebar {
+        display: none;
+      }
+      
+      main {
+        margin-bottom: 60px; /* Espaço para a barra inferior */
+      }
     }
   </style>
 </head>
-<body class="bg-coapac text-coapac">
-  <div class="flex min-h-screen p-4 gap-4">
+<body class="bg-gray-100 text-coapac">
+  <div class="flex flex-col lg:flex-row min-h-screen p-4 gap-4">
     
-    <!-- Container principal -->
-    <div class="flex flex-col lg:flex-row bg-white rounded-3xl shadow-lg w-full max-w-[calc(100%-22rem)] overflow-hidden">
+    <!-- Sidebar (desktop only) -->
+    <aside class="hidden lg:flex flex-col justify-between w-64 p-4 border-divider bg-white rounded-3xl shadow-lg">
 
-      <!-- Sidebar -->
-      <aside class="flex flex-col justify-between w-full lg:w-64 p-6 border-divider">
-        <div>
-          <div class="text-center">
-            <img src="https://via.placeholder.com/140x50?text=FaceIN" alt="Logo FaceIN" class="mx-auto mb-4 h-10">
-            <div class="bg-coapac w-16 h-16 mx-auto rounded-full flex items-center justify-center text-white text-2xl font-bold">
-              <i class="bi bi-grid-3x3-gap"></i>
-            </div>
-            <h1 class="mt-2 font-bold">COAPAC</h1>
+      <div>
+        <div class="text-center">
+          <img src="img/FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
+          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover">
           </div>
-          <nav class="mt-8 space-y-4 text-sm">
-            <a href="#" class="flex items-center gap-2"><i class="bi bi-house-door"></i> Início</a>
-            <a href="#" class="flex items-center gap-2"><i class="bi bi-person"></i> Usuários</a>
-            <a href="#" class="flex items-center gap-2"><i class="bi bi-people"></i> Turmas</a>
-            <a href="#" class="flex items-center gap-2"><i class="bi bi-clock"></i> Registro</a>
-            <a href="#" class="flex items-center gap-2"><i class="bi bi-shield-lock"></i> Permissões</a>
-            <a href="#" class="flex items-center gap-2"><i class="bi bi-slash-circle"></i> Suspensões</a>
-            <a href="#" class="flex items-center gap-2 nav-active"><i class="bi bi-door-open"></i> Acesso Externo</a>
-          </nav>
+          <h1 class="mt-2 font-bold text-lg uppercase">COAPAC</h1>
         </div>
-        <div>
-          <button class="btn-sair flex items-center justify-center gap-2">
-            <i class="bi bi-box-arrow-left"></i> SAIR
-          </button>
-          <div class="mt-4 flex justify-center">
-            <img src="https://via.placeholder.com/120x50?text=FaceIN" alt="Logo FaceIN" class="h-10">
-          </div>
+        <nav class="mt-10 space-y-4 text-sm">
+          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-home"></i> Início</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Permissões</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
+          <a href="#" class="flex items-center gap-3 p-2 "><i class="fi fi-ss-user-key"></i> Acesso Externo</a>
+        </nav>
+      </div>
+      <div>
+        <button class="mt-6 btn-sair">
+          <i class="bi bi-box-arrow-left"></i> SAIR
+        </button>
+        <div class="mt-6 flex justify-center">
+          <img src="img/Logo IN4 png verde.png" alt="Logo FaceIN" class="h-8">
         </div>
-      </aside>
+      </div>
+    </aside>
 
-      <!-- Conteúdo central -->
-      <main class="flex-1 flex flex-col p-6 space-y-6 overflow-auto">
-        <!-- Cabeçalho -->
-        <header class="flex justify-between items-center">
+    <!-- Mobile Sidebar (hidden by default) -->
+    <aside class="mobile-sidebar">
+      <div class="p-4">
+        <div class="text-center">
+          <img src="img/FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
+          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover">
+          </div>
+          <h1 class="mt-2 font-bold text-lg uppercase">COAPAC</h1>
+        </div>
+        <nav class="mt-10 space-y-4 text-sm">
+          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-home"></i> Início</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Permissões</a>
+          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
+          <a href="#" class="flex items-center gap-3 p-2 "><i class="fi fi-ss-user-key"></i> Acesso Externo</a>
+        </nav>
+      </div>
+      <div class="p-4">
+        <button class="mt-6 btn-sair">
+          <i class="bi bi-box-arrow-left"></i> SAIR
+        </button>
+        <div class="mt-6 flex justify-center">
+          <img src="img/Logo IN4 png verde.png" alt="Logo FaceIN" class="h-8">
+        </div>
+      </div>
+    </aside>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="overlay"></div>
+
+    <!-- Main content and right sidebar container -->
+    <div class="flex flex-col lg:flex-row w-full gap-4">
+      <!-- Conteúdo principal -->
+      <main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
+        <header class="flex flex-col md:flex-row justify-between items-center gap-4" aria-label="Cabeçalho principal">
           <div>
-            <h2 class="text-2xl font-bold">Cadastro de visitantes e prestadores de serviços</h2>
+            <h2 class="text-xl md:text-2xl font-bold">Cadastro de visitantes e prestadores de serviços</h2>
             <p class="text-sm text-gray-500">Domingo, 01 de Janeiro de 2025</p>
           </div>
           <div class="flex items-center gap-4">
-            <div class="bg-white p-3 rounded shadow"><i class="bi bi-bell-fill text-[#386641]"></i></div>
-            <span class="bg-coapac text-white px-6 py-3 rounded font-bold tracking-wider">9RS8YB</span>
+            <div class="bg-white p-3 rounded-full shadow"><i class="bi bi-bell-fill text-coapac"></i></div>
+            <span class="bg-coapac text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-bold tracking-wider text-sm md:text-base" aria-label="Código de identificação">9RS8YB</span>
           </div>
         </header>
 
-        <!-- Formulário -->
-        <section class="section-box">
-          <h3 class="text-xl font-bold mb-6">Gerenciar Acesso</h3>
+        <section class="section-box" aria-labelledby="formulario-cadastro">
+          <h3 id="formulario-cadastro" class="text-xl font-bold mb-6">Gerenciar Acesso</h3>
           <form class="space-y-5">
             <div>
-              <label class="block font-bold mb-2">Nome completo:</label>
-              <input type="text" placeholder="Fulano de tal" class="input-base">
+              <label for="nome" class="block font-bold mb-2">Nome completo:</label>
+              <input id="nome" name="nome" type="text" placeholder="Fulano de tal" class="input-base">
             </div>
             <div class="grid md:grid-cols-2 gap-5">
               <div>
-                <label class="block font-bold mb-2">Documento (CIN, CNH):</label>
-                <input type="text" placeholder="XXX.XXX.XXX-XX" class="input-base">
+                <label for="documento" class="block font-bold mb-2">Documento (CIN, CNH):</label>
+                <input id="documento" name="documento" type="text" placeholder="XXX.XXX.XXX-XX" class="input-base">
               </div>
               <div>
-                <label class="block font-bold mb-2">Empresa:</label>
-                <input type="text" placeholder="In4" class="input-base">
+                <label for="empresa" class="block font-bold mb-2">Empresa:</label>
+                <input id="empresa" name="empresa" type="text" placeholder="In4" class="input-base">
               </div>
             </div>
             <div>
-              <label class="block font-bold mb-2">Motivo do acesso:</label>
-              <input type="text" placeholder="Consertar ar condicionados" class="input-base">
+              <label for="motivo" class="block font-bold mb-2">Motivo do acesso:</label>
+              <input id="motivo" name="motivo" type="text" placeholder="Consertar ar condicionados" class="input-base">
             </div>
             <div class="grid md:grid-cols-3 gap-5">
               <div>
-                <label class="block font-bold mb-2">Data:</label>
-                <input type="date" class="input-base">
+                <label for="data" class="block font-bold mb-2">Data:</label>
+                <input id="data" name="data" type="date" class="input-base">
               </div>
               <div>
-                <label class="block font-bold mb-2">Horário:</label>
-                <input type="time" value="00:00" class="input-base">
+                <label for="horario" class="block font-bold mb-2">Horário:</label>
+                <input id="horario" name="horario" type="time" value="00:00" class="input-base">
               </div>
               <div>
-                <label class="block font-bold mb-2">Liberação:</label>
-                <select class="input-base">
+                <label for="liberacao" class="block font-bold mb-2">Liberação:</label>
+                <select id="liberacao" name="liberacao" class="input-base">
                   <option>Durante 24h</option>
                 </select>
               </div>
             </div>
             <div class="flex items-center pt-6">
-              <i class="bi bi-folder text-3xl"></i>
+              <i class="bi bi-folder text-3xl" aria-hidden="true"></i>
               <button type="submit" class="ml-auto btn-submit">Cadastrar</button>
             </div>
           </form>
         </section>
       </main>
-    </div>
 
-    <!-- Registro -->
-    <aside class="w-80 bg-coapac text-white p-6 overflow-auto rounded-3xl shadow-lg flex-shrink-0">
-      <div class="flex justify-between items-center mb-4">
-        <h4 class="text-xl font-bold">Registro</h4>
-        <i class="bi bi-journal-bookmark-fill text-2xl"></i>
-      </div>
-      <p class="text-sm mb-3">Jan 01, 2025</p>
-      <div class="space-y-3">
-        <div class="flex justify-between items-center text-sm border-b border-white pb-2">
-          <span>00:00</span>
-          <div class="text-right">
-            <span class="font-semibold">Nome do usuário</span><br>
-            <span class="text-white">LIBERADO <i class="bi bi-lock-fill"></i></span>
+      <!-- Registro (reposicionado para baixo em mobile) -->
+      <aside class="w-full lg:w-80 bg-coapac text-white p-6 overflow-auto rounded-3xl shadow-lg flex-shrink-0 order-first lg:order-last">
+        <div class="flex justify-between items-center mb-6">
+          <h4 class="text-2xl font-bold">Registro</h4>
+          <div class="w-9 h-11 bg-gray-100 rounded-lg flex items-center justify-center">
+              <i class="fi fi-sr-folder-open text-coapac text-2xl"></i>
           </div>
         </div>
-        <div class="flex justify-between items-center text-sm border-b border-white pb-2">
-          <span>00:00</span>
-          <div class="text-right">
-            <span class="font-semibold">Nome do usuário</span><br>
-            <span class="text-white">NEGADO <i class="bi bi-lock-fill"></i></span>
+        
+        <div class="flex justify-between items-center mb-4">
+            <p class="text-sm font-semibold opacity-80">Hoje</p>
+            <i class="fi fi-sr-menu-dots text-white/80"></i>
+        </div>
+        <div class="space-y-4 mb-6">
+          <div class="flex items-center gap-3">
+            <span class="font-bold text-lg">14:32</span>
+            <div class="w-px h-8 bg-white/30"></div>
+            <div>
+              <p class="font-medium text-white/90 text-sm">João Silva</p>
+              <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
+                LIBERADO <i class="fi fi-sr-lock-open-alt"></i>
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-bold text-lg">14:15</span>
+            <div class="w-px h-8 bg-white/30"></div>
+            <div>
+              <p class="font-medium text-white/90 text-sm">Maria Souza</p>
+              <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
+                LIBERADO <i class="fi fi-sr-lock-open-alt"></i>
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-bold text-lg">13:58</span>
+            <div class="w-px h-8 bg-white/30"></div>
+            <div>
+              <p class="font-medium text-white/90 text-sm">Carlos Lima</p>
+              <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
+                NEGADO <i class="fi fi-sr-lock"></i>
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-      <button class="btn-ver-todos">VER TODO O REGISTRO</button>
-    </aside>
+
+        <div class="flex justify-between items-center mb-4">
+            <p class="text-sm font-semibold opacity-80">Ontem</p>
+            <i class="fi fi-sr-menu-dots text-white/80"></i>
+        </div>
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <span class="font-bold text-lg">18:45</span>
+            <div class="w-px h-8 bg-white/30"></div>
+            <div>
+              <p class="font-medium text-white/90 text-sm">Ana Costa</p>
+              <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
+                LIBERADO <i class="fi fi-sr-lock-open-alt"></i>
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-bold text-lg">17:30</span>
+            <div class="w-px h-8 bg-white/30"></div>
+            <div>
+              <p class="font-medium text-white/90 text-sm">Pedro Alves</p>
+              <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
+                NEGADO <i class="fi fi-sr-lock"></i>
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-bold text-lg">16:12</span>
+            <div class="w-px h-8 bg-white/30"></div>
+            <div>
+              <p class="font-medium text-white/90 text-sm">Luiza Mendes</p>
+              <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
+                LIBERADO <i class="fi fi-sr-lock-open-alt"></i>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-ver-todos">VER TODO O REGISTRO</button>
+
+        <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-coapac to-transparent pointer-events-none"></div>
+      </aside>
+    </div>
   </div>
+
+  <!-- Mobile bottom navigation -->
+  <nav class="mobile-bottom-nav">
+    <a href="#" class="nav-active">
+      <i class="fi fi-sr-home"></i>
+      <span>Início</span>
+    </a>
+    <a href="#">
+      <i class="fi fi-sr-user"></i>
+      <span>Usuários</span>
+    </a>
+    <a href="#">
+      <i class="fi fi-sr-users-alt"></i>
+      <span>Turmas</span>
+    </a>
+    <a href="#">
+      <i class="fi fi-sr-folder-open"></i>
+      <span>Registro</span>
+    </a>
+    <button id="menu-button">
+      <i class="fi fi-sr-menu-burger"></i>
+      <span>Menu</span>
+    </button>
+  </nav>
+
+  <script>
+    // Adiciona classe ativa ao clicar nos itens do menu mobile
+    document.querySelectorAll('.mobile-bottom-nav a').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.mobile-bottom-nav a').forEach(i => i.classList.remove('nav-active'));
+        this.classList.add('nav-active');
+      });
+    });
+
+    // Controla abertura/fechamento do menu lateral mobile
+    const menuButton = document.getElementById('menu-button');
+    const mobileSidebar = document.querySelector('.mobile-sidebar');
+    const overlay = document.querySelector('.overlay');
+    
+    menuButton.addEventListener('click', function() {
+      mobileSidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    });
+    
+    overlay.addEventListener('click', function() {
+      mobileSidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+  </script>
 </body>
 </html>
