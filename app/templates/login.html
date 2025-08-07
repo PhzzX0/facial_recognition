@@ -72,14 +72,14 @@
         <div class="hidden lg:block absolute left-6 top-0 h-full w-0.5 bg-white/50" aria-hidden="true"></div>
         <div class="w-full max-w-md">
           <div class="flex justify-center lg:justify-start items-center gap-3 mb-4">
-            <img src="{% static 'imagens/FaceIN_Logo_branca.png' %}" alt="Logo FaceIN" class="h-8" />
+            <img src="FaceIN Logo branca.png" alt="Logo FaceIN" class="h-8" />
           </div>
           <h1 class="text-2xl sm:text-3xl font-bold text-white">INSTITUTO FEDERAL</h1>
           <p class="text-base sm:text-lg mb-4 text-white">Rio Grande do Norte - Campus Apodi</p>
           <p class="text-sm font-light mb-6 text-white/80">
             Um software desenvolvido pela IN4 focado na melhoria da segurança do IFRN.
           </p>
-          <img src="{% static 'imagens/img_facein.png' %}" alt="Ilustração do sistema de segurança FaceIN" class="w-full max-w-xs sm:max-w-md mx-auto" />
+          <img src="img-facein.png" alt="Ilustração do sistema de segurança FaceIN" class="w-full max-w-xs sm:max-w-md mx-auto" />
         </div>
       </section>
 
@@ -88,12 +88,9 @@
         <div class="bg-brand-green-dark w-full max-w-md p-6 sm:p-10 rounded-3xl">
           <h2 class="text-3xl sm:text-4xl font-bold mb-6 text-center">Login</h2>
 
-          <form method="POST" class="space-y-6">
+          <form action="#" role="form" class="space-y-5 sm:space-y-6" aria-describedby="login-instrucao">
             <p id="login-instrucao" class="sr-only">Digite seu usuário e senha para acessar o sistema</p>
-            {% csrf_token %}
-            {% if erro %}
-              <p style="color:red;">{{ erro }}</p>
-            {% endif %}
+
             <div>
               <label for="usuario" class="block mb-2 text-sm font-medium">Usuário:</label>
               <input type="text" id="usuario" name="usuario" class="input-field" required autocomplete="username" />
@@ -120,7 +117,7 @@
 
   <footer class="text-white text-[10px] sm:text-sm flex items-center gap-1 sm:gap-2 justify-center sm:justify-end w-full px-4 sm:px-8 pb-4">
     <span>desenvolvido por</span>
-    <img src="{% static 'imagens/Logo_IN4_png2.png' %}" alt="Logo da empresa IN4" class="h-4 sm:h-5" />
+    <img src="Logo IN4 png2.png" alt="Logo da empresa IN4" class="h-4 sm:h-5" />
   </footer>
 
   <script>
@@ -150,4 +147,3 @@
 </body>
 
 </html>
-
