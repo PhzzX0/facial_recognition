@@ -12,7 +12,7 @@ import base64
 import uuid
 import numpy as np
 import json
-from core_functions import verificar_pessoa
+from core_functions import verificar_pessoa, buscar_logs_filtrados
 import mediapipe as mp
 import json
 from datetime import date
@@ -466,6 +466,7 @@ def acessoExterno(request):
 	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
 
 	return render(request, "acessoExterno.html") # carrega a pagina acesso externo
+
 
 
 
