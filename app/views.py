@@ -78,12 +78,10 @@ def aluno(request):
 
 def negado(request):
     dados = request.session.get('dados', {})
-    print(dados)
     return render(request, "Acesso_Negado.html", dados)
 
 def permitido(request):
     dados = request.session.get('dados', {})
-    print(dados)
     return render(request, 'Acesso_permitido.html', dados)
 
 def index(request):
@@ -106,7 +104,7 @@ def login(request):
 			else:
 				erro = 'Senha incorreta' # mensagem de erro
 		except Operadores.DoesNotExist: # se o usuario nao for encontrado no banco de dados
-			erro = 'Usuario nao encontrado' # mensagem de erro
+			erro = 'Usuário não encontrado' # mensagem de erro
 		return render(request, "login.html", {"erro": erro}) # carrega a pagina de login com a mensagem de erro
 	return render(request, "login.html") # carrega a pagina de login
 
