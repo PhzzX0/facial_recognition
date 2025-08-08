@@ -178,8 +178,8 @@
 </head>
 <body class="bg-gray-100 text-coapac">
   <div class="flex flex-col lg:flex-row min-h-screen p-4 gap-4">
-    
-    <!-- Sidebar (desktop only) -->
+
+    <!-- Sidebar -->
     <aside class="hidden lg:flex flex-col justify-between w-64 p-4 border-divider bg-white rounded-3xl shadow-lg">
       <div>
         <div class="text-center">
@@ -191,146 +191,71 @@
         </div>
         <nav class="mt-10 space-y-4 text-sm">
           <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="bi bi-house-fill"></i> Início</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-person-fill"></i> Usuários</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-people-fill"></i> Turmas</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-shield-lock-fill"></i> Permissões</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-door-open-fill"></i> Acesso Externo</a>
+          <a href="#"><i class="bi bi-person-fill"></i> Usuários</a>
+          <a href="#"><i class="bi bi-people-fill"></i> Turmas</a>
+          <a href="#"><i class="bi bi-shield-lock-fill"></i> Permissões</a>
+          <a href="#"><i class="bi bi-door-open-fill"></i> Acesso Externo</a>
         </nav>
       </div>
       <div>
-        <button class="btn-danger">
-          <i class="bi bi-box-arrow-left"></i> SAIR
-        </button>
+        <button class="btn-danger"><i class="bi bi-box-arrow-left"></i> SAIR</button>
         <div class="mt-6 flex justify-center">
           <div class="text-coapac font-bold text-xl">in4</div>
         </div>
       </div>
     </aside>
 
-    <!-- Mobile Sidebar -->
-    <aside class="mobile-sidebar">
-      <div class="p-4">
-        <div class="text-center">
-          <div class="text-facein text-2xl font-bold mb-4">FaceIN</div>
-          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden bg-coapac flex items-center justify-center">
-            <i class="bi bi-person-fill text-white text-3xl"></i>
-          </div>
-          <h1 class="mt-2 font-bold text-lg uppercase">PORTEIRO</h1>
-        </div>
-        <nav class="mt-10 space-y-4 text-sm">
-          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="bi bi-house-fill"></i> Início</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-person-fill"></i> Usuários</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-people-fill"></i> Turmas</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-shield-lock-fill"></i> Permissões</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="bi bi-door-open-fill"></i> Acesso Externo</a>
-        </nav>
-      </div>
-      <div class="p-4">
-        <button class="btn-danger">
-          <i class="bi bi-box-arrow-left"></i> SAIR
-        </button>
-        <div class="mt-6 flex justify-center">
-          <div class="text-coapac font-bold text-xl">in4</div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- Overlay for mobile sidebar -->
-    <div class="overlay"></div>
-
-    <!-- Main content and right sidebar container -->
+    <!-- Main -->
     <div class="flex flex-col lg:flex-row w-full gap-4">
-      <!-- Conteúdo principal -->
       <main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
         <header class="flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
             <h2 class="text-2xl font-bold">Registros de Acesso</h2>
-            <p id="current-date" class="text-sm text-gray-500">Domingo, 10 de Janeiro de 2025</p>
+            <p id="current-date" class="text-sm text-gray-500">{{ data_formatada }}</p>
           </div>
           <div class="flex items-center gap-4">
-            <button class="bg-white p-3 rounded-full shadow">
-              <i class="bi bi-bell-fill text-coapac"></i>
-            </button>
+            <button class="bg-white p-3 rounded-full shadow"><i class="bi bi-bell-fill text-coapac"></i></button>
             <span class="bg-coapac text-white px-6 py-3 rounded-lg font-bold tracking-wider">9RS8YB</span>
           </div>
         </header>
 
         <div class="flex flex-col md:flex-row gap-4 items-center">
-          <input type="date" id="seletor-data" class="hidden" onchange="atualizarDataSelecionada()" />
-          <button onclick="document.getElementById('seletor-data').showPicker()" class="btn-primary">
-            Quarta, 16 de Julho de 2025
-          </button>
-          <button class="bg-white p-3 rounded-full shadow" onclick="imprimirRegistros()">
+          <form method="get" action="{% url 'registro' %}">
+            <input type="date" name="data" value="{{ data_selecionada }}" class="input-base" onchange="this.form.submit()">
+          </form>
+          <button class="bg-white p-3 rounded-full shadow" onclick="window.print()">
             <i class="bi bi-printer text-coapac"></i>
           </button>
         </div>
 
+        <!-- Registros dinâmicos -->
         <section class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          <!-- Registro 1 -->
+          {% for log in logs %}
           <div class="card">
             <div class="flex items-center gap-4 p-4">
-              <div class="bg-coapac text-white font-bold text-lg px-6 py-4 rounded-xl">16:00</div>
+              <div class="bg-coapac text-white font-bold text-lg px-6 py-4 rounded-xl">
+                {{ log.timestamp_acesso|date:"H:i" }}
+              </div>
               <div class="flex-1">
-                <p class="text-gray-700">Fulano de Tal</p>
-                <p class="font-bold text-coapac">LIBERADO <i class="fas fa-lock-open ml-2"></i></p>
+                <p class="text-gray-700">{{ log.nome_completo }}</p>
+                <p class="font-bold text-coapac">
+                  {{ log.status }}
+                  {% if log.status == "LIBERADO" %}
+                    <i class="fas fa-lock-open ml-2"></i>
+                  {% else %}
+                    <i class="fas fa-lock ml-2"></i>
+                  {% endif %}
+                </p>
               </div>
             </div>
           </div>
-          
-          <!-- Registro 2 -->
-          <div class="card">
-            <div class="flex items-center gap-4 p-4">
-              <div class="bg-coapac text-white font-bold text-lg px-6 py-4 rounded-xl">16:00</div>
-              <div class="flex-1">
-                <p class="text-gray-700">Fulano de Tal</p>
-                <p class="font-bold text-coapac">LIBERADO <i class="fas fa-lock-open ml-2"></i></p>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Registro 3 -->
-          <div class="card">
-            <div class="flex items-center gap-4 p-4">
-              <div class="bg-coapac text-white font-bold text-lg px-6 py-4 rounded-xl">16:00</div>
-              <div class="flex-1">
-                <p class="text-gray-700">Fulano de Tal</p>
-                <p class="font-bold text-coapac">LIBERADO <i class="fas fa-lock-open ml-2"></i></p>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Registro 4 -->
-          <div class="card">
-            <div class="flex items-center gap-4 p-4">
-              <div class="bg-coapac text-white font-bold text-lg px-6 py-4 rounded-xl">16:00</div>
-              <div class="flex-1">
-                <p class="text-gray-700">Fulano de Tal</p>
-                <p class="font-bold text-coapac">LIBERADO <i class="fas fa-lock-open ml-2"></i></p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Card de Gerenciamento 1 -->
-          <div class="card">
-            <div class="card-header">Gerenciar Acessos</div>
-            <div class="card-body">
-              <p class="text-gray-600">Gerencie os acessos dos visitantes</p>
-            </div>
-          </div>
-          
-          <!-- Card de Gerenciamento 2 -->
-          <div class="card">
-            <div class="card-header">Relatórios</div>
-            <div class="card-body">
-              <p class="text-gray-600">Visualize relatórios de acesso</p>
-            </div>
-          </div>
+          {% empty %}
+          <p class="text-gray-500 col-span-full">Nenhum registro encontrado para esta data.</p>
+          {% endfor %}
         </section>
       </main>
 
-      <!-- Sidebar Direita (Registros) -->
+      <!-- Sidebar Direita -->
       <aside class="w-full lg:w-80 bg-coapac text-white p-6 rounded-3xl shadow-lg flex-shrink-0">
         <div class="flex justify-between items-center mb-6">
           <h4 class="text-xl font-bold">Registros Recentes</h4>
@@ -338,132 +263,28 @@
             <i class="bi bi-clock-history text-coapac text-xl"></i>
           </div>
         </div>
-        
         <div class="space-y-4">
+          {% for log in logs|slice:":5" %}
           <div class="flex items-center gap-3">
-            <span class="font-bold">16:00</span>
+            <span class="font-bold">{{ log.timestamp_acesso|date:"H:i" }}</span>
             <div class="w-px h-8 bg-white/30"></div>
             <div>
-              <p class="font-medium">Fulano de Tal</p>
+              <p class="font-medium">{{ log.nome_completo }}</p>
               <p class="flex items-center gap-1.5 text-sm uppercase">
-                LIBERADO <i class="fas fa-lock-open"></i>
+                {{ log.status }}
+                {% if log.status == "LIBERADO" %}
+                  <i class="fas fa-lock-open"></i>
+                {% else %}
+                  <i class="fas fa-lock"></i>
+                {% endif %}
               </p>
             </div>
           </div>
-          
-          <div class="flex items-center gap-3">
-            <span class="font-bold">15:30</span>
-            <div class="w-px h-8 bg-white/30"></div>
-            <div>
-              <p class="font-medium">Ciclano Silva</p>
-              <p class="flex items-center gap-1.5 text-sm uppercase">
-                LIBERADO <i class="fas fa-lock-open"></i>
-              </p>
-            </div>
-          </div>
-          
-          <div class="flex items-center gap-3">
-            <span class="font-bold">14:45</span>
-            <div class="w-px h-8 bg-white/30"></div>
-            <div>
-              <p class="font-medium">Beltrano Souza</p>
-              <p class="flex items-center gap-1.5 text-sm uppercase">
-                NEGADO <i class="fas fa-lock"></i>
-              </p>
-            </div>
-          </div>
+          {% endfor %}
         </div>
-        
-        <button class="btn-primary mt-6 w-full">
-          VER TODO O REGISTRO
-        </button>
+        <button class="btn-primary mt-6 w-full">VER TODO O REGISTRO</button>
       </aside>
     </div>
   </div>
-
-  <!-- Mobile bottom navigation -->
-  <nav class="mobile-bottom-nav">
-    <a href="#" class="nav-active">
-      <i class="bi bi-house-fill"></i>
-      <span>Início</span>
-    </a>
-    <a href="#">
-      <i class="bi bi-person-fill"></i>
-      <span>Usuários</span>
-    </a>
-    <a href="#">
-      <i class="bi bi-people-fill"></i>
-      <span>Turmas</span>
-    </a>
-    <a href="#">
-      <i class="bi bi-clock-history"></i>
-      <span>Registros</span>
-    </a>
-    <button id="menu-button">
-      <i class="bi bi-list"></i>
-      <span>Menu</span>
-    </button>
-  </nav>
-
-  <script>
-    const meses = [
-      "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-      "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-    ];
-    const diasSemana = [
-      "Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"
-    ];
-
-    function atualizarDataSelecionada() {
-      const input = document.getElementById("seletor-data");
-      const botao = document.getElementById("botao-data");
-      const dataSelecionada = new Date(input.value + "T00:00:00");
-
-      if (!isNaN(dataSelecionada)) {
-        const diaSemana = diasSemana[dataSelecionada.getDay()];
-        const dia = dataSelecionada.getDate().toString().padStart(2, "0");
-        const mes = meses[dataSelecionada.getMonth()];
-        const ano = dataSelecionada.getFullYear();
-
-        botao.textContent = `${diaSemana}, ${dia} de ${mes} de ${ano}`;
-      }
-    }
-
-    function imprimirRegistros() {
-      window.print();
-    }
-
-    // Atualiza data atual
-    document.addEventListener('DOMContentLoaded', function() {
-      const hoje = new Date();
-      const dataAtualElement = document.getElementById("current-date");
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      dataAtualElement.textContent = hoje.toLocaleDateString('pt-BR', options);
-      
-      // Inicializa seletor de data
-      const input = document.getElementById("seletor-data");
-      input.value = hoje.toISOString().split("T")[0];
-      atualizarDataSelecionada();
-    });
-
-    // Controla menu mobile
-    const menuButton = document.getElementById('menu-button');
-    const mobileSidebar = document.querySelector('.mobile-sidebar');
-    const overlay = document.querySelector('.overlay');
-    
-    if (menuButton) {
-      menuButton.addEventListener('click', function() {
-        mobileSidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
-      });
-    }
-    
-    if (overlay) {
-      overlay.addEventListener('click', function() {
-        mobileSidebar.classList.remove('active');
-        overlay.classList.remove('active');
-      });
-    }
-  </script>
 </body>
 </html>
