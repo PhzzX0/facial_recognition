@@ -31,7 +31,7 @@ if not os.path.exists(capturas_dir):
     os.makedirs(capturas_dir)
 
 # Abre o stream de vídeo do IP Webcam (mude a URL conforme seu IP)
-video_capture = cv2.VideoCapture('http://10.176.4.4:8080/video')#'http://192.168.0.0:8080/video')
+video_capture = cv2.VideoCapture(0) # ('http://192.168.0.0:8080/video')
 
 # Inicializa os módulos do MediaPipe
 mp_face_detection = mp.solutions.face_detection

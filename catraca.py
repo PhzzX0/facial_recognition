@@ -3,7 +3,7 @@ from tkinter import *
 
 
 # Configure a porta serial conforme sua ESP32
-esp32 = serial.Serial('COM6', 9600)
+esp32 = serial.Serial('COM8', 9600)
 
 
 def enviar_comando(comando):

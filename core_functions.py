@@ -4,7 +4,7 @@ import cv2
 from datetime import datetime
 from deepface import DeepFace
 import hashlib
-# from catraca import enviar_comando (tira o comentário se quiser rodar o esp plmds)
+from catraca import enviar_comando
 
 # --- CONFIGURAÇÕES GLOBAIS ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -44,7 +44,7 @@ def verificar_pessoa(imagem_rosto_detectado):
 
         if not registros:
             registrar_log_acesso('Não Encontrado', caminho_foto_capturada=log_img_path)
-            return {"resposta": 1}
+            return {"resposta": 1, "dados":{"dados": False}}
         
         for user_id, nome, caminho_relativo_db in registros:
             caminho_absoluto_rosto = os.path.join(BASE_DIR, caminho_relativo_db)
@@ -74,9 +74,9 @@ def verificar_pessoa(imagem_rosto_detectado):
                         if situacao == 'Suspenso':
                             print(f"ACESSO NEGADO: {nome_completo}")
                             print(f"  - Motivo: Utilizador com situação '{situacao}'")
+                            registrar_log_acesso('Negado', user_id, log_img_path)
                             return {"resposta": 1, "dados": {"nome": nome_completo,
                                                              "situacao": situacao}}
-                            registrar_log_acesso('Negado', user_id, log_img_path)
                         else:
                             # CORREÇÃO: Adicionados os prints de detalhes
                             print(f"ACESSO ACEITO: {nome_completo}")
@@ -87,7 +87,7 @@ def verificar_pessoa(imagem_rosto_detectado):
                                 print(f"  - Curso: {curso or 'Não vinculado'}")
                                 print(f"  - Turma: {turma or 'Não vinculada'}")
                             registrar_log_acesso('Aceito', user_id, log_img_path)
-                            # enviar_comando('1') (tira o comentário se quiser rodar o esp plmds)
+                            enviar_comando('1')
                             return {"resposta": 2, "dados": {"nome": nome_completo,
                                                              "matricula": matricula or "N/A",
                                                              "tipo": tipo,
@@ -101,8 +101,8 @@ def verificar_pessoa(imagem_rosto_detectado):
                 print(f"Verificação falhou para {nome}. Detalhe: {e}")
 
         print("Pessoa não reconhecida no banco de dados.")
-        return {"resposta": 1}
         registrar_log_acesso('Não Encontrado', caminho_foto_capturada=log_img_path)
+        return {"resposta": 1, "dados":{"dados": False}}
     finally:
         conn.close()
 
@@ -135,7 +135,7 @@ def adicionar_operador(nome, login, senha, papel):
         conn.close()
 
 def cadastrar_usuario(nome, matricula, tipo, nome_ficheiro_foto):
-    caminho_relativo = os.path.join('rostos_cadastrados', nome_ficheiro_foto)
+    caminho_relativo = os.path.join('Rostos_cadastrados', nome_ficheiro_foto)
     caminho_absoluto_verificacao = os.path.join(BASE_DIR, caminho_relativo)
     if not os.path.exists(caminho_absoluto_verificacao):
         print(f"[ERRO] A foto '{nome_ficheiro_foto}' não foi encontrada na pasta 'rostos_cadastrados'.")
@@ -181,54 +181,6 @@ def excluir_usuario(usuario_nome_completo):
         conn.close()
 
 
-def excluir_usuario(usuario_nome_completo):
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
-    try:
-        c.execute("SELECT caminho_foto_rosto FROM app_Usuarios WHERE nome_completo = ?", (usuario_nome_completo,))
-        resultado = c.fetchone()
-        if not resultado:
-            return False
-        
-        caminho_relativo_db = resultado[0]
-        # CORREÇÃO: Monta o caminho absoluto para encontrar o ficheiro a apagar
-        caminho_absoluto_foto = os.path.join(BASE_DIR, caminho_relativo_db)
-
-        c.execute("DELETE FROM app_Usuarios WHERE nome_completo = ?", (usuario_nome_completo,))
-        conn.commit()
-        
-        if os.path.exists(caminho_absoluto_foto):
-            os.remove(caminho_absoluto_foto)
-        
-        return True
-    finally:
-        conn.close()
-
-
-def excluir_usuario(usuario_nome_completo):
-    conn = sqlite3.connect(db_path)
-    c = conn.cursor()
-    try:
-        c.execute("SELECT caminho_foto_rosto FROM app_Usuarios WHERE nome_completo = ?", (usuario_nome_completo,))
-        resultado = c.fetchone()
-        if not resultado:
-            return False
-        
-        caminho_relativo_db = resultado[0]
-        # CORREÇÃO: Monta o caminho absoluto para encontrar o ficheiro a apagar
-        caminho_absoluto_foto = os.path.join(BASE_DIR, caminho_relativo_db)
-
-        c.execute("DELETE FROM app_Usuarios WHERE nome_completo = ?", (usuario_nome_completo,))
-        conn.commit()
-        
-        if os.path.exists(caminho_absoluto_foto):
-            os.remove(caminho_absoluto_foto)
-        
-        return True
-    finally:
-        conn.close()
-
-
 def listar_todos_usuarios():
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
@@ -258,20 +210,6 @@ def buscar_usuario(termo_busca):
         return []
     finally:
         conn.close()
-
-
-
-
-
-#cadastrar_usuario("TESTE", 0000000, "Discente", ".\Rostos_cadastrados\este.jpg")
-
-#cadastrar_curso("Informática")
-#cadastrar_usuario("juan", 1111111, "Discente", ".\capturas_log\juan.jpg")
-#print(listar_todos_usuarios())
-#excluir_usuario('TESTE')
-
-# Exemplo de como chamar a nova função
-
 
 
 def cadastrar_visitante(nome, documento, empresa, motivo, horario_inicio, horario_fim):
@@ -680,7 +618,3 @@ def contar_sancoes_ativas():
     finally:
         conn.close()
 
-#if __name__ == "__main__":
-#    adicionar_operador("Coapac", "coapac", "coapac", "COAPAC")
-
-#    adicionar_operador("Porteiro", "porteiro", "porteiro", "Porteiro")
