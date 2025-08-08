@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -209,13 +210,13 @@
             <p>Rio Grande do Norte - Campus Apodi</p>
         </div>
         <div class="header-logo">
-            <img src="https://i.ibb.co/QnC4d62/Face-IN-Logo-branca.png" alt="Logo FaceIN">
+            <img src="{% static 'imagens/FaceIN_Logo_branca.png' %}" alt="Logo FaceIN">
         </div>
     </header>
 
     <main class="main-content">
         <div class="camera-feed">
-            <img src="https://i.ibb.co/3kZcZ5j/macaco-camera.jpg" alt="Imagem da câmera de segurança mostrando um rosto">
+            <video id="camera" autoplay playsinline class="w-full h-full object-cover" style="transform: scaleX(-1);"></video>
             <div class="focus-overlay">
                 <div class="focus-box">
                     <div class="focus-corner top-left"></div>
@@ -232,12 +233,11 @@
             </div>
 
             <div class="info-box user-details-box">
-                <img class="avatar" src="https://i.ibb.co/fHnB03z/macaco-avatar.jpg" alt="Avatar do usuário">
                 <div class="user-info">
-                    <p><strong>NOME:</strong><br>MACACO PREGO DA SILVA</p>
-                    <p><strong>MATRÍCULA:</strong><br>20221084010000</p>
-                    <p><strong>TURMA:</strong><br>4º ANO DE INFORMÁTICA</p>
-                    <p><strong>SITUAÇÃO:</strong><br>SEM RESTRIÇÕES</p>
+                    <p><strong>NOME:</strong><br>{{ nome }}</p>
+                    <p><strong>MATRÍCULA:</strong><br>{{ matricula }}</p>
+                    <p><strong>TURMA:</strong><br>{{ turma }}</p>
+                    <p><strong>SITUAÇÃO:</strong><br>{{ situacao }}</p>
                 </div>
             </div>
 
@@ -249,8 +249,48 @@
 
     <footer class="page-footer">
         <span>desenvolvido por</span>
-        <img src="https://i.ibb.co/St2Q77s/Logo-IN4-png2.png" alt="Logo IN4">
+        <img src="{% static 'imagens/Logo_IN4_png2.png' %}" alt="Logo IN4">
     </footer>
+    <script>
+        const video = document.getElementById('camera');
 
+        // Pede acesso à câmera
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Erro ao acessar a câmera:', error);
+            });
+
+        // Envia imagem para o servidor a cada 2 segundos
+        const enviarImagem = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imagemBase64 = canvas.toDataURL('image/jpeg');
+
+            fetch('/receber_imagem/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ imagem: imagemBase64 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                            if (data.redirect) {
+                           window.location.href = data.redirect;
+                            }})
+            .catch(err => console.error('Erro ao enviar imagem:', err));
+        };
+
+        // Espera vídeo carregar antes de começar a enviar
+        video.addEventListener('loadedmetadata', () => {
+            setInterval(enviarImagem, 3000); // a cada 2 segundos
+        });
+    </script>
 </body>
 </html>
