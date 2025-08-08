@@ -135,12 +135,12 @@ def adicionar_operador(nome, login, senha, papel):
         conn.close()
 
 def cadastrar_usuario(nome, matricula, tipo, nome_ficheiro_foto):
-    caminho_relativo = os.path.join('rostos_cadastrados', nome_ficheiro_foto)
+    caminho_relativo = os.path.join('.\Rostos_cadastrados', nome_ficheiro_foto)
     caminho_absoluto_verificacao = os.path.join(BASE_DIR, caminho_relativo)
     if not os.path.exists(caminho_absoluto_verificacao):
         print(f"[ERRO] A foto '{nome_ficheiro_foto}' não foi encontrada na pasta 'rostos_cadastrados'.")
         return None
-
+    print(caminho_relativo)
     conn = sqlite3.connect(db_path)
     c = conn.cursor()
     try:
@@ -684,3 +684,4 @@ def contar_sancoes_ativas():
 #    adicionar_operador("Coapac", "coapac", "coapac", "COAPAC")
 
 #    adicionar_operador("Porteiro", "porteiro", "porteiro", "Porteiro")
+
