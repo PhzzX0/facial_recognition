@@ -12,11 +12,10 @@ import base64
 import uuid
 import numpy as np
 import json
-from core_functions import verificar_pessoa
+from core_functions import verificar_pessoa, buscar_logs_filtrados
 import mediapipe as mp
 import json
-from datetime import date
-
+from django.utils.timezone import now
 
 mp_face_detection = mp.solutions.face_detection
 
@@ -78,12 +77,10 @@ def aluno(request):
 
 def negado(request):
     dados = request.session.get('dados', {})
-    print(dados)
     return render(request, "Acesso_Negado.html", dados)
 
 def permitido(request):
     dados = request.session.get('dados', {})
-    print(dados)
     return render(request, 'Acesso_permitido.html', dados)
 
 def index(request):
@@ -106,7 +103,7 @@ def login(request):
 			else:
 				erro = 'Senha incorreta' # mensagem de erro
 		except Operadores.DoesNotExist: # se o usuario nao for encontrado no banco de dados
-			erro = 'Usuario nao encontrado' # mensagem de erro
+			erro = 'Usuário não encontrado' # mensagem de erro
 		return render(request, "login.html", {"erro": erro}) # carrega a pagina de login com a mensagem de erro
 	return render(request, "login.html") # carrega a pagina de login
 
@@ -273,17 +270,26 @@ def deletar_turma(request, turma_id):
 
 
 def registro(request):
-	if 'operador_id' not in request.session: # verifica se ha um usuario logado
-		return redirect("login") # se nao tiver um usuario logado redireciona para a pagina de login
-	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
-	
-	# Obtém a data atual no formato YYYY-MM-DD
-	data_atual = date.today().isoformat()
-		
-	# Chama a função com a data atual
-	logs_de_hoje = buscar_logs_filtrados(data_atual)
-	
-	return render(request, "registro.html", logs_de_hoje) # carrega a pagina registro
+    """Página de registros de acesso."""
+    # Data de hoje como padrão
+    data_selecionada = request.GET.get("data") or now().strftime("%Y-%m-%d")
+
+    # Busca os registros dessa data
+    logs = buscar_logs_filtrados(data_selecionada)
+
+    # Formata a data para exibir no título
+    data_formatada = now().strftime("%d/%m/%Y")
+    if request.GET.get("data"):
+        try:
+            data_formatada = now().strptime(request.GET["data"], "%Y-%m-%d").strftime("%d/%m/%Y")
+        except:
+            pass
+
+    return render(request, "registro.html", {
+        "logs": logs,
+        "data_selecionada": data_selecionada,
+        "data_formatada": data_formatada
+    })
 
 # ------------------ PERMISSÕES ESPECIAIS ------------------
 
@@ -468,9 +474,3 @@ def acessoExterno(request):
 	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
 
 	return render(request, "acessoExterno.html") # carrega a pagina acesso externo
-
-
-
-
-
-
