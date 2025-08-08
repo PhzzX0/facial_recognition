@@ -12,7 +12,7 @@ import base64
 import uuid
 import numpy as np
 import json
-from core_functions import verificar_pessoa, buscar_logs_filtrados
+from core_functions import verificar_pessoa, buscar_logs_filtrados, cadastrar_usuario
 import mediapipe as mp
 import json
 from django.utils.timezone import now
@@ -468,9 +468,56 @@ def suspensoes(request):
 	return render(request, "suspensoes.html") # carrega a pagina suspensoes
 
 
-def acessoExterno(request):
-	if 'operador_id' not in request.session: # verifica se ha um usuario logado
-		return redirect("login") # se nao tiver um usuario logado redireciona para a pagina de login
-	operador = Operadores.objects.get(id=request.session['operador_id']) # variavel para o usuario logado
+from django.conf import settings
+from django.contrib import messages
 
-	return render(request, "acessoExterno.html") # carrega a pagina acesso externo
+BASE_DIR = settings.BASE_DIR
+db_path = os.path.join(BASE_DIR, 'database.db')
+
+def acessoExterno(request):
+    if 'operador_id' not in request.session:
+        return redirect("login")
+
+    operador = Operadores.objects.get(id=request.session['operador_id'])
+
+    if request.method == "POST":
+        nome = request.POST.get('nome')
+        matricula = request.POST.get('matricula')
+        tipo = request.POST.get('tipo')
+        foto = request.FILES.get('foto')
+
+        if not all([nome, matricula, tipo, foto]):
+            messages.error(request, "Todos os campos são obrigatórios.")
+            return redirect("acessoExterno")
+
+        pasta_destino = os.path.join(BASE_DIR, 'Rostos_cadastrados')
+        os.makedirs(pasta_destino, exist_ok=True)
+
+        caminho_foto = os.path.join(pasta_destino, foto.name)
+        with open(caminho_foto, 'wb+') as destino:
+            for chunk in foto.chunks():
+                destino.write(chunk)
+
+        novo_id = cadastrar_usuario(nome, matricula, tipo, foto.name)
+        if novo_id:
+            messages.success(request, f"Usuário {nome} cadastrado com sucesso!")
+        else:
+            messages.error(request, f"Erro: matrícula '{matricula}' já cadastrada.")
+
+        return redirect("acessoExterno")
+
+    # Busca últimos registros usando campo real de data/hora
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    c.execute("""
+        SELECT nome_completo, tipo, 'LIBERADO' as status
+        FROM app_Usuarios
+    """)
+    registros = c.fetchall()
+    conn.close()
+
+    return render(request, "acessoExterno.html", {
+        "operador": operador,
+        "registros": registros
+    })
+
