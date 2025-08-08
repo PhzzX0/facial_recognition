@@ -7,165 +7,29 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-straight/css/uicons-solid-straight.css'>
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
-  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'> <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Poppins', sans-serif; }
     .bg-coapac { background-color: #386641; }
     .text-coapac { color: #386641; }
-    .section-box {
-      background-color: #386641;
-      color: #E7E7E4;
-      padding: 1.5rem;
-      border-radius: 1.5rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      width: 100%;
-    }
-    .input-base {
-      width: 100%;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      background-color: #E7E7E4;
-      color: #386641;
-      font-weight: 600;
-    }
-    .btn-submit {
-      background-color: #E7E7E4;
-      color: #386641;
-      padding: 0.75rem 2rem;
-      border-radius: 0.5rem;
-      font-weight: 700;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .btn-sair {
-      background-color: #dc2626;
-      color: #E7E7E4;
-      padding: 0.5rem;
-      border-radius: 9999px;
-      width: 100%;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-    .btn-ver-todos {
-      margin-top: 1.5rem;
-      width: 100%;
-      background-color: #E7E7E4;
-      color: #386641;
-      padding: 0.75rem;
-      border-radius: 0.5rem;
-      font-weight: 700;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    nav a {
-      color: #9ca3af;
-      transition: color 0.3s ease;
-      font-weight: 600;
-    }
-    nav a:hover {
-      color: #386641;
-    }
-    .nav-active {
-      color: #386641;
-      font-weight: 700;
-    }
-    .border-divider {
-      border-right: 2px solid #e5e7eb;
-    }
-    
-    /* Mobile bottom navigation */
-    .mobile-bottom-nav {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-      z-index: 100;
-    }
-    
-    .mobile-bottom-nav a, .mobile-bottom-nav button {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0.5rem 0;
-      color: #9ca3af;
-      font-size: 0.75rem;
-      border: none;
-      background: none;
-      cursor: pointer;
-    }
-    
-    .mobile-bottom-nav a.nav-active, .mobile-bottom-nav button.nav-active {
-      color: #386641;
-    }
-    
-    .mobile-bottom-nav i {
-      font-size: 1.25rem;
-      margin-bottom: 0.25rem;
-    }
-    
-    /* Mobile sidebar */
-    .mobile-sidebar {
-      position: fixed;
-      top: 0;
-      left: -100%;
-      width: 85%;
-      max-width: 320px;
-      height: 100%;
-      background: white;
-      z-index: 110;
-      transition: left 0.3s ease;
-      overflow-y: auto;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    }
-    
-    .mobile-sidebar.active {
-      left: 0;
-    }
-    
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 105;
-    }
-    
-    .overlay.active {
-      display: block;
-    }
-    
-    @media (max-width: 1023px) {
-      .mobile-bottom-nav {
-        display: flex;
-      }
-      
-      .sidebar {
-        display: none;
-      }
-      
-      main {
-        margin-bottom: 60px; /* Espaço para a barra inferior */
-      }
-    }
+    .section-box { background-color: #386641; color: #E7E7E4; padding: 1.5rem; border-radius: 1.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); width: 100%; }
+    .input-base { width: 100%; padding: 0.75rem; border-radius: 0.5rem; background-color: #E7E7E4; color: #386641; font-weight: 600; }
+    .btn-submit { background-color: #E7E7E4; color: #386641; padding: 0.75rem 2rem; border-radius: 0.5rem; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .btn-sair { background-color: #dc2626; color: #E7E7E4; padding: 0.5rem; border-radius: 9999px; width: 100%; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .btn-ver-todos { margin-top: 1.5rem; width: 100%; background-color: #E7E7E4; color: #386641; padding: 0.75rem; border-radius: 0.5rem; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    nav a { color: #9ca3af; transition: color 0.3s ease; font-weight: 600; }
+    nav a:hover { color: #386641; }
+    .nav-active { color: #386641; font-weight: 700; }
+    .border-divider { border-right: 2px solid #e5e7eb; }
   </style>
 </head>
 <body class="bg-gray-100 text-coapac">
   <div class="flex flex-col lg:flex-row min-h-screen p-4 gap-4">
-    
-    <!-- Sidebar (desktop only) -->
+
+    <!-- Sidebar -->
     <aside class="hidden lg:flex flex-col justify-between w-64 p-4 border-divider bg-white rounded-3xl shadow-lg">
-
       <div>
         <div class="text-center">
           <img src="img/FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
@@ -174,80 +38,32 @@
           </div>
           <h1 class="mt-2 font-bold text-lg uppercase">COAPAC</h1>
         </div>
-        <nav class="mt-10 space-y-4 text-sm">
-          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-home"></i> Início</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Permissões</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
-          <a href="#" class="flex items-center gap-3 p-2 "><i class="fi fi-ss-user-key"></i> Acesso Externo</a>
-        </nav>
       </div>
       <div>
-        <button class="mt-6 btn-sair">
-          <i class="bi bi-box-arrow-left"></i> SAIR
-        </button>
+        <button class="mt-6 btn-sair"><i class="bi bi-box-arrow-left"></i> SAIR</button>
         <div class="mt-6 flex justify-center">
           <img src="img/Logo IN4 png verde.png" alt="Logo FaceIN" class="h-8">
         </div>
       </div>
     </aside>
 
-    <!-- Mobile Sidebar (hidden by default) -->
-    <aside class="mobile-sidebar">
-      <div class="p-4">
-        <div class="text-center">
-          <img src="img/FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
-          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover">
-          </div>
-          <h1 class="mt-2 font-bold text-lg uppercase">COAPAC</h1>
-        </div>
-        <nav class="mt-10 space-y-4 text-sm">
-          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-home"></i> Início</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Permissões</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
-          <a href="#" class="flex items-center gap-3 p-2 "><i class="fi fi-ss-user-key"></i> Acesso Externo</a>
-        </nav>
-      </div>
-      <div class="p-4">
-        <button class="mt-6 btn-sair">
-          <i class="bi bi-box-arrow-left"></i> SAIR
-        </button>
-        <div class="mt-6 flex justify-center">
-          <img src="img/Logo IN4 png verde.png" alt="Logo FaceIN" class="h-8">
-        </div>
-      </div>
-    </aside>
-
-    <!-- Overlay for mobile sidebar -->
-    <div class="overlay"></div>
-
-    <!-- Main content and right sidebar container -->
+    <!-- Main -->
     <div class="flex flex-col lg:flex-row w-full gap-4">
-      <!-- Conteúdo principal -->
       <main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
-        <header class="flex flex-col md:flex-row justify-between items-center gap-4" aria-label="Cabeçalho principal">
+        <header class="flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
             <h2 class="text-xl md:text-2xl font-bold">Cadastro de visitantes e prestadores de serviços</h2>
-            <p class="text-sm text-gray-500">Domingo, 01 de Janeiro de 2025</p>
-          </div>
-          <div class="flex items-center gap-4">
-            <div class="bg-white p-3 rounded-full shadow"><i class="bi bi-bell-fill text-coapac"></i></div>
-            <span class="bg-coapac text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-bold tracking-wider text-sm md:text-base" aria-label="Código de identificação">9RS8YB</span>
+            <p class="text-sm text-gray-500">{% now "l, d \\d\\e F \\d\\e Y" %}</p>
           </div>
         </header>
 
-        <section class="section-box" aria-labelledby="formulario-cadastro">
-          <h3 id="formulario-cadastro" class="text-xl font-bold mb-6">Gerenciar Acesso</h3>
-          <form class="space-y-5">
+        <section class="section-box">
+          <h3 class="text-xl font-bold mb-6">Gerenciar Acesso</h3>
+          <form method="POST" enctype="multipart/form-data" class="space-y-5">
+            {% csrf_token %}
             <div>
               <label for="nome" class="block font-bold mb-2">Nome completo:</label>
-              <input id="nome" name="nome" type="text" placeholder="Fulano de tal" class="input-base">
+              <input id="nome" name="nome" type="text" placeholder="Fulano de tal" class="input-base" required>
             </div>
             <div class="grid md:grid-cols-2 gap-5">
               <div>
@@ -261,7 +77,7 @@
             </div>
             <div>
               <label for="motivo" class="block font-bold mb-2">Motivo do acesso:</label>
-              <input id="motivo" name="motivo" type="text" placeholder="Consertar ar condicionados" class="input-base">
+              <input id="motivo" name="motivo" type="text" placeholder="Consertar ar condicionado" class="input-base">
             </div>
             <div class="grid md:grid-cols-3 gap-5">
               <div>
@@ -279,6 +95,27 @@
                 </select>
               </div>
             </div>
+
+            <!-- Campos adicionados para integração -->
+            <div class="grid md:grid-cols-3 gap-5">
+              <div>
+                <label for="matricula" class="block font-bold mb-2">Matrícula:</label>
+                <input id="matricula" name="matricula" type="text" placeholder="12345" class="input-base" required>
+              </div>
+              <div>
+                <label for="tipo" class="block font-bold mb-2">Tipo:</label>
+                <select id="tipo" name="tipo" class="input-base" required>
+                  <option value="Discente">Discente</option>
+                  <option value="Servidor">Servidor</option>
+                  <option value="Docente">Docente</option>
+                </select>
+              </div>
+              <div>
+                <label for="foto" class="block font-bold mb-2">Foto do rosto:</label>
+                <input id="foto" name="foto" type="file" class="input-base" accept="image/*" required>
+              </div>
+            </div>
+
             <div class="flex items-center pt-6">
               <i class="bi bi-folder text-3xl" aria-hidden="true"></i>
               <button type="submit" class="ml-auto btn-submit">Cadastrar</button>
@@ -287,143 +124,34 @@
         </section>
       </main>
 
-      <!-- Registro (reposicionado para baixo em mobile) -->
+      <!-- Registro dinâmico -->
       <aside class="w-full lg:w-80 bg-coapac text-white p-6 overflow-auto rounded-3xl shadow-lg flex-shrink-0 order-first lg:order-last">
         <div class="flex justify-between items-center mb-6">
           <h4 class="text-2xl font-bold">Registro</h4>
-          <div class="w-9 h-11 bg-gray-100 rounded-lg flex items-center justify-center">
-              <i class="fi fi-sr-folder-open text-coapac text-2xl"></i>
-          </div>
-        </div>
-        
-        <div class="flex justify-between items-center mb-4">
-            <p class="text-sm font-semibold opacity-80">Hoje</p>
-            <i class="fi fi-sr-menu-dots text-white/80"></i>
         </div>
         <div class="space-y-4 mb-6">
+          {% for nome, tipo, status in registros %}
           <div class="flex items-center gap-3">
-            <span class="font-bold text-lg">14:32</span>
+            <span class="font-bold text-lg">{{ horario|date:"H:i" }}</span>
             <div class="w-px h-8 bg-white/30"></div>
             <div>
-              <p class="font-medium text-white/90 text-sm">João Silva</p>
+              <p class="font-medium text-white/90 text-sm">{{ nome }}</p>
               <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
-                LIBERADO <i class="fi fi-sr-lock-open-alt"></i>
+                {{ status }}
+                {% if status == "LIBERADO" %}
+                  <i class="fi fi-sr-lock-open-alt"></i>
+                {% else %}
+                  <i class="fi fi-sr-lock"></i>
+                {% endif %}
               </p>
             </div>
           </div>
-          <div class="flex items-center gap-3">
-            <span class="font-bold text-lg">14:15</span>
-            <div class="w-px h-8 bg-white/30"></div>
-            <div>
-              <p class="font-medium text-white/90 text-sm">Maria Souza</p>
-              <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
-                LIBERADO <i class="fi fi-sr-lock-open-alt"></i>
-              </p>
-            </div>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="font-bold text-lg">13:58</span>
-            <div class="w-px h-8 bg-white/30"></div>
-            <div>
-              <p class="font-medium text-white/90 text-sm">Carlos Lima</p>
-              <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
-                NEGADO <i class="fi fi-sr-lock"></i>
-              </p>
-            </div>
-          </div>
+          {% empty %}
+          <p class="text-sm opacity-70">Nenhum registro encontrado.</p>
+          {% endfor %}
         </div>
-
-        <div class="flex justify-between items-center mb-4">
-            <p class="text-sm font-semibold opacity-80">Ontem</p>
-            <i class="fi fi-sr-menu-dots text-white/80"></i>
-        </div>
-        <div class="space-y-4">
-          <div class="flex items-center gap-3">
-            <span class="font-bold text-lg">18:45</span>
-            <div class="w-px h-8 bg-white/30"></div>
-            <div>
-              <p class="font-medium text-white/90 text-sm">Ana Costa</p>
-              <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
-                LIBERADO <i class="fi fi-sr-lock-open-alt"></i>
-              </p>
-            </div>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="font-bold text-lg">17:30</span>
-            <div class="w-px h-8 bg-white/30"></div>
-            <div>
-              <p class="font-medium text-white/90 text-sm">Pedro Alves</p>
-              <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
-                NEGADO <i class="fi fi-sr-lock"></i>
-              </p>
-            </div>
-          </div>
-          <div class="flex items-center gap-3">
-            <span class="font-bold text-lg">16:12</span>
-            <div class="w-px h-8 bg-white/30"></div>
-            <div>
-              <p class="font-medium text-white/90 text-sm">Luiza Mendes</p>
-              <p class="flex items-center gap-1.5 font-bold text-xs uppercase">
-                LIBERADO <i class="fi fi-sr-lock-open-alt"></i>
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <button class="btn-ver-todos">VER TODO O REGISTRO</button>
-
-        <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-coapac to-transparent pointer-events-none"></div>
       </aside>
     </div>
   </div>
-
-  <!-- Mobile bottom navigation -->
-  <nav class="mobile-bottom-nav">
-    <a href="#" class="nav-active">
-      <i class="fi fi-sr-home"></i>
-      <span>Início</span>
-    </a>
-    <a href="#">
-      <i class="fi fi-sr-user"></i>
-      <span>Usuários</span>
-    </a>
-    <a href="#">
-      <i class="fi fi-sr-users-alt"></i>
-      <span>Turmas</span>
-    </a>
-    <a href="#">
-      <i class="fi fi-sr-folder-open"></i>
-      <span>Registro</span>
-    </a>
-    <button id="menu-button">
-      <i class="fi fi-sr-menu-burger"></i>
-      <span>Menu</span>
-    </button>
-  </nav>
-
-  <script>
-    // Adiciona classe ativa ao clicar nos itens do menu mobile
-    document.querySelectorAll('.mobile-bottom-nav a').forEach(item => {
-      item.addEventListener('click', function() {
-        document.querySelectorAll('.mobile-bottom-nav a').forEach(i => i.classList.remove('nav-active'));
-        this.classList.add('nav-active');
-      });
-    });
-
-    // Controla abertura/fechamento do menu lateral mobile
-    const menuButton = document.getElementById('menu-button');
-    const mobileSidebar = document.querySelector('.mobile-sidebar');
-    const overlay = document.querySelector('.overlay');
-    
-    menuButton.addEventListener('click', function() {
-      mobileSidebar.classList.toggle('active');
-      overlay.classList.toggle('active');
-    });
-    
-    overlay.addEventListener('click', function() {
-      mobileSidebar.classList.remove('active');
-      overlay.classList.remove('active');
-    });
-  </script>
 </body>
 </html>
