@@ -4,7 +4,7 @@ import cv2
 from datetime import datetime
 from deepface import DeepFace
 import hashlib
-from catraca import enviar_comando
+# from catraca import enviar_comando
 
 # --- CONFIGURAÇÕES GLOBAIS ---
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -87,7 +87,7 @@ def verificar_pessoa(imagem_rosto_detectado):
                                 print(f"  - Curso: {curso or 'Não vinculado'}")
                                 print(f"  - Turma: {turma or 'Não vinculada'}")
                             registrar_log_acesso('Aceito', user_id, log_img_path)
-                            enviar_comando('1')
+                            # enviar_comando('1')
                             return {"resposta": 2, "dados": {"nome": nome_completo,
                                                              "matricula": matricula or "N/A",
                                                              "tipo": tipo,

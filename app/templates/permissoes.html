@@ -1,152 +1,223 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FaceIN - Controle de Permissões</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FaceIN - Permissões Especiais</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Poppins', sans-serif; }
-    .bg-coapac { background-color: #386641; }
-    .text-coapac { color: #386641; }
-    .border-coapac { border-color: #386641; }
-    .form-input {
-      background-color: #F0F2F5;
-      border-radius: 0.5rem;
-      padding: 0.75rem 1rem;
-      color: #386641;
-      font-weight: 500;
-      width: 100%;
-      border: none;
-    }
-    .form-input:focus { outline: 2px solid #6A994E; }
-    nav a {
-      color: #9ca3af;
-      transition: color 0.3s ease;
-      font-weight: 600;
-    }
-    nav a:hover { color: #386641; }
-    .nav-active, .nav-active i {
-      color: #386641;
-      font-weight: 700;
-    }
-    .border-divider { border-right: 2px solid #e5e7eb; }
+  body { font-family: 'Poppins', sans-serif; }
 
-    /* Mobile bottom navigation */
+  .bg-coapac { background-color: #386641; }
+  .text-coapac { color: #386641; }
+
+  /* Section e cards */
+  .section-box {
+    background-color: #386641;
+    color: #E7E7E4;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
+  .option-card {
+    background-color: #E7E7E4;
+    color: #386641;
+    border-radius: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .option-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Botões */
+  .btn-sair {
+    background-color: #dc2626;
+    color: #E7E7E4;
+    padding: 0.5rem;
+    border-radius: 9999px;
+    width: 100%;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .btn-salvar {
+    background: #386641;
+    color: #fff;
+    font-weight: 700;
+    padding: 0.5rem 2rem;
+    border-radius: 0.75rem;
+  }
+  .btn-salvar:hover {
+    background: #274c2b;
+  }
+
+  /* Formulário e mensagens */
+  .form-card {
+    background: #f3f4f6;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+  .errorlist {
+    color: #dc2626;
+    margin-bottom: 1rem;
+  }
+  .success {
+    color: #386641;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  /* Tabela */
+  .table-perm {
+    margin-top: 2rem;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    min-width: 250px;
+  }
+
+  /* Navegação */
+  nav a {
+    color: #9ca3af;
+    transition: color 0.3s ease;
+    font-weight: 600;
+  }
+  nav a:hover {
+    color: #386641;
+  }
+  .nav-active, .nav-active i {
+    color: #386641;
+    font-weight: 700;
+  }
+  .nav-inactive {
+    color: #9ca3af;
+  }
+
+  /* Divisor de borda */
+  .border-divider {
+    border-right: 2px solid #e5e7eb;
+  }
+
+  /* Mobile bottom navigation */
+  .mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    z-index: 100;
+  }
+  .mobile-bottom-nav a, .mobile-bottom-nav button {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0;
+    color: #9ca3af;
+    font-size: 0.75rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  .mobile-bottom-nav a.nav-active, .mobile-bottom-nav button.nav-active {
+    color: #386641;
+  }
+  .mobile-bottom-nav i {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Mobile sidebar */
+  .mobile-sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 85%;
+    max-width: 320px;
+    height: 100%;
+    background: white;
+    z-index: 110;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  }
+  .mobile-sidebar.active {
+    left: 0;
+  }
+
+  /* Overlay */
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 105;
+  }
+  .overlay.active {
+    display: block;
+  }
+
+  /* Responsive */
+  @media (max-width: 1023px) {
     .mobile-bottom-nav {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-      z-index: 100;
-    }
-
-    .mobile-bottom-nav a, .mobile-bottom-nav button {
-      flex: 1;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 0.5rem 0;
-      color: #9ca3af;
-      font-size: 0.75rem;
-      border: none;
-      background: none;
-      cursor: pointer;
     }
-
-    .mobile-bottom-nav a.nav-active, .mobile-bottom-nav button.nav-active {
-      color: #386641;
-    }
-
-    .mobile-bottom-nav i {
-      font-size: 1.25rem;
-      margin-bottom: 0.25rem;
-    }
-
-    /* Mobile sidebar */
-    .mobile-sidebar {
-      position: fixed;
-      top: 0;
-      left: -100%;
-      width: 85%;
-      max-width: 320px;
-      height: 100%;
-      background: white;
-      z-index: 110;
-      transition: left 0.3s ease;
-      overflow-y: auto;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    }
-
-    .mobile-sidebar.active {
-      left: 0;
-    }
-
-    .overlay {
+    .sidebar {
       display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 105;
     }
-
-    .overlay.active {
-      display: block;
+    main {
+      margin-bottom: 60px;
     }
-
-    @media (max-width: 1023px) {
-      .mobile-bottom-nav {
-        display: flex;
-      }
-
-      .sidebar {
-        display: none;
-      }
-
-      main {
-        margin-bottom: 60px; /* Espaço para a barra inferior */
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body class="bg-gray-100 text-coapac">
   <div class="flex flex-col lg:flex-row min-h-screen p-4 gap-4">
-    
     <!-- Sidebar (desktop only) -->
-    <aside class="hidden lg:flex flex-col justify-between w-full lg:w-64 p-4 border-divider bg-white rounded-3xl shadow-lg">
+    <aside class="hidden lg:flex flex-col justify-between w-64 p-4 border-divider bg-white rounded-3xl shadow-lg">
       <div>
         <div class="text-center">
-          <img src="FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32" loading="lazy" />
-          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover" loading="lazy" />
+          <img src="{% static 'imagens/FaceIN_Logo.png' %}" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
+          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden bg-coapac flex items-center justify-center">
+            <img src="{% static 'imagens/Porteiro.png' %}" alt="Foto do usuário" class="w-full h-full object-cover">
           </div>
-          <h1 class="mt-2 font-bold text-lg uppercase">COAPAC</h1>
+          <h1 class="mt-2 font-bold text-lg uppercase text-coapac">COAPAC</h1>
         </div>
-        <nav class="mt-10 space-y-2 text-sm">
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-home"></i> Início</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
-          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-user-key"></i> Permissões</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-door-open"></i> Acesso Externo</a>
+        <nav class="mt-10 space-y-4 text-sm">
+          <a href="{% url 'dashboard' %}" class="flex items-center gap-3 p-2 nav-inactive"><i class="fi fi-sr-home"></i> Início</a>
+          <a href="{% url 'usuarios' %}" class="flex items-center gap-3 p-2 nav-inactive"><i class="fi fi-sr-user"></i> Usuários</a>
+          <a href="{% url 'turmas' %}" class="flex items-center gap-3 p-2 nav-inactive"><i class="fi fi-sr-users-alt"></i> Turmas</a>
+          <a href="{% url 'registro' %}" class="flex items-center gap-3 p-2 nav-inactive"><i class="fi fi-sr-folder-open"></i> Registro</a>
+          <a href="{% url 'permissoes' %}" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-ss-user-key"></i> Permissões</a>
+          <a href="{% url 'suspensoes' %}" class="flex items-center gap-3 p-2 nav-inactive"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
+          <a href="{% url 'acessoExterno' %}" class="flex items-center gap-3 p-2 nav-inactive"><i class="fi fi-ss-user-key"></i> Acesso Externo</a>
         </nav>
       </div>
       <div>
-        <button id="btn-sair" class="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center gap-2">
+        <button class="mt-6 btn-sair">
           <i class="fi fi-sr-exit"></i> SAIR
         </button>
         <div class="mt-6 flex justify-center">
-          <img src="Logo IN4 png verde.png" alt="Logo IN4" class="h-8" loading="lazy" />
+          <img src="{% static 'imagens/Logo_IN4_png_verde.png' %}" alt="Logo FaceIN" class="h-8">
         </div>
       </div>
     </aside>
@@ -155,28 +226,28 @@
     <aside class="mobile-sidebar">
       <div class="p-4">
         <div class="text-center">
-          <img src="FaceIN Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32" loading="lazy" />
-          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=1780" alt="Foto do usuário" class="w-full h-full object-cover" loading="lazy" />
+          <img src="{% static 'imagens/FaceIN_Logo.png' %}" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
+          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden bg-coapac flex items-center justify-center">
+            <img src="{% static 'imagens/Porteiro.png' %}" alt="Foto do usuário" class="w-full h-full object-cover">
           </div>
-          <h1 class="mt-2 font-bold text-lg uppercase">COAPAC</h1>
+          <h1 class="mt-2 font-bold text-lg uppercase text-coapac">COAPAC</h1>
         </div>
-        <nav class="mt-10 space-y-2 text-sm">
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-home"></i> Início</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
-          <a href="#" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-user-key"></i> Permissões</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
-          <a href="#" class="flex items-center gap-3 p-2"><i class="fi fi-sr-door-open"></i> Acesso Externo</a>
+        <nav class="mt-10 space-y-4 text-sm">
+          <a href="{% url 'dashboard' %}" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-home"></i> Início</a>
+          <a href="{% url 'usuarios' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
+          <a href="{% url 'turmas' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
+          <a href="{% url 'registro' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
+          <a href="{% url 'permissoes' %}" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Permissões</a>
+          <a href="{% url 'suspensoes' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
+          <a href="{% url 'acessoExterno' %}" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Acesso Externo</a>
         </nav>
       </div>
       <div class="p-4">
-        <button id="btn-sair-mobile" class="w-full bg-red-600 text-white font-bold py-2 px-4 rounded-full flex items-center justify-center gap-2">
+        <button class="mt-6 btn-sair">
           <i class="fi fi-sr-exit"></i> SAIR
         </button>
         <div class="mt-6 flex justify-center">
-          <img src="Logo IN4 png verde.png" alt="Logo IN4" class="h-8" loading="lazy" />
+          <img src="{% static 'imagens/Logo_IN4_png_verde.png' %}" alt="Logo FaceIN" class="h-8">
         </div>
       </div>
     </aside>
@@ -188,283 +259,190 @@
     <div class="flex flex-col lg:flex-row w-full gap-4">
       <!-- Conteúdo principal -->
       <main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <header class="flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
-            <h2 class="text-2xl font-bold">Controle de acessos autorizados fora do horário</h2>
+            <h2 class="text-2xl font-bold">Permissões Especiais</h2>
             <p id="current-date" class="text-sm text-gray-500">Carregando data...</p>
           </div>
           <div class="flex items-center gap-4">
-            <div class="bg-white p-3 rounded-full shadow-md cursor-pointer" aria-label="Notificações"><i class="fi fi-sr-bell text-coapac"></i></div>
+            <div class="bg-white p-3 rounded-full shadow"><i class="fi fi-sr-bell text-coapac"></i></div>
             <span class="bg-coapac text-white px-6 py-3 rounded-lg font-bold tracking-wider">9RS8YB</span>
           </div>
         </header>
-
-               <section class="bg-coapac text-white p-6 rounded-2xl shadow-lg">
-          <h3 class="font-bold text-lg mb-4">Cadastrar nova permissão</h3>
-          <form id="form-permission" class="space-y-4" novalidate>
-              {% csrf_token %}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label for="nome" class="block text-sm font-semibold mb-1">Nome:</label>
-                <input type="text" id="nome" name="nome" class="form-input" aria-label="Nome" placeholder="Digite o nome" />
-                <p class="text-red-300 text-xs mt-1 hidden" id="error-nome">Campo obrigatório</p>
-              </div>
-              <div>
-                <label for="matricula" class="block text-sm font-semibold mb-1">Matrícula:</label>
-                <input type="text" id="matricula" name="matricula" class="form-input" aria-label="Matrícula" placeholder="Digite a matrícula" />
-                <p class="text-red-300 text-xs mt-1 hidden" id="error-matricula">Campo obrigatório</p>
-              </div>
+        <!-- Formulário de cadastro -->
+        <div class="form-card">
+          <h3 class="text-lg font-bold mb-4">Cadastrar Permissão Especial</h3>
+          {% if messages %}
+            {% for message in messages %}
+              <div class="{% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+          <form method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+            {% csrf_token %}
+            <div>
+              <label class="block font-semibold mb-1" for="id_usuario">Usuário</label>
+              {{ form.usuario }}
+              {% if form.usuario.errors %}
+                <div class="text-red-600 text-xs">{{ form.usuario.errors }}</div>
+              {% endif %}
+            </div>
+            <div class="md:col-span-2">
+              <label class="block font-semibold mb-1" for="id_justificativa">Justificativa</label>
+              {{ form.justificativa }}
+              {% if form.justificativa.errors %}
+                <div class="text-red-600 text-xs">{{ form.justificativa.errors }}</div>
+              {% endif %}
             </div>
             <div>
-              <label for="justificativa" class="block text-sm font-semibold mb-1">Justificativa:</label>
-              <input type="text" id="justificativa" name="justificativa" class="form-input" aria-label="Justificativa" placeholder="Digite a justificativa" />
-              <p class="text-red-300 text-xs mt-1 hidden" id="error-justificativa">Campo obrigatório</p>
+              <label class="block font-semibold mb-1" for="id_data">Data</label>
+              {{ form.data }}
+              {% if form.data.errors %}
+                <div class="text-red-600 text-xs">{{ form.data.errors }}</div>
+              {% endif %}
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label for="data" class="block text-sm font-semibold mb-1">Data:</label>
-                <input type="date" id="data" name="data" class="form-input" aria-label="Data" />
-                <p class="text-red-300 text-xs mt-1 hidden" id="error-data">Campo obrigatório</p>
-              </div>
-              <div>
-                <label for="horario" class="block text-sm font-semibold mb-1">Horário:</label>
-                <input type="time" id="horario" name="hora" class="form-input" aria-label="Horário" />
-                <p class="text-red-300 text-xs mt-1 hidden" id="error-horario">Campo obrigatório</p>
-              </div>
-              <div>
-                <label for="liberadoPor" class="block text-sm font-semibold mb-1">Liberado por:</label>
-                
-                <!-- Campo de texto com lista de sugestões -->
-                <input 
-                    type="text" 
-                    id="liberadoPor" 
-                    name="liberadoPor" 
-                    list="servidores-list" 
-                    class="form-input" 
-                    aria-label="Liberado por" 
-                    placeholder="Nome de quem liberou" 
-                />
-                <!-- Lista de opções -->
-                <datalist id="servidores-list">
-                    {% for servidor in servidores %}
-                    <option value="{{ servidor.nome_completo }}">
-                    {% endfor %}
-                </datalist>
-                
-                <p class="text-red-300 text-xs mt-1 hidden" id="error-liberadoPor">Campo obrigatório</p>
-                </div>
+            <div>
+              <label class="block font-semibold mb-1" for="id_hora">Hora</label>
+              {{ form.hora }}
+              {% if form.hora.errors %}
+                <div class="text-red-600 text-xs">{{ form.hora.errors }}</div>
+              {% endif %}
             </div>
-            <div class="flex justify-end pt-4">
-              <button type="submit" class="bg-gray-100 text-coapac font-bold py-2 px-6 rounded-lg shadow hover:bg-gray-200 transition">
-                Cadastrar permissão
-              </button>
+            <div class="md:col-span-2 flex justify-end">
+              <button type="submit" class="btn-salvar">Salvar Permissão</button>
             </div>
           </form>
-          <div class="flex justify-end pt-2">
-            <button id="btn-ver-permissoes" class="bg-gray-200 text-coapac font-bold py-2 px-6 rounded-lg shadow hover:bg-gray-300 transition">
-              Ver permissões
-            </button>
-          </div>
-
-          <!-- Lista dinâmica de permissões (oculta inicialmente) -->
-          <div id="lista-permissoes" class="mt-6 max-h-64 overflow-auto hidden">
-            <h4 class="text-white font-semibold mb-3">Permissões cadastradas:</h4>
-            <ul class="space-y-2 text-sm"></ul>
-          </div>
+        </div>
+        <!-- Tabela de permissões -->
+        <section class="overflow-x-auto">
+          <table class="min-w-full bg-white rounded-xl shadow">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-left text-coapac">Usuário</th>
+                <th class="px-4 py-2 text-left text-coapac">Matrícula</th>
+                <th class="px-4 py-2 text-left text-coapac">Justificativa</th>
+                <th class="px-4 py-2 text-left text-coapac">Operador</th>
+                <th class="px-4 py-2 text-left text-coapac">Data/Hora</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for permissao in permissoes %}
+              <tr>
+                <td class="px-4 py-2">{{ permissao.usuario.nome_completo }}</td>
+                <td class="px-4 py-2">{{ permissao.usuario.matricula }}</td>
+                <td class="px-4 py-2">{{ permissao.justificativa }}</td>
+                <td class="px-4 py-2">{{ permissao.operador.nome }}</td>
+                <td class="px-4 py-2">{{ permissao.data_hora_permissao|date:"d/m/Y H:i" }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="px-4 py-2 text-center text-gray-400">Nenhuma permissão especial cadastrada.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </section>
       </main>
-
-      <!-- Sidebar direita para registros -->
-      <aside class="hidden lg:flex flex-col w-72 p-6 bg-white rounded-3xl shadow-lg overflow-auto max-h-[80vh]">
-        <h3 class="font-bold text-lg mb-4">Registro</h3>
-        <p class="text-gray-500 text-sm mb-6">Aqui ficam os registros das permissões cadastradas.</p>
-        <ul id="registro-list" class="space-y-3 text-sm text-coapac">
-          <!-- Entradas do registro vão aparecer aqui -->
-        </ul>
+      <!-- Sidebar Direita (Resumo) -->
+      <aside class="w-full lg:w-80 bg-coapac text-white p-6 rounded-3xl shadow-lg flex-shrink-0">
+        <div class="flex justify-between items-center mb-6">
+          <h4 class="text-xl font-bold">Resumo</h4>
+          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+            <i class="fi fi-ss-user-key text-coapac text-xl"></i>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Total de Permissões:</label>
+            <div class="bg-white text-coapac font-bold py-1 px-3 rounded-full text-sm inline-block">
+              {{ total }}
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Ativas:</label>
+            <div class="bg-white text-green-600 font-bold py-1 px-3 rounded-full text-sm inline-block">
+              {{ ativas }}
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Pendentes:</label>
+            <div class="bg-white text-yellow-600 font-bold py-1 px-3 rounded-full text-sm inline-block">
+              {{ pendentes }}
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Negadas:</label>
+            <div class="bg-white text-red-600 font-bold py-1 px-3 rounded-full text-sm inline-block">
+              {{ negadas }}
+            </div>
+          </div>
+        </div>
       </aside>
     </div>
   </div>
 
-  <!-- Botão para abrir o menu mobile -->
-  <button id="btn-open-menu" aria-label="Abrir menu" class="fixed top-4 left-4 z-120 lg:hidden bg-white rounded-full p-2 shadow">
-    <i class="fi fi-rr-menu-burger text-coapac text-xl"></i>
-  </button>
-
-  <!-- Navegação inferior mobile -->
-  <nav class="mobile-bottom-nav lg:hidden" role="navigation" aria-label="Navegação inferior">
-    <a href="#" class="nav-active" aria-current="page">
+  <!-- Mobile bottom navigation -->
+  <nav class="mobile-bottom-nav">
+    <a href="{% url 'dashboard' %}" class="nav-active">
       <i class="fi fi-sr-home"></i>
       <span>Início</span>
     </a>
-    <a href="#">
+    <a href="{% url 'usuarios' %}">
+      <i class="fi fi-sr-user"></i>
+      <span>Usuários</span>
+    </a>
+    <a href="{% url 'turmas' %}">
       <i class="fi fi-sr-users-alt"></i>
       <span>Turmas</span>
     </a>
-    <button id="btn-permissoes-mobile">
-      <i class="fi fi-sr-user-key"></i>
-      <span>Permissões</span>
-    </button>
-    <a href="#">
-      <i class="fi fi-sr-user-lock"></i>
-      <span>Suspensões</span>
+    <a href="{% url 'registro' %}">
+      <i class="fi fi-sr-folder-open"></i>
+      <span>Registro</span>
     </a>
+    <button id="menu-button" type="button">
+      <i class="fi fi-sr-menu-burger"></i>
+      <span>Menu</span>
+    </button>
   </nav>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Exibir data atual formatada
-      const currentDateEl = document.getElementById('current-date');
-      const dataAtual = new Date();
-      currentDateEl.textContent = dataAtual.toLocaleDateString('pt-BR', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateElement = document.getElementById('current-date');
+        if (dateElement) {
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = today.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', ...options });
+            dateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+        }
 
-      // Sidebar móvel controle
-      const mobileSidebar = document.querySelector('.mobile-sidebar');
-      const overlay = document.querySelector('.overlay');
-      const btnOpenMenu = document.getElementById('btn-open-menu');
-      btnOpenMenu.addEventListener('click', () => {
-        mobileSidebar.classList.add('active');
-        overlay.classList.add('active');
-      });
-      overlay.addEventListener('click', () => {
-        mobileSidebar.classList.remove('active');
-        overlay.classList.remove('active');
-      });
-
-      // Fechar mobile sidebar ao clicar nos links (se quiser)
-      mobileSidebar.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-          mobileSidebar.classList.remove('active');
-          overlay.classList.remove('active');
-        });
-      });
-
-      // Validação do formulário e salvamento
-      const form = document.getElementById('form-permission');
-      const listaPermissoesEl = document.getElementById('lista-permissoes');
-      const listaUL = listaPermissoesEl.querySelector('ul');
-      const registroList = document.getElementById('registro-list');
-
-      // Erros por campo
-      const campos = [
-        { id: 'nome', name: 'Nome' },
-        { id: 'matricula', name: 'Matrícula' },
-        { id: 'justificativa', name: 'Justificativa' },
-        { id: 'data', name: 'Data' },
-        { id: 'horario', name: 'Horário' },
-        { id: 'liberadoPor', name: 'Liberado por' },
-      ];
-
-      function validarFormulario() {
-        let valido = true;
-        campos.forEach(({id}) => {
-          const input = document.getElementById(id);
-          const error = document.getElementById(`error-${id}`);
-          if (!input.value.trim()) {
-            error.classList.remove('hidden');
-            valido = false;
+        // Sidebar navigation active link toggle (desktop)
+        const sidebarLinks = document.querySelectorAll('aside.hidden.lg\\:flex nav a');
+        sidebarLinks.forEach(link => {
+          if (link.href === window.location.href) {
+            link.classList.add('nav-active');
           } else {
-            error.classList.add('hidden');
+            link.classList.remove('nav-active');
           }
         });
-        return valido;
-      }
 
-      // Armazenar permissões no array
-      const permissoes = [];
+        // Mobile sidebar toggle
+        const menuButton = document.getElementById('menu-button');
+        const mobileSidebar = document.querySelector('.mobile-sidebar');
+        const overlay = document.querySelector('.overlay');
 
-      function renderizarLista() {
-        // Limpar listas
-        listaUL.innerHTML = '';
-        registroList.innerHTML = '';
-
-        if(permissoes.length === 0){
-          listaUL.innerHTML = '<li class="text-white/70 italic">Nenhuma permissão cadastrada.</li>';
-          registroList.innerHTML = '<li class="text-coapac/70 italic">Nenhum registro.</li>';
-          return;
+        function openSidebar() {
+          mobileSidebar.classList.add('active');
+          overlay.classList.add('active');
+          document.body.style.overflow = 'hidden';
         }
-
-        permissoes.forEach((p, i) => {
-          // Lista permissões (white bg)
-          const li = document.createElement('li');
-          li.className = "bg-white rounded-lg p-3 shadow text-coapac";
-          li.innerHTML = `
-            <strong>${p.nome}</strong> (${p.matricula})<br />
-            <em>${p.justificativa}</em><br />
-            Data: ${p.data} às ${p.horario}<br />
-            Liberado por: ${p.liberadoPor}
-          `;
-          listaUL.appendChild(li);
-
-          // Registro sidebar direita
-          const regLi = document.createElement('li');
-          regLi.textContent = `${p.data} - ${p.nome} (${p.matricula}) - ${p.justificativa}`;
-          registroList.appendChild(regLi);
-        });
-      }
-
-      form.addEventListener('submit', e => {
-        e.preventDefault();
-        if (!validarFormulario()) {
-          alert('Por favor, preencha todos os campos obrigatórios!');
-          return;
-        }
-
-        const novaPermissao = {};
-        campos.forEach(({id}) => {
-          novaPermissao[id] = document.getElementById(id).value.trim();
-        });
-
-        permissoes.push(novaPermissao);
-        renderizarLista();
-        form.reset();
-        listaPermissoesEl.classList.remove('hidden');
-        listaPermissoesEl.scrollIntoView({ behavior: 'smooth' });
-      });
-
-      // Botão ver permissões
-      const btnVerPermissoes = document.getElementById('btn-ver-permissoes');
-      btnVerPermissoes.addEventListener('click', () => {
-        if(listaPermissoesEl.classList.contains('hidden')){
-          listaPermissoesEl.classList.remove('hidden');
-          btnVerPermissoes.textContent = 'Esconder permissões';
-        } else {
-          listaPermissoesEl.classList.add('hidden');
-          btnVerPermissoes.textContent = 'Ver permissões';
-        }
-      });
-
-      // Botão permissão mobile abre lista (mesma função)
-      const btnPermissoesMobile = document.getElementById('btn-permissoes-mobile');
-      btnPermissoesMobile.addEventListener('click', () => {
-        if(listaPermissoesEl.classList.contains('hidden')){
-          listaPermissoesEl.classList.remove('hidden');
-          btnVerPermissoes.textContent = 'Esconder permissões';
-          // fechar menu móvel se aberto
+        function closeSidebar() {
           mobileSidebar.classList.remove('active');
           overlay.classList.remove('active');
-        } else {
-          listaPermissoesEl.classList.add('hidden');
-          btnVerPermissoes.textContent = 'Ver permissões';
+          document.body.style.overflow = '';
         }
-      });
 
-      // Botão sair (desktop/mobile) só alerta por enquanto
-      document.getElementById('btn-sair').addEventListener('click', () => {
-        alert('Saindo...');
+        menuButton.addEventListener('click', openSidebar);
+        overlay.addEventListener('click', closeSidebar);
       });
-      document.getElementById('btn-sair-mobile').addEventListener('click', () => {
-        alert('Saindo...');
-      });
-
-      // Iniciar renderização vazia
-      renderizarLista();
-    });
   </script>
 </body>
 </html>
-

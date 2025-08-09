@@ -1,160 +1,383 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Controle de Turmas</title>
+  <title>FaceIN - Turmas</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-straight/css/uicons-solid-straight.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-    }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-</head>
-<body class="bg-[#E7E7E4] text-[#386641] min-h-screen">
-  <div class="flex flex-col md:flex-row min-h-screen">
+  body { font-family: 'Poppins', sans-serif; }
 
-    <aside class="hidden md:flex w-64 bg-white p-6 flex-col justify-between rounded-r-3xl shadow">
+  .bg-coapac { background-color: #386641; }
+  .text-coapac { color: #386641; }
+
+  /* Section e cards */
+  .section-box {
+    background-color: #386641;
+    color: #E7E7E4;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+  }
+  .option-card {
+    background-color: #E7E7E4;
+    color: #386641;
+    border-radius: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .option-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Botões */
+  .btn-sair {
+    background-color: #dc2626;
+    color: #E7E7E4;
+    padding: 0.5rem;
+    border-radius: 9999px;
+    width: 100%;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .btn-salvar {
+    background: #386641;
+    color: #fff;
+    font-weight: 700;
+    padding: 0.5rem 2rem;
+    border-radius: 0.75rem;
+  }
+  .btn-salvar:hover {
+    background: #274c2b;
+  }
+
+  /* Formulário e mensagens */
+  .form-card {
+    background: #f3f4f6;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+  .errorlist {
+    color: #dc2626;
+    margin-bottom: 1rem;
+  }
+  .success {
+    color: #386641;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
+  /* Tabela */
+  .table-perm {
+    margin-top: 2rem;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    min-width: 250px;
+  }
+
+  /* Navegação */
+  nav a {
+    color: #9ca3af;
+    transition: color 0.3s ease;
+    font-weight: 600;
+  }
+  nav a:hover {
+    color: #386641;
+  }
+  .nav-active, .nav-active i {
+    color: #386641;
+    font-weight: 700;
+  }
+  .nav-inactive {
+    color: #9ca3af;
+  }
+
+  /* Divisor de borda */
+  .border-divider {
+    border-right: 2px solid #e5e7eb;
+  }
+
+  /* Mobile bottom navigation */
+  .mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    z-index: 100;
+  }
+  .mobile-bottom-nav a, .mobile-bottom-nav button {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0;
+    color: #9ca3af;
+    font-size: 0.75rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  .mobile-bottom-nav a.nav-active, .mobile-bottom-nav button.nav-active {
+    color: #386641;
+  }
+  .mobile-bottom-nav i {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Mobile sidebar */
+  .mobile-sidebar {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 85%;
+    max-width: 320px;
+    height: 100%;
+    background: white;
+    z-index: 110;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  }
+  .mobile-sidebar.active {
+    left: 0;
+  }
+
+  /* Overlay */
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 105;
+  }
+  .overlay.active {
+    display: block;
+  }
+
+  /* Responsive */
+  @media (max-width: 1023px) {
+    .mobile-bottom-nav {
+      display: flex;
+    }
+    .sidebar {
+      display: none;
+    }
+    main {
+      margin-bottom: 60px;
+    }
+  }
+</style>
+</head>
+<body class="bg-gray-100 text-coapac">
+  <div class="flex flex-col lg:flex-row min-h-screen p-4 gap-4">
+    <aside class="hidden lg:flex flex-col justify-between w-64 p-4 border-divider bg-white rounded-3xl shadow-lg">
       <div>
-        <img src="https://via.placeholder.com/140x50?text=FaceIN" alt="Logo FaceIN" class="mx-auto mb-4 h-10 object-contain">
-        <div class="bg-[#386641] w-16 h-16 mx-auto rounded-full flex items-center justify-center text-white text-2xl font-bold">
-          <i class="bi bi-grid-3x3-gap"></i>
+        <div class="text-center">
+          <img src="{% static 'imagens/FaceIN_Logo.png' %}" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
+          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden bg-coapac flex items-center justify-center">
+            <img src="{% static 'imagens/Porteiro.png' %}" alt="Foto do usuário" class="w-full h-full object-cover">
+          </div>
+          <h1 class="mt-2 font-bold text-lg uppercase text-coapac">COAPAC</h1>
         </div>
-        <h1 class="mt-2 text-center font-bold">COAPAC</h1>
-        <nav class="mt-8 space-y-4 text-sm text-gray-500">
-          <a href="#" class="flex items-center gap-2 hover:text-[#386641] transition-colors"><i class="bi bi-house-door"></i> Início</a>
-          <a href="#" class="flex items-center gap-2 hover:text-[#386641] transition-colors"><i class="bi bi-person"></i> Usuários</a>
-          <a href="#" class="flex items-center gap-2 font-bold text-[#386641]"><i class="bi bi-people"></i> Turmas</a>
-          <a href="#" class="flex items-center gap-2 hover:text-[#386641] transition-colors"><i class="bi bi-clock"></i> Registro</a>
-          <a href="#" class="flex items-center gap-2 hover:text-[#386641] transition-colors"><i class="bi bi-shield-lock"></i> Permissões</a>
-          <a href="#" class="flex items-center gap-2 hover:text-[#386641] transition-colors"><i class="bi bi-slash-circle"></i> Suspensões</a>
-          <a href="#" class="flex items-center gap-2 hover:text-[#386641] transition-colors"><i class="bi bi-door-open"></i> Acesso Externo</a>
+        <nav class="mt-10 space-y-4 text-sm">
+          <a href="{% url 'dashboard' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-home"></i> Início</a>
+          <a href="{% url 'usuarios' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
+          <a href="{% url 'turmas' %}" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-users-alt"></i> Turmas</a>
+          <a href="{% url 'registro' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
+          <a href="{% url 'permissoes' %}" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Permissões</a>
+          <a href="{% url 'suspensoes' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
+          <a href="{% url 'acessoExterno' %}" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Acesso Externo</a>
         </nav>
       </div>
-      <div class="mt-auto">
-        <button class="bg-red-600 text-white py-2 rounded font-bold flex items-center justify-center gap-2 w-full">
-          <i class="bi bi-box-arrow-left"></i> SAIR
+      <div>
+        <button class="mt-6 btn-sair">
+          <i class="fi fi-sr-exit"></i> SAIR
         </button>
-        <div class="mt-4 flex justify-center">
-          <img src="https://via.placeholder.com/120x50?text=IN4" alt="Logo IN4" class="h-10 object-contain">
+        <div class="mt-6 flex justify-center">
+          <img src="{% static 'imagens/Logo_IN4_png_verde.png' %}" alt="Logo FaceIN" class="h-8">
         </div>
       </div>
     </aside>
-
-    <main class="flex-1 flex flex-col p-6 gap-4 pb-32 md:pb-6">
-
-      <div class="flex justify-between items-center flex-wrap gap-2">
-        <div>
-          <h2 class="text-xl font-bold">Controle de Turmas</h2>
-          <p class="text-sm text-gray-500">Domingo, 01 de Janeiro de 2025</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <div class="bg-[#E7E7E4] p-2 rounded"><i class="bi bi-bell-fill text-[#386641]"></i></div>
-          <span class="bg-[#386641] text-white px-4 py-2 rounded font-bold tracking-wider">9RS8YB</span>
-        </div>
-      </div>
-
-      <button class="bg-[#386641] text-white px-6 py-2 rounded font-bold w-max flex items-center gap-2"><i class="bi bi-plus-lg"></i> Adicionar turma</button>
-
-      <div class="space-y-4">
-        
-        <div class="flex bg-white rounded-xl shadow overflow-hidden">
-          <div class="w-2 bg-[#386641] rounded-l-xl"></div>
-          <div class="flex-1 flex justify-between items-center p-4 flex-wrap gap-2">
-            <div>
-              <h3 class="font-bold">4º Ano de Informática Vespertino</h3>
-              <p class="text-sm text-gray-500">48441V</p>
-            </div>
-            <div class="flex gap-2 text-[#386641]">
-              <button><i class="bi bi-eye-fill"></i></button>
-              <button><i class="bi bi-trash-fill"></i></button>
-            </div>
+    <aside class="mobile-sidebar">
+      <div class="p-4">
+        <div class="text-center">
+          <img src="{% static 'imagens/FaceIN_Logo.png' %}" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
+          <div class="w-16 h-16 mx-auto rounded-full overflow-hidden bg-coapac flex items-center justify-center">
+            <img src="{% static 'imagens/FaceIN_Logo_branca.png' %}" alt="Foto do usuário" class="w-full h-full object-cover">
           </div>
+          <h1 class="mt-2 font-bold text-lg uppercase text-coapac">COAPAC</h1>
         </div>
-        
-        <div class="flex bg-white rounded-xl shadow overflow-hidden">
-          <div class="w-2 bg-[#386641] rounded-l-xl"></div>
-          <div class="flex-1 flex justify-between items-center p-4 flex-wrap gap-2">
-            <div>
-              <h3 class="font-bold">3º Ano de Informática Matutino</h3>
-              <p class="text-sm text-gray-500">35407M</p>
-            </div>
-            <div class="flex gap-2 text-[#386641]">
-              <button><i class="bi bi-eye-fill"></i></button>
-              <button><i class="bi bi-trash-fill"></i></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex bg-white rounded-xl shadow overflow-hidden">
-          <div class="w-2 bg-[#386641] rounded-l-xl"></div>
-          <div class="flex-1 flex justify-between items-center p-4 flex-wrap gap-2">
-            <div>
-              <h3 class="font-bold">2º Ano de Informática Vespertino</h3>
-              <p class="text-sm text-gray-500">25807V</p>
-            </div>
-            <div class="flex gap-2 text-[#386641]">
-              <button><i class="bi bi-eye-fill"></i></button>
-              <button><i class="bi bi-trash-fill"></i></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="flex bg-white rounded-xl shadow overflow-hidden">
-          <div class="w-2 bg-[#386641] rounded-l-xl"></div>
-          <div class="flex-1 flex justify-between items-center p-4 flex-wrap gap-2">
-            <div>
-              <h3 class="font-bold">1º Ano de Informática Matutino</h3>
-              <p class="text-sm text-gray-500">18401M</p>
-            </div>
-            <div class="flex gap-2 text-[#386641]">
-              <button><i class="bi bi-eye-fill"></i></button>
-              <button><i class="bi bi-trash-fill"></i></button>
-            </div>
-          </div>
+        <nav class="mt-10 space-y-4 text-sm">
+          <a href="{% url 'dashboard' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-home"></i> Início</a>
+          <a href="{% url 'usuarios' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
+          <a href="{% url 'turmas' %}" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-users-alt"></i> Turmas</a>
+          <a href="{% url 'registro' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
+          <a href="{% url 'permissoes' %}" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Permissões</a>
+          <a href="{% url 'suspensoes' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user-lock"></i> Suspensões</a>
+          <a href="{% url 'acessoExterno' %}" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Acesso Externo</a>
+        </nav>
+      </div>
+      <div class="p-4">
+        <button class="mt-6 btn-sair">
+          <i class="fi fi-sr-exit"></i> SAIR
+        </button>
+        <div class="mt-6 flex justify-center">
+          <img src="{% static 'imagens/Logo_IN4_png_verde.png' %}" alt="Logo FaceIN" class="h-8">
         </div>
       </div>
-
-      <div class="flex gap-2 flex-wrap mt-4">
-        <button class="bg-[#386641] text-white px-4 py-1 rounded-full font-bold text-sm">Informática</button>
-        <button class="bg-white text-[#386641] px-4 py-1 rounded-full font-bold text-sm">Manutenção</button>
-        <button class="bg-white text-[#386641] px-4 py-1 rounded-full font-bold text-sm">Química</button>
-        <button class="bg-white text-[#386641] px-4 py-1 rounded-full font-bold text-sm">Agropecuária</button>
-      </div>
-    </main>
-
-    <aside class="hidden lg:block w-80 bg-[#386641] text-white p-6 rounded-l-3xl">
-      <div class="flex justify-between items-center mb-4">
-        <h4 class="font-bold text-lg">Registro</h4>
-        <i class="bi bi-journal-bookmark-fill text-xl"></i>
-      </div>
-      <p class="text-sm mb-2">Jan 01, 2025</p>
-      <div class="space-y-2 max-h-64 overflow-y-auto pr-2">
-        <div class="text-sm border-b border-white pb-1">
-          <span>00:00</span>
-          <div><strong>LIBERADO B</strong> <i class="bi bi-lock-fill"></i></div>
-        </div>
-        <div class="text-sm border-b border-white pb-1">
-          <span>00:00</span>
-          <div><strong>NEGADO B</strong> <i class="bi bi-lock-fill"></i></div>
-        </div>
-        <div class="text-sm border-b border-white pb-1">
-          <span>00:00</span>
-          <div><strong>LIBERADO B</strong> <i class="bi bi-lock-fill"></i></div>
-        </div>
-      </div>
-      <button class="mt-6 w-full bg-white text-[#386641] py-2 font-bold rounded text-sm">VER TODO O REGISTRO</button>
     </aside>
-
-    <nav class="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t border-gray-200 flex justify-around py-2 text-[#386641] z-50">
-      <a href="#" class="flex flex-col items-center text-sm"><i class="bi bi-house-door text-lg"></i> Início</a>
-      <a href="#" class="flex flex-col items-center text-sm"><i class="bi bi-person text-lg"></i> Usuários</a>
-      <a href="#" class="flex flex-col items-center text-sm font-bold text-[#386641]"><i class="bi bi-people text-lg"></i> Turmas</a>
-      <a href="#" class="flex flex-col items-center text-sm"><i class="bi bi-clock text-lg"></i> Registro</a>
-      <a href="#" class="flex flex-col items-center text-sm"><i class="bi bi-box-arrow-left text-lg"></i> Sair</a>
-    </nav>
+    <div class="overlay"></div>
+    <div class="flex flex-col lg:flex-row w-full gap-4">
+      <main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
+        <header class="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div>
+            <h2 class="text-2xl font-bold">Turmas</h2>
+            <p id="current-date" class="text-sm text-gray-500">Carregando data...</p>
+          </div>
+          <div class="flex items-center gap-4">
+            <div class="bg-white p-3 rounded-full shadow"><i class="fi fi-sr-bell text-coapac"></i></div>
+            <span class="bg-coapac text-white px-6 py-3 rounded-lg font-bold tracking-wider">9RS8YB</span>
+          </div>
+        </header>
+        <section class="overflow-x-auto">
+          <table class="min-w-full bg-white rounded-xl shadow">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-left text-coapac">Nome da Turma</th>
+                <th class="px-4 py-2 text-left text-coapac">Curso</th>
+                <th class="px-4 py-2 text-left text-coapac">Ano</th>
+                <th class="px-4 py-2 text-left text-coapac">Turno</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for turma in turmas %}
+              <tr>
+                <td class="px-4 py-2">{{ turma.nome_turma }}</td>
+                <td class="px-4 py-2">{{ turma.curso.nome_curso }}</td>
+                <td class="px-4 py-2">{{ turma.ano }}</td>
+                <td class="px-4 py-2">{{ turma.turno }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="px-4 py-2 text-center text-gray-400">Nenhuma turma cadastrada.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </section>
+      </main>
+      <aside class="w-full lg:w-80 bg-coapac text-white p-6 rounded-3xl shadow-lg flex-shrink-0">
+        <div class="flex justify-between items-center mb-6">
+          <h4 class="text-xl font-bold">Resumo de Turmas</h4>
+          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+            <i class="fi fi-sr-users-alt text-coapac text-xl"></i>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-semibold mb-1">Total de Turmas:</label>
+            <div class="bg-white text-coapac font-bold py-1 px-3 rounded-full text-sm inline-block">
+              {{ total_turmas }}
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold mb-1">Total de Alunos:</label>
+            <div class="bg-white text-green-600 font-bold py-1 px-3 rounded-full text-sm inline-block">
+              {{ total_alunos }}
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
   </div>
+  <nav class="mobile-bottom-nav">
+    <a href="{% url 'dashboard' %}">
+      <i class="fi fi-sr-home"></i>
+      <span>Início</span>
+    </a>
+    <a href="{% url 'usuarios' %}">
+      <i class="fi fi-sr-user"></i>
+      <span>Usuários</span>
+    </a>
+    <a href="{% url 'turmas' %}" class="nav-active">
+      <i class="fi fi-sr-users-alt"></i>
+      <span>Turmas</span>
+    </a>
+    <a href="{% url 'registro' %}">
+      <i class="fi fi-sr-folder-open"></i>
+      <span>Registro</span>
+    </a>
+    <button id="menu-button" type="button">
+      <i class="fi fi-sr-menu-burger"></i>
+      <span>Menu</span>
+    </button>
+  </nav>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const dateElement = document.getElementById('current-date');
+        if (dateElement) {
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = today.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', ...options });
+            dateElement.textContent = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+        }
+        const sidebarLinks = document.querySelectorAll('nav a');
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                sidebarLinks.forEach(l => {
+                  l.classList.remove('nav-active');
+                  l.querySelector('i').classList.remove('text-coapac');
+                });
+                this.classList.add('nav-active');
+                this.querySelector('i').classList.add('text-coapac');
+            });
+        });
+        document.querySelectorAll('.mobile-bottom-nav a').forEach(item => {
+          item.addEventListener('click', function() {
+            document.querySelectorAll('.mobile-bottom-nav a').forEach(i => i.classList.remove('nav-active'));
+            this.classList.add('nav-active');
+          });
+        });
+        const menuButton = document.getElementById('menu-button');
+        const mobileSidebar = document.querySelector('.mobile-sidebar');
+        const overlay = document.querySelector('.overlay');
+        menuButton.addEventListener('click', function() {
+          mobileSidebar.classList.toggle('active');
+          overlay.classList.toggle('active');
+        });
+        overlay.addEventListener('click', function() {
+          mobileSidebar.classList.remove('active');
+          overlay.classList.remove('active');
+        });
+        document.querySelectorAll('.mobile-sidebar nav a').forEach(link => {
+          link.addEventListener('click', function() {
+            mobileSidebar.classList.remove('active');
+            overlay.classList.remove('active');
+          });
+        });
+    });
+  </script>
 </body>
 </html>
