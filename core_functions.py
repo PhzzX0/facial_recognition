@@ -135,7 +135,7 @@ def adicionar_operador(nome, login, senha, papel):
         conn.close()
 
 def cadastrar_usuario(nome, matricula, tipo, nome_ficheiro_foto):
-    caminho_relativo = os.path.join('Rostos_cadastrados', nome_ficheiro_foto)
+    caminho_relativo = os.path.join('.\Rostos_cadastrados', nome_ficheiro_foto)
     caminho_absoluto_verificacao = os.path.join(BASE_DIR, caminho_relativo)
     if not os.path.exists(caminho_absoluto_verificacao):
         print(f"[ERRO] A foto '{nome_ficheiro_foto}' não foi encontrada na pasta 'rostos_cadastrados'.")
@@ -618,3 +618,6 @@ def contar_sancoes_ativas():
     finally:
         conn.close()
 
+#if __name__ == "__main__":
+    #excluir_usuario('ph')
+    #cadastrar_usuario('ph', '20221084010003', 'Servidor', 'ph.jpg')
