@@ -84,7 +84,10 @@ class LogAcesso(models.Model):
 class AcaoDisciplinar(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     operador = models.ForeignKey(Operadores, on_delete=models.CASCADE)
-    tipo = models.CharField(max_length=20, choices=[('Advertência', 'Advertência'), ('Suspensão', 'Suspensão')])
+    tipo = models.CharField(
+        max_length=20,
+        choices=[('Advertência', 'Advertência'), ('Suspensão', 'Suspensão')]
+    )
     motivo = models.TextField(null=True, blank=True)
     data_inicio = models.DateField(null=True, blank=True)
     data_fim = models.DateField(null=True, blank=True)
@@ -93,6 +96,14 @@ class AcaoDisciplinar(models.Model):
     class Meta:
         db_table = 'app_AcoesDisciplinares'
         managed = False
+
+    @property
+    def nome_usuario(self):
+        return self.usuario.nome_completo if self.usuario else None
+
+    @property
+    def matricula_usuario(self):
+        return self.usuario.matricula if self.usuario else None
 
 # 9. Permissões Especiais
 class PermissaoEspecial(models.Model):
