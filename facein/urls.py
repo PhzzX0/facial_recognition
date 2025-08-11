@@ -37,5 +37,10 @@ urlpatterns = [
     path('registro/', views.registro, name="registro"),
     path('suspensoes/', views.suspensoes, name="suspensoes"),
     path('acessoExterno/', views.acessoExterno, name="acessoExterno"),
-    path('turmas/deletar/<int:turma_id>/', views.deletar_turma, name='deletar_turma'), # View que lida com exclusão de turmas via POST
+    path('turmas/deletar/<int:turma_id>/', views.deletar_turma, name='deletar_turma'),
+    path('usuarios/cadastrar/', views.cadastrar_usuario, name="cadastrar_usuario"),
+    path('turmas/', views.turmas, name="turmas"),
+    path('turmas/adicionar/', views.adicionar_turma, name='adicionar_turma'),
+    path('turmas/adicionar-curso/', views.adicionar_curso, name='adicionar_curso'),
+    path('turmas/<int:turma_id>/gerenciar-alunos/', views.gerenciar_alunos, name='gerenciar_alunos'), # View que lida com exclusão de turmas via POST
 ]
