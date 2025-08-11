@@ -4,6 +4,7 @@ import cv2
 from datetime import datetime
 from deepface import DeepFace
 import hashlib
+from django.conf import settings
 # from catraca import enviar_comando
 
 # --- CONFIGURAÇÕES GLOBAIS ---
@@ -615,6 +616,54 @@ def contar_sancoes_ativas():
     except Exception as e:
         print(f"[ERRO] Falha ao contar sanções ativas: {e}")
         return 0
+    finally:
+        conn.close()
+
+# core_functions.py
+# ... (imports)
+
+def cadastrar_usuario_core(nome, matricula, tipo, caminho_relativo_foto):
+    print(f"--- Início de cadastrar_usuario_core para {nome} ---")
+    caminho_absoluto_verificacao = os.path.join(settings.BASE_DIR, caminho_relativo_foto)
+    
+    if not os.path.exists(caminho_absoluto_verificacao):
+        print("[ERRO] Foto não encontrada para cadastro.")
+        return None
+
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    try:
+        print("Tentando inserir no banco de dados...")
+        c.execute('''
+            INSERT INTO app_Usuarios (nome_completo, matricula, tipo, caminho_foto_rosto)
+            VALUES (?, ?, ?, ?)
+        ''', (nome, matricula, tipo, caminho_relativo_foto))
+        conn.commit()
+        novo_id = c.lastrowid
+        print(f"[INFO] Usuário '{nome}' cadastrado com sucesso. ID: {novo_id}")
+        return novo_id
+    except sqlite3.IntegrityError:
+        print(f"[ERRO] Matrícula '{matricula}' já existe.")
+        return None
+    except Exception as e:
+        print(f"[ERRO] Erro desconhecido no banco de dados: {e}")
+        return None
+    finally:
+        conn.close()
+        print("--- Fim de cadastrar_usuario_core ---")
+
+def criar_turma(nome_turma, curso_id, ano, turno):
+    conn = sqlite3.connect(db_path)
+    c = conn.cursor()
+    sql = "INSERT INTO app_Turmas (nome_turma, curso_id, ano, turno) VALUES (?, ?, ?, ?)"
+    try:
+        c.execute(sql, (nome_turma, curso_id, ano, turno))
+        conn.commit()
+        novo_id = c.lastrowid
+        return novo_id
+    except Exception as e:
+        print(f"Falha ao criar turma: {e}")
+        return None
     finally:
         conn.close()
 
