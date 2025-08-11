@@ -1,12 +1,16 @@
 from django.db import models
 
 #1. operadores
-class Operadores(models.Model): # classe para a tabela operadores
-	nome = models.CharField(max_length=150)
-	login = models.CharField(max_length=100, unique=True)
-	senha_hash = models.CharField(max_length=128)
-	papel = models.CharField(max_length=50)
-	data_criacao = models.DateTimeField(auto_now_add=True)
+class Operadores(models.Model):
+    nome = models.CharField(max_length=150)
+    login = models.CharField(max_length=100, unique=True)
+    senha_hash = models.CharField(max_length=128)
+    papel = models.CharField(max_length=50)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'app_Operadores'
+        managed = False
 
 # 2. Cursos
 class Curso(models.Model):
@@ -38,6 +42,8 @@ class Usuario(models.Model):
     class Meta:
         db_table = 'app_Usuarios'
         managed = False
+    def __str__(self):
+        return self.nome_completo
 
 # 5. UsuarioTurma
 class UsuarioTurma(models.Model):
