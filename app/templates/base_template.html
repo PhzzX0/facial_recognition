@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FaceIN - Usuários</title>
+  <title>FaceIN - {% block title %}Início{% endblock %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-solid-straight/css/uicons-solid-straight.css'>
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
@@ -17,6 +17,7 @@
   .text-coapac { color: #386641; }
 
   /* Section e cards */
+  
   .section-box {
     background-color: #386641;
     color: #E7E7E4;
@@ -203,7 +204,7 @@
         </div>
         <nav class="mt-10 space-y-4 text-sm">
           <a href="{% url 'dashboard' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-home"></i> Início</a>
-          <a href="{% url 'usuarios' %}" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-user"></i> Usuários</a>
+          <a href="{% url 'usuarios' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
           <a href="{% url 'turmas' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
           <a href="{% url 'registro' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
           <a href="{% url 'permissoes' %}" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Permissões</a>
@@ -231,7 +232,7 @@
         </div>
         <nav class="mt-10 space-y-4 text-sm">
           <a href="{% url 'dashboard' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-home"></i> Início</a>
-          <a href="{% url 'usuarios' %}" class="flex items-center gap-3 p-2 nav-active"><i class="fi fi-sr-user"></i> Usuários</a>
+          <a href="{% url 'usuarios' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-user"></i> Usuários</a>
           <a href="{% url 'turmas' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-users-alt"></i> Turmas</a>
           <a href="{% url 'registro' %}" class="flex items-center gap-3 p-2"><i class="fi fi-sr-folder-open"></i> Registro</a>
           <a href="{% url 'permissoes' %}" class="flex items-center gap-3 p-2"><i class="fi fi-ss-user-key"></i> Permissões</a>
@@ -250,79 +251,8 @@
     </aside>
     <div class="overlay"></div>
     <div class="flex flex-col lg:flex-row w-full gap-4">
-      <main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
-        <header class="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div>
-            <h2 class="text-2xl font-bold">Usuários</h2>
-            <p id="current-date" class="text-sm text-gray-500">Carregando data...</p>
-          </div>
-          <div class="flex items-center gap-4">
-            {% if operador.papel == "COAPAC" %}
-            <a href="{% url 'cadastrar_usuario' %}" class="bg-coapac text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2">
-                <i class="fi fi-sr-user-add"></i> Cadastrar Usuário
-            </a>
-            {% endif %}
-            <div class="bg-white p-3 rounded-full shadow"><i class="fi fi-sr-bell text-coapac"></i></div>
-            <span class="bg-coapac text-white px-6 py-3 rounded-lg font-bold tracking-wider">9RS8YB</span>
-          </div>
-        </header>
-        <section class="overflow-x-auto">
-          <table class="min-w-full bg-white rounded-xl shadow">
-            <thead>
-              <tr>
-                <th class="px-4 py-2 text-left text-coapac">Nome</th>
-                <th class="px-4 py-2 text-left text-coapac">Matrícula</th>
-                <th class="px-4 py-2 text-left text-coapac">Tipo</th>
-                <th class="px-4 py-2 text-left text-coapac">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for usuario in usuarios %}
-              <tr>
-                <td class="px-4 py-2">{{ usuario.nome_completo }}</td>
-                <td class="px-4 py-2">{{ usuario.matricula }}</td>
-                <td class="px-4 py-2">{{ usuario.tipo }}</td>
-                <td class="px-4 py-2 {% if usuario.situacao == 'Normal' %}text-green-600{% else %}text-red-600{% endif %} font-bold">
-                  {% if usuario.situacao == 'Normal' %}Ativo{% else %}Inativo{% endif %}
-                </td>
-              </tr>
-              {% empty %}
-              <tr>
-                <td colspan="4" class="px-4 py-2 text-center text-gray-400">Nenhum usuário cadastrado.</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </section>
-      </main>
-      <aside class="w-full lg:w-80 bg-coapac text-white p-6 rounded-3xl shadow-lg flex-shrink-0">
-        <div class="flex justify-between items-center mb-6">
-          <h4 class="text-xl font-bold">Resumo de Usuários</h4>
-          <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-            <i class="fi fi-sr-user text-coapac text-xl"></i>
-          </div>
-        </div>
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-semibold mb-1">Total de Usuários:</label>
-            <div class="bg-white text-coapac font-bold py-1 px-3 rounded-full text-sm inline-block">
-              {{ total }}
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm font-semibold mb-1">Ativos:</label>
-            <div class="bg-white text-green-600 font-bold py-1 px-3 rounded-full text-sm inline-block">
-              {{ ativos }}
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm font-semibold mb-1">Inativos:</label>
-            <div class="bg-white text-red-600 font-bold py-1 px-3 rounded-full text-sm inline-block">
-              {{ inativos }}
-            </div>
-          </div>
-        </div>
-      </aside>
+        {% block content %}
+        {% endblock %}
     </div>
   </div>
   <nav class="mobile-bottom-nav">

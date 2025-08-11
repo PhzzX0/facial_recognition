@@ -1,0 +1,66 @@
+{% extends "base_template.html" %}
+{% block title %}Gerenciar Alunos{% endblock %}
+
+{% block content %}
+<main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
+    <header class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+            <h2 class="text-2xl font-bold">Gerenciar Alunos da Turma: {{ turma.nome_turma }}</h2>
+            <p class="text-sm text-gray-500">Curso: {{ turma.curso.nome_curso }} ({{ turma.ano }})</p>
+        </div>
+    </header>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li class="{{ message.tags }} p-4 rounded-lg font-semibold">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <section class="space-y-4">
+        <h3 class="text-xl font-bold text-coapac">Adicionar novo aluno</h3>
+        <form method="post" action="{% url 'gerenciar_alunos' turma.id %}" class="flex flex-col md:flex-row gap-4 items-end">
+            {% csrf_token %}
+            <div class="flex-1">
+                <label for="id_usuario_id" class="block text-sm font-medium text-gray-700">Aluno</label>
+                <select name="usuario_id" id="id_usuario_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-coapac focus:ring-coapac">
+                    <option value="">-- Selecione um aluno --</option>
+                    {% for aluno in alunos_disponiveis %}
+                    <option value="{{ aluno.id }}">{{ aluno.nome_completo }} ({{ aluno.matricula }})</option>
+                    {% empty %}
+                    <option value="" disabled>Nenhum aluno disponível para adicionar.</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn-salvar">Adicionar Aluno</button>
+        </form>
+    </section>
+
+    <section class="space-y-4">
+        <h3 class="text-xl font-bold text-coapac">Alunos nesta turma</h3>
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-xl shadow">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-2 text-left text-coapac">Nome</th>
+                        <th class="px-4 py-2 text-left text-coapac">Matrícula</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aluno in alunos_na_turma %}
+                    <tr>
+                        <td class="px-4 py-2">{{ aluno.nome_completo }}</td>
+                        <td class="px-4 py-2">{{ aluno.matricula }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="px-4 py-2 text-center text-gray-400">Nenhum aluno nesta turma.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+{% endblock %}

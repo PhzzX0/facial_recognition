@@ -1,0 +1,53 @@
+{% extends "base_template.html" %}  
+{% block content %}
+<main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
+    <header class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+            <h2 class="text-2xl font-bold">Cadastrar Novo Usuário</h2>
+        </div>
+    </header>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li class="{{ message.tags }} p-4 rounded-lg font-semibold">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post" action="{% url 'cadastrar_usuario' %}" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label for="id_nome_completo" class="block text-sm font-medium text-gray-700">Nome Completo</label>
+            <input type="text" name="nome_completo" id="id_nome_completo" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-coapac focus:ring-coapac">
+        </div>
+        <div>
+            <label for="id_matricula" class="block text-sm font-medium text-gray-700">Matrícula</label>
+            <input type="text" name="matricula" id="id_matricula" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-coapac focus:ring-coapac">
+        </div>
+        <div>
+            <label for="id_tipo" class="block text-sm font-medium text-gray-700">Tipo de Usuário</label>
+            <select name="tipo" id="id_tipo" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-coapac focus:ring-coapac">
+                <option value="Discente">Discente</option>
+                <option value="Docente">Docente</option>
+                <option value="Servidor">Servidor</option>
+            </select>
+        </div>
+        <div>
+            <label for="id_foto" class="block text-sm font-medium text-gray-700">Foto do Rosto</label>
+            <input type="file" name="foto" id="id_foto" required class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-coapac file:text-white hover:file:bg-coapac-dark">
+        </div>
+        <div>
+            <label for="id_turma" class="block text-sm font-medium text-gray-700">Turma (Opcional)</label>
+            <select name="turma_id" id="id_turma" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-coapac focus:ring-coapac">
+                <option value="">-- Selecione uma turma --</option>
+                {% for turma in turmas %}
+                <option value="{{ turma.id }}">{{ turma.nome_turma }} ({{ turma.curso.nome_curso }})</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn-salvar">Cadastrar Usuário</button>
+    </form>
+</main>
+{% endblock %}

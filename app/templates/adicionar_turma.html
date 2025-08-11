@@ -1,0 +1,49 @@
+{% extends "base_template.html" %}
+{% block title %}Adicionar Turma{% endblock %}
+{% block content %}
+<main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
+    <header class="flex flex-col md:flex-row justify-between items-center gap-4">
+        <div>
+            <h2 class="text-2xl font-bold">Adicionar Nova Turma</h2>
+        </div>
+    </header>
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li class="{{ message.tags }} p-4 rounded-lg font-semibold">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post" action="{% url 'adicionar_turma' %}" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label for="id_nome_turma" class="block text-sm font-medium text-gray-700">Nome da Turma</label>
+            <input type="text" name="nome_turma" id="id_nome_turma" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-coapac focus:ring-coapac">
+        </div>
+        <div>
+            <label for="id_curso_id" class="block text-sm font-medium text-gray-700">Curso</label>
+            <select name="curso_id" id="id_curso_id" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-coapac focus:ring-coapac">
+                <option value="">-- Selecione um curso --</option>
+                {% for curso in cursos %}
+                <option value="{{ curso.id }}">{{ curso.nome_curso }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="id_ano" class="block text-sm font-medium text-gray-700">Ano</label>
+            <input type="number" name="ano" id="id_ano" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-coapac focus:ring-coapac">
+        </div>
+        <div>
+            <label for="id_turno" class="block text-sm font-medium text-gray-700">Turno</label>
+            <select name="turno" id="id_turno" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-coapac focus:ring-coapac">
+                <option value="">-- Selecione um turno --</option>
+                <option value="Matutino">Matutino</option>
+                <option value="Vespertino">Vespertino</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-salvar">Adicionar Turma</button>
+    </form>
+</main>
+{% endblock %}
