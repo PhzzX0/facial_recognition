@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import (Operadores, LogAcesso, Usuario, Curso, Turma, UsuarioTurma, Visitante, PermissaoEspecial)
 from .forms import FormPermissaoEspecial
 import hashlib
@@ -12,11 +12,14 @@ import base64
 import uuid
 import numpy as np
 import json
-from core_functions import verificar_pessoa, buscar_logs_filtrados, cadastrar_usuario
+# app/views.py
+from core_functions import verificar_pessoa, buscar_logs_filtrados, cadastrar_usuario_core, criar_turma, db_path
 import mediapipe as mp
 from django.utils.timezone import now
 from django.conf import settings
 from django.contrib import messages
+from django.db.models import Q, Exists, OuterRef
+
 
 mp_face_detection = mp.solutions.face_detection
 
@@ -362,4 +365,233 @@ def acessoExterno(request):
         "visitantes": visitantes,
         "total": total,
         "hoje": hoje_count,
+    })
+
+# app/views.py
+
+...
+
+def usuarios(request):
+    if 'operador_id' not in request.session:
+        return redirect("login")
+    operador = Operadores.objects.get(id=request.session['operador_id'])
+
+    # Apenas operadores COAPAC podem acessar esta view
+    if operador.papel != "COAPAC":
+        messages.error(request, "Você não tem permissão para acessar esta página.")
+        return redirect("dashboard")
+
+    usuarios = Usuario.objects.all()
+    total = usuarios.count()
+    ativos = usuarios.filter(situacao="Normal").count()
+    inativos = usuarios.exclude(situacao="Normal").count()
+    return render(request, "usuarios.html", {
+        "operador": operador,
+        "usuarios": usuarios,
+        "total": total,
+        "ativos": ativos,
+        "inativos": inativos,
+    })
+
+def cadastrar_usuario(request):
+    print("--- Início da view cadastrar_usuario ---")
+    if 'operador_id' not in request.session:
+        return redirect("login")
+
+    operador = Operadores.objects.get(id=request.session['operador_id'])
+
+    if operador.papel != "COAPAC":
+        messages.error(request, "Você não tem permissão para cadastrar usuários.")
+        return redirect("dashboard")
+
+    if request.method == "POST":
+        print("--- Recebida requisição POST ---")
+        nome = request.POST.get('nome_completo')
+        matricula = request.POST.get('matricula')
+        tipo = request.POST.get('tipo')
+        foto = request.FILES.get('foto')
+        turma_id = request.POST.get('turma_id')
+
+        if not all([nome, matricula, tipo, foto]):
+            print("ERRO: Validação falhou, campos obrigatórios não preenchidos.")
+            messages.error(request, "Todos os campos obrigatórios devem ser preenchidos.")
+            return redirect("cadastrar_usuario")
+
+        print("Validação OK. Tentando salvar a foto.")
+        pasta_destino = os.path.join(settings.BASE_DIR, 'rostos_cadastrados')
+        os.makedirs(pasta_destino, exist_ok=True)
+        caminho_foto = os.path.join(pasta_destino, foto.name)
+        new_filename = foto.name
+        
+        with open(caminho_foto, 'wb+') as destino:
+            for chunk in foto.chunks():
+                destino.write(chunk)
+        print(f"Foto salva em: {caminho_foto}")
+
+        print("Chamando a função cadastrar_usuario_core...")
+        novo_id = cadastrar_usuario_core(nome, matricula, tipo, os.path.join('rostos_cadastrados', new_filename))
+        print(f"Retorno de cadastrar_usuario_core: {novo_id}")
+
+        if novo_id:
+            print("Cadastro bem-sucedido!")
+            messages.success(request, f"Usuário {nome} cadastrado com sucesso!")
+        else:
+            print("Cadastro falhou. Matrícula pode já existir.")
+            messages.error(request, f"Erro ao cadastrar usuário. A matrícula '{matricula}' pode já existir.")
+
+        return redirect("usuarios")
+
+    cursos = Curso.objects.all()
+    turmas = Turma.objects.all()
+    print("--- Fim da view cadastrar_usuario (GET) ---")
+    return render(request, "cadastrar_usuario.html", {
+        "cursos": cursos,
+        "turmas": turmas,
+        "operador": operador,
+    })
+
+def turmas(request):
+    if 'operador_id' not in request.session:
+        return redirect("login")
+    turmas = Turma.objects.select_related('curso').all().order_by('curso__nome_curso', '-ano')
+    cursos = Curso.objects.all()
+    total_turmas = turmas.count()
+    total_alunos = UsuarioTurma.objects.count()
+    return render(request, 'turmas.html', {
+        'turmas': turmas,
+        'cursos': cursos,
+        'total_turmas': total_turmas,
+        'total_alunos': total_alunos,
+    })
+
+
+def adicionar_turma(request):
+    if 'operador_id' not in request.session:
+        return redirect("login")
+
+    if request.method == 'POST':
+        nome_turma = request.POST.get('nome_turma')
+        curso_id = request.POST.get('curso_id')
+        ano = request.POST.get('ano')
+        turno = request.POST.get('turno')
+        
+        # Lógica de cadastro no banco de dados (usando uma função do core)
+        novo_id = criar_turma(nome_turma, curso_id, ano, turno)
+
+        if novo_id:
+            messages.success(request, "Turma adicionada com sucesso!")
+            return redirect('turmas')
+        else:
+            messages.error(request, "Falha ao adicionar a turma. Verifique se a turma já existe.")
+            return redirect('adicionar_turma')
+
+    cursos = Curso.objects.all()
+    return render(request, 'adicionar_turma.html', {'cursos': cursos})
+
+def adicionar_curso(request):
+    if 'operador_id' not in request.session:
+        return redirect("login")
+
+    if request.method == 'POST':
+        nome_curso = request.POST.get('nome_curso')
+
+        if not nome_curso:
+            messages.error(request, "O nome do curso não pode ser vazio.")
+            return redirect('adicionar_curso')
+
+        try:
+            Curso.objects.create(nome_curso=nome_curso)
+            messages.success(request, f"Curso '{nome_curso}' adicionado com sucesso!")
+            return redirect('turmas')
+        except Exception as e:
+            messages.error(request, f"Erro ao adicionar curso: {e}")
+            return redirect('adicionar_curso')
+
+    return render(request, 'adicionar_curso.html')
+
+def gerenciar_alunos(request, turma_id):
+    if 'operador_id' not in request.session:
+        return redirect("login")
+
+    turma = get_object_or_404(Turma, id=turma_id)
+    
+    # Alunos que já estão na turma
+    alunos_na_turma = Usuario.objects.filter(usuarioturma__turma=turma)
+
+    if request.method == 'POST':
+        usuario_id = request.POST.get('usuario_id')
+        if usuario_id:
+            usuario = get_object_or_404(Usuario, id=usuario_id)
+            
+            conn = sqlite3.connect(db_path)
+            c = conn.cursor()
+            try:
+                # Verifica se o aluno já está na turma usando SQL puro
+                c.execute("SELECT COUNT(*) FROM app_UsuarioTurma WHERE usuario_id = ? AND turma_id = ?", (usuario_id, turma_id))
+                if c.fetchone()[0] == 0:
+                    # Se não existir, insere o novo aluno usando SQL puro
+                    c.execute("INSERT INTO app_UsuarioTurma (usuario_id, turma_id) VALUES (?, ?)", (usuario_id, turma_id))
+                    conn.commit()
+                    messages.success(request, f"Aluno {usuario.nome_completo} adicionado à turma com sucesso!")
+                else:
+                    messages.warning(request, f"Aluno {usuario.nome_completo} já está nesta turma.")
+            except Exception as e:
+                conn.rollback()
+                messages.error(request, f"Erro no banco de dados ao adicionar aluno: {e}")
+            finally:
+                conn.close()
+
+        return redirect('gerenciar_alunos', turma_id=turma_id)
+
+    # Alunos disponíveis para serem adicionados
+    alunos_disponiveis = Usuario.objects.filter(
+        Q(tipo='Discente')
+    ).exclude(
+        Q(usuarioturma__turma=turma)
+    )
+
+    return render(request, 'gerenciar_alunos.html', {
+        'turma': turma,
+        'alunos_na_turma': alunos_na_turma,
+        'alunos_disponiveis': alunos_disponiveis,
+    })
+
+def permissoes(request):
+    if 'operador_id' not in request.session:
+        return redirect("login")
+    
+    operador = Operadores.objects.get(id=request.session['operador_id'])
+    
+    if request.method == "POST":
+        form = FormPermissaoEspecial(request.POST)
+        if form.is_valid():
+            permissao = form.save(commit=False)
+            data = form.cleaned_data['data']
+            hora = form.cleaned_data['hora']
+            permissao.data_hora_permissao = datetime.combine(data, hora)
+            permissao.operador = operador
+            permissao.save()
+            messages.success(request, "Permissão especial cadastrada com sucesso!")
+            return redirect("permissoes")
+        else:
+            # O formulário não é válido, exibe os erros
+            messages.error(request, "Erro ao cadastrar permissão. Verifique os campos.")
+            # A view continuará para o render, exibindo o formulário com os erros
+    else:
+        form = FormPermissaoEspecial()
+
+    permissoes = PermissaoEspecial.objects.select_related('usuario', 'operador').order_by('-data_hora_permissao')
+    total = permissoes.count()
+    ativas = permissoes.filter(data_hora_permissao__gte=now()).count()
+    pendentes = permissoes.filter(data_hora_permissao__gte=now()).count() # A lógica de pendente é a mesma de ativa
+    negadas = 0 # O conceito de negadas não existe diretamente, é mais para a lógica de acesso
+
+    return render(request, "permissoes.html", {
+        "operador": operador,
+        "form": form,
+        "permissoes": permissoes,
+        "total": total,
+        "ativas": ativas,
+        "pendentes": pendentes,
+        "negadas": negadas,
     })
