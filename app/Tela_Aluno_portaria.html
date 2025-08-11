@@ -1,0 +1,222 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>FaceIN - Portaria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #E7E7E4; /* Fundo branco/claro para a página */
+            color: #386641; /* Cor padrão para o texto principal, como no dashboard */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Cores da marca */
+        .bg-brand-green { background-color: #386641; }
+        .text-white-light { color: #E7E7E4; } /* Usado para textos claros em fundo escuro */
+
+        /* Estilo do cabeçalho */
+        .header-content {
+            background-color: #386641; /* Fundo verde do cabeçalho */
+            color: #E7E7E4; /* Texto branco/claro no cabeçalho */
+            padding: 1.5rem 2rem; /* Espaçamento interno */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            flex-shrink: 0; /* Não permite que o cabeçalho encolha */
+        }
+        .header-left h1 {
+            font-size: 1.5rem; /* INSTITUTO FEDERAL */
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        .header-left p {
+            font-size: 0.9rem; /* Rio Grande do Norte - Campus Apodi */
+            opacity: 0.9;
+        }
+        .header-right img {
+            height: 3rem; /* Tamanho da logo FaceIN no cabeçalho */
+        }
+        
+        .main-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+        }
+
+        /* Container da câmera */
+        .camera-outer-container {
+            background-color: #000; /* Fundo preto para o espaço da câmera */
+            border-radius: 1.5rem; /* Bordas arredondadas */
+            overflow: hidden; /* Garante que qualquer conteúdo dentro respeite as bordas */
+            display: flex;
+            flex-direction: column; /* Para empilhar o placeholder e a barra de instrução */
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Sombra para destacar */
+            flex-grow: 1; /* Permite que o container da câmera ocupe o espaço disponível */
+        }
+        .camera-placeholder {
+            flex-grow: 1; /* Ocupa o espaço superior dentro do container */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        .camera-placeholder-text {
+            color: #E7E7E4; /* Cor do texto no placeholder */
+            font-size: 1.8rem;
+            text-align: center;
+            line-height: 1.2;
+            padding: 1rem;
+        }
+        .instruction-bar {
+            background-color: #386641; /* Cor verde para a barra de instrução */
+            color: #E7E7E4; /* Texto branco/claro na barra */
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 1.5rem;
+            text-align: center;
+            width: 100%; /* Ocupa toda a largura do container */
+            position: absolute; /* Para que fique na parte inferior */
+            bottom: 0;
+        }
+
+        /* Layout para Telas Horizontais (Portaria - Desktop/Tablet Landscape) */
+        @media (min-aspect-ratio: 1/1) {
+            .main-content {
+                padding: 2rem;
+            }
+            .camera-outer-container {
+                width: 70vw; /* Largura base para a câmera */
+                max-width: 800px; /* Largura máxima */
+                height: calc(70vw * 9 / 16); /* Proporção 16:9 */
+                max-height: 450px;
+            }
+            .instruction-bar {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Layout para Telas Verticais (Celular/Tablet Portrait) */
+        @media (max-aspect-ratio: 1/1) {
+            .main-content {
+                padding: 1.5rem;
+            }
+            .camera-outer-container {
+                width: 90vw; /* Largura maior em verticais */
+                height: calc(90vw * 4 / 3); /* Proporção 4:3 */
+                max-height: 400px;
+            }
+            .instruction-bar {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Rodapé */
+        .footer-content {
+            font-size: 0.8rem; /* Aumentado */
+            color: #555;
+            padding: 1rem; /* Aumentado */
+            display: flex;
+            justify-content: center; /* Centralizado */
+            align-items: center;
+            width: 100%;
+            flex-shrink: 0;
+            gap: 0.5rem; /* Aumentado */
+        }
+        .footer-logo {
+            height: 1.1rem; /* Aumentado */
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <header class="header-content">
+        <div class="header-left">
+            <h1>INSTITUTO FEDERAL</h1>
+            <p>Rio Grande do Norte - Campus Apodi</p>
+        </div>
+        <div class="header-right">
+            <img src="{% static 'imagens/FaceIN_Logo_branca.png' %}" alt="Logo FaceIN" />
+        </div>
+    </header>
+
+    <main class="flex-1 flex items-center justify-center main-content">
+        <div class="camera-outer-container">
+            <div class="camera-placeholder">
+                <video id="camera" autoplay playsinline class="w-full h-full object-cover" style="transform: scaleX(-1);"></video>
+            </div>
+            
+            <div class="instruction-bar">
+                Aproxime o rosto da câmera!
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer-content">
+        <span>desenvolvido por</span>
+        <img src="{% static 'imagens/Logo_IN4_png2.png' %}" alt="Logo da empresa IN4" class="footer-logo" />
+    </footer>
+    <script>
+        const video = document.getElementById('camera');
+
+        // Pede acesso à câmera
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Erro ao acessar a câmera:', error);
+            });
+
+        // Envia imagem para o servidor a cada 2 segundos
+        const enviarImagem = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imagemBase64 = canvas.toDataURL('image/jpeg');
+
+            fetch('/receber_imagem/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ imagem: imagemBase64 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    // Espera X ms antes de enviar a próxima imagem
+                    setTimeout(enviarImagem, 3000); 
+                }
+            })
+            .catch(err => {
+                console.error('Erro ao enviar imagem:', err);
+                // Mesmo em erro, tenta novamente após X ms
+                setTimeout(enviarImagem, 3000); 
+            });
+        };
+
+        // Quando o vídeo estiver pronto, inicia o primeiro envio
+        video.addEventListener('loadedmetadata', () => {
+                setTimeout(() => {
+                    enviarImagem();
+                }, 3000); // 3 segundos
+        });
+    </script>
+</body>
+</html>
