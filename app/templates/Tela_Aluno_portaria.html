@@ -197,15 +197,25 @@
             })
             .then(res => res.json())
             .then(data => {
-                            if (data.redirect) {
-                           window.location.href = data.redirect;
-                            }})
-            .catch(err => console.error('Erro ao enviar imagem:', err));
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    // Espera X ms antes de enviar a próxima imagem
+                    setTimeout(enviarImagem, 3000); 
+                }
+            })
+            .catch(err => {
+                console.error('Erro ao enviar imagem:', err);
+                // Mesmo em erro, tenta novamente após X ms
+                setTimeout(enviarImagem, 3000); 
+            });
         };
 
-        // Espera vídeo carregar antes de começar a enviar
+        // Quando o vídeo estiver pronto, inicia o primeiro envio
         video.addEventListener('loadedmetadata', () => {
-            setInterval(enviarImagem, 3000); // a cada 2 segundos
+                setTimeout(() => {
+                    enviarImagem();
+                }, 3000); // 3 segundos
         });
     </script>
 </body>

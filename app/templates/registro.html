@@ -213,9 +213,11 @@
         </nav>
       </div>
       <div>
-        <button class="mt-6 btn-sair">
-          <i class="fi fi-sr-exit"></i> SAIR
-        </button>
+        <a href="/logout/">
+          <button class="mt-6 btn-sair">
+            <i class="fi fi-sr-exit"></i> SAIR
+          </button>
+        </a>
         <div class="mt-6 flex justify-center">
           <img src="{% static 'imagens/Logo_IN4_png_verde.png' %}" alt="Logo FaceIN" class="h-8">
         </div>
@@ -242,9 +244,11 @@
         </nav>
       </div>
       <div class="p-4">
-        <button class="mt-6 btn-sair">
-          <i class="fi fi-sr-exit"></i> SAIR
-        </button>
+        <a href="/logout/">
+          <button class="mt-6 btn-sair">
+            <i class="fi fi-sr-exit"></i> SAIR
+          </button>
+        </a>
         <div class="mt-6 flex justify-center">
           <img src="{% static 'imagens/Logo_IN4_png2.png' %}" alt="Logo FaceIN" class="h-8">
         </div>
@@ -288,7 +292,7 @@
               <tr>
                 <td class="px-4 py-2">{{ log.usuario.nome_completo }}</td>
                 <td class="px-4 py-2">{{ log.usuario.matricula }}</td>
-                <td class="px-4 py-2">{{ log.timestamp_acesso|date:"d/m/Y H:i:s" }}</td>
+                <td class="px-4 py-2">{{ log.timestamp_acesso }}</td>
                 <td class="px-4 py-2 {% if log.status == 'Aceito' %}text-green-600{% else %}text-red-600{% endif %} font-bold">
                   {{ log.status }}
                 </td>

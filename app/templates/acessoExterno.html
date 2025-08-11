@@ -213,9 +213,11 @@
         </nav>
       </div>
       <div>
-        <button class="mt-6 btn-sair">
-          <i class="fi fi-sr-exit"></i> SAIR
-        </button>
+        <a href="/logout/">
+          <button class="mt-6 btn-sair">
+            <i class="fi fi-sr-exit"></i> SAIR
+          </button>
+        </a>
         <div class="mt-6 flex justify-center">
           <img src="{% static 'imagens/Logo_IN4_png_verde.png' %}" alt="Logo FaceIN" class="h-8">
         </div>
@@ -225,9 +227,9 @@
     <aside class="mobile-sidebar">
       <div class="p-4">
         <div class="text-center">
-          <img src="img/FaceIN_Logo.png" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
+          <img src="{% static 'imagens/FaceIN_Logo.png' %}" alt="Logo FaceIN" class="mx-auto mb-4 w-32">
           <div class="w-16 h-16 mx-auto rounded-full overflow-hidden bg-coapac flex items-center justify-center">
-            <img src="img/user_avatar.png" alt="Foto do usuário" class="w-full h-full object-cover">
+            <img src="{% static 'imagens/Porteiro.png' %}" alt="Foto do usuário" class="w-full h-full object-cover">
           </div>
           <h1 class="mt-2 font-bold text-lg uppercase text-coapac">COAPAC</h1>
         </div>
@@ -242,11 +244,13 @@
         </nav>
       </div>
       <div class="p-4">
-        <button class="mt-6 btn-sair">
-          <i class="fi fi-sr-exit"></i> SAIR
-        </button>
+        <a href="/logout/">
+          <button class="mt-6 btn-sair">
+            <i class="fi fi-sr-exit"></i> SAIR
+          </button>
+        </a>
         <div class="mt-6 flex justify-center">
-          <img src="Logo IN4 png verde.png" alt="Logo FaceIN" class="h-8">
+          <img src="{% static 'imagens/Logo_IN4_png_verde.png' %}" alt="Logo FaceIN" class="h-8">
         </div>
       </div>
     </aside>

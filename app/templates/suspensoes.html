@@ -283,19 +283,27 @@
               </tr>
             </thead>
             <tbody>
-              {% for sancao in sancoes %}
-                <tr>
-                  <td class="px-4 py-2">{{ sancao.nome_usuario }}</td>
-                  <td class="px-4 py-2">{{ sancao.matricula_usuario }}</td>
-                  <td class="px-4 py-2">{{ sancao.motivo }}</td>
-                  <td class="px-4 py-2 text-red-600 font-bold">{{ sancao.tipo }}</td>
-                  <td class="px-4 py-2">{{ sancao.data_fim }}</td>
-                </tr>
-              {% empty %}
               <tr>
-                <td colspan="4" class="px-4 py-2 text-center text-gray-400">Nenhuma suspensão encontrado.</td>
+                <td class="px-4 py-2">João Pedro Lima</td>
+                <td class="px-4 py-2">00091235</td>
+                <td class="px-4 py-2">Comportamento</td>
+                <td class="px-4 py-2 text-red-600 font-bold">Suspenso</td>
+                <td class="px-4 py-2">15/08/2025</td>
               </tr>
-              {% endfor %}
+              <tr>
+                <td class="px-4 py-2">Lucas Ferreira</td>
+                <td class="px-4 py-2">00056789</td>
+                <td class="px-4 py-2">Faltas</td>
+                <td class="px-4 py-2 text-red-600 font-bold">Suspenso</td>
+                <td class="px-4 py-2">12/08/2025</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2">Maria Clara Santos</td>
+                <td class="px-4 py-2">00045678</td>
+                <td class="px-4 py-2">Agressão</td>
+                <td class="px-4 py-2 text-red-600 font-bold">Suspenso</td>
+                <td class="px-4 py-2">20/08/2025</td>
+              </tr>
             </tbody>
           </table>
         </section>
@@ -312,13 +320,13 @@
           <div>
             <label class="block text-sm font-semibold mb-1">Total de Suspensões:</label>
             <div class="bg-white text-coapac font-bold py-1 px-3 rounded-full text-sm inline-block">
-              {{ total }}
+              12
             </div>
           </div>
           <div>
             <label class="block text-sm font-semibold mb-1">Ativas:</label>
             <div class="bg-white text-red-600 font-bold py-1 px-3 rounded-full text-sm inline-block">
-              {{ ativas }}
+              3
             </div>
           </div>
           <div>

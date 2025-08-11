@@ -192,6 +192,7 @@
 </head>
 <body class="bg-gray-100 text-coapac">
   <div class="flex flex-col lg:flex-row min-h-screen p-4 gap-4">
+    <!-- Sidebar (desktop only) -->
     <aside class="hidden lg:flex flex-col justify-between w-64 p-4 border-divider bg-white rounded-3xl shadow-lg">
       <div>
         <div class="text-center">
@@ -212,14 +213,17 @@
         </nav>
       </div>
       <div>
-        <button class="mt-6 btn-sair">
-          <i class="fi fi-sr-exit"></i> SAIR
-        </button>
+        <a href="/logout/">
+          <button class="mt-6 btn-sair">
+            <i class="fi fi-sr-exit"></i> SAIR
+          </button>
+        </a>
         <div class="mt-6 flex justify-center">
           <img src="{% static 'imagens/Logo_IN4_png_verde.png' %}" alt="Logo FaceIN" class="h-8">
         </div>
       </div>
     </aside>
+    <!-- Mobile Sidebar (hidden by default) -->
     <aside class="mobile-sidebar">
       <div class="p-4">
         <div class="text-center">
@@ -240,16 +244,21 @@
         </nav>
       </div>
       <div class="p-4">
-        <button class="mt-6 btn-sair">
-          <i class="fi fi-sr-exit"></i> SAIR
-        </button>
+        <a href="/logout/">
+          <button class="mt-6 btn-sair">
+            <i class="fi fi-sr-exit"></i> SAIR
+          </button>
+        </a>
         <div class="mt-6 flex justify-center">
           <img src="{% static 'imagens/Logo_IN4_png_verde.png' %}" alt="Logo FaceIN" class="h-8">
         </div>
       </div>
     </aside>
+    <!-- Overlay for mobile sidebar -->
     <div class="overlay"></div>
+    <!-- Main content and right sidebar container -->
     <div class="flex flex-col lg:flex-row w-full gap-4">
+      <!-- Conteúdo principal -->
       <main class="flex-1 flex flex-col p-6 space-y-6 bg-white rounded-3xl shadow-lg">
         <header class="flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
@@ -257,15 +266,11 @@
             <p id="current-date" class="text-sm text-gray-500">Carregando data...</p>
           </div>
           <div class="flex items-center gap-4">
-            {% if operador.papel == "COAPAC" %}
-            <a href="{% url 'cadastrar_usuario' %}" class="bg-coapac text-white px-4 py-2 rounded-lg font-bold flex items-center gap-2">
-                <i class="fi fi-sr-user-add"></i> Cadastrar Usuário
-            </a>
-            {% endif %}
             <div class="bg-white p-3 rounded-full shadow"><i class="fi fi-sr-bell text-coapac"></i></div>
             <span class="bg-coapac text-white px-6 py-3 rounded-lg font-bold tracking-wider">9RS8YB</span>
           </div>
         </header>
+        <!-- Tabela dinâmica de usuários -->
         <section class="overflow-x-auto">
           <table class="min-w-full bg-white rounded-xl shadow">
             <thead>
@@ -295,6 +300,7 @@
           </table>
         </section>
       </main>
+      <!-- Sidebar Direita (Resumo) -->
       <aside class="w-full lg:w-80 bg-coapac text-white p-6 rounded-3xl shadow-lg flex-shrink-0">
         <div class="flex justify-between items-center mb-6">
           <h4 class="text-xl font-bold">Resumo de Usuários</h4>
@@ -325,6 +331,7 @@
       </aside>
     </div>
   </div>
+  <!-- Mobile bottom navigation -->
   <nav class="mobile-bottom-nav">
     <a href="{% url 'dashboard' %}">
       <i class="fi fi-sr-home"></i>
