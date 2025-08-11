@@ -1,0 +1,242 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FaceIN - Acesso</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+  
+    body {
+      background-color: #fff;
+    }
+  
+    header {
+      background-color: #065f46;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  
+    header h1 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  
+    header p {
+      font-size: 0.875rem;
+    }
+  
+    header img {
+      height: 24px;
+      filter: invert(1);
+    }
+  
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 1.5rem;
+    }
+  
+    @media (min-width: 1024px) {
+      main {
+        flex-direction: row;
+      }
+    }
+  
+    .camera, .dados {
+      width: 100%;
+    }
+  
+    .camera {
+      background-color: #f3f4f6;
+      border-radius: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+  
+    .camera img.bg {
+      width: 100%;
+      border-radius: 24px;
+      display: block;
+    }
+  
+    .camera img.icone {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      height: 96px;
+      opacity: 0.8;
+      animation: pulse 2s infinite;
+    }
+  
+    @keyframes pulse {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+      50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    }
+  
+    .dados {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  
+    .box {
+      background-color: #f3f4f6;
+      padding: 1rem;
+      border-radius: 16px;
+    }
+  
+    .alerta {
+      background-color: #065f46;
+      color: white;
+      text-align: center;
+      padding: 0.75rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.125rem;
+    }
+  
+    .perfil {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background-color: #065f46;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 1rem;
+    }
+  
+    .perfil img {
+      width: 250px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+  
+    .perfil p {
+      font-size: 1rem;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+  
+    @media (min-width: 768px) {
+      .perfil {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+      }
+  
+      .perfil p {
+        font-size: 1.25rem;
+      }
+  
+      .perfil img {
+        width: 300px;
+        height: 300px;
+      }
+    }
+  
+    .situacao {
+      text-align: center;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #374151;
+    }
+  
+    .situacao span {
+      font-weight: 600;
+    }
+  
+    .acesso {
+      background-color: #065f46;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      border-radius: 12px;
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
+  
+    .acesso span {
+      color: #a3e635;
+    }
+  
+    footer {
+      text-align: right;
+      font-size: 0.875rem;
+      color: #6b7280;
+      padding: 1rem 1.5rem;
+    }
+  
+    footer strong {
+      color: rgb(0, 0, 0);
+    }
+  </style>
+  
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <div>
+      <h1>Instituto Federal</h1>
+      <p>Rio Grande do Norte - Campus Apodi</p>
+    </div>
+    <div >
+      <img src="{% static 'imagens/FaceIN_Logo.png' %}" alt="Logo do sistema FaceIN" style="height: 24px; filter: brightness(0) invert(1);">
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main>
+    <!-- Câmera -->
+    <div class="camera">
+      <img src="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9" alt="Imagem da Câmera" class="bg" />
+      <img src="" alt="Reconhecimento facial" class="icone" />
+    </div>
+
+    <!-- Dados do usuário -->
+    <div class="dados">
+      <!-- Alerta -->
+      <div class="alerta">APROXIME O ROSTO DA CÂMERA</div>
+
+      <!-- Perfil -->
+      <div class="box perfil">
+        <img src="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9" alt="Foto identificada" />
+        <div>
+          <p><strong>NOME:</strong> MACACO PREGO DA SILVA</p>
+          <p><strong>MATRÍCULA:</strong> 20221084010000</p>
+          <p><strong>TURMA:</strong> 4º ANO DE INFORMÁTICA</p>
+          <p> SITUAÇÃO: <span>SEM RESTRIÇÕES</span></p>
+        </div>
+      </div>
+
+    
+
+      <!-- Acesso liberado -->
+      <div class="acesso">
+        ACESSO <span>LIBERADO</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    desenvolvido por <strong>in4</strong>
+  </footer>
+</body>
+</html>

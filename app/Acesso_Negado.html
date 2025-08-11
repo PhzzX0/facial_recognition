@@ -1,0 +1,305 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FaceIN - Acesso Negado</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variáveis de CSS com as cores corretas */
+        :root {
+            --bg-main: #E7E7E4;      /* Fundo principal claro */
+            --green-dark: #386641;    /* Verde para header/footer */
+            --green-cards: #2F523D;   /* Verde mais escuro para as caixas de info */
+            --text-on-dark: #F0F2F5;  /* Texto claro em fundo escuro */
+            --text-denied: #dc3545;    /* Vermelho para 'ACESSO NEGADO' */
+            --border-radius: 1rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--green-dark);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header --- */
+        .page-header {
+            background-color: var(--green-dark);
+            color: var(--text-on-dark);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .header-title p {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .header-logo img {
+            height: 40px;
+        }
+
+        /* --- Main Content Area (Fundo Claro) --- */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            background-color: var(--bg-main);
+        }
+
+        /* --- Câmera Feed (Esquerda) --- */
+        .camera-feed {
+            flex: 0 1 480px; /* Alterado: Não cresce, pode encolher, base de 480px */
+            max-width: 480px; /* Garante que não ultrapasse essa largura */
+            position: relative;
+            background-color: #000;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            height: 450px; /* Altura fixa para manter a proporção */
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .camera-feed img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .focus-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .focus-box { position: relative; width: 60%; height: 70%; }
+
+        .focus-corner {
+            position: absolute; width: 40px; height: 40px;
+            border: 5px solid white;
+        }
+
+        .focus-corner.top-left { top: 0; left: 0; border-right: none; border-bottom: none; border-top-left-radius: var(--border-radius); }
+        .focus-corner.top-right { top: 0; right: 0; border-left: none; border-bottom: none; border-top-right-radius: var(--border-radius); }
+        .focus-corner.bottom-left { bottom: 0; left: 0; border-right: none; border-top: none; border-bottom-left-radius: var(--border-radius); }
+        .focus-corner.bottom-right { bottom: 0; right: 0; border-left: none; border-top: none; border-bottom-right-radius: var(--border-radius); }
+
+        /* --- Painel de Informações (Direita) --- */
+        .info-panel {
+            flex: 1 1 500px; /* Alterado: Pode crescer e encolher, base de 500px */
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .info-box {
+            background-color: var(--green-cards);
+            color: var(--text-on-dark);
+            padding: 1.25rem;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .instruction-box { font-size: 1.1rem; }
+
+        .user-details-box {
+            display: flex; align-items: center; gap: 1.5rem;
+            text-align: left; padding: 1.5rem;
+        }
+
+        .user-details-box .avatar {
+            width: 70px; height: 70px; border-radius: 50%;
+            object-fit: cover; border: 2px solid var(--text-on-dark);
+            flex-shrink: 0;
+        }
+
+        .user-info p { font-size: 0.9rem; line-height: 1.6; font-weight: 400; }
+        .user-info p strong { font-weight: 700; }
+
+        .status-box { font-size: 1.8rem; font-weight: 700; }
+        .status-box .status-text { color: var(--text-denied); }
+
+        /* --- Footer --- */
+        .page-footer {
+            background-color: var(--green-dark);
+            color: var(--text-on-dark);
+            padding: 0.5rem 2rem;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .page-footer img {
+            height: 18px;
+            filter: brightness(0) invert(1); /* Deixa a logo preta branca */
+        }
+
+        /* --- Media Query para Responsividade --- */
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            .camera-feed, .info-panel {
+                width: 100%;
+                max-width: 500px; /* Limita a largura máxima no modo coluna */
+                flex-basis: auto; /* Reseta a base do flex */
+            }
+            .camera-feed {
+                height: auto; /* Permite que a altura se ajuste */
+                aspect-ratio: 4 / 3; /* Mantém uma proporção de câmera */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .page-header { padding: 1rem 1.5rem; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .header-title h1 { font-size: 1.2rem; }
+            .header-title p { font-size: 0.9rem; }
+            .header-logo img { height: 30px; }
+
+            .main-content { padding: 1.5rem; gap: 1.5rem; }
+
+            .focus-corner { width: 30px; height: 30px; border-width: 4px; }
+
+            .info-panel { gap: 1rem; }
+            .info-box { padding: 1rem; }
+            .instruction-box { font-size: 1rem; }
+            .user-details-box { padding: 1rem; gap: 1rem; }
+            .user-details-box .avatar { width: 60px; height: 60px; }
+            .user-info p { font-size: 0.8rem; }
+            .status-box { font-size: 1.5rem; }
+
+            .page-footer { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="page-header">
+        <div class="header-title">
+            <h1>INSTITUTO FEDERAL</h1>
+            <p>Rio Grande do Norte - Campus Apodi</p>
+        </div>
+        <div class="header-logo">
+            <img src="{% static 'imagens/FaceIN_Logo_branca.png' %}" alt="Logo FaceIN">
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="camera-feed">
+            <video id="camera" autoplay playsinline class="w-full h-full object-cover" style="transform: scaleX(-1);"></video>
+            <div class="focus-overlay">
+                <div class="focus-box">
+                    <div class="focus-corner top-left"></div>
+                    <div class="focus-corner top-right"></div>
+                    <div class="focus-corner bottom-left"></div>
+                    <div class="focus-corner bottom-right"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            {% if dados == False %}
+                <div class="info-box instruction-box">
+                    ROSTO NÃO RECONHECIDO
+                </div>
+            {% else %}
+                <div class="info-box user-details-box">
+                    <div class="user-info">
+                        <p><strong>NOME:</strong><br>{{ nome }}</p>
+                        <p><strong>SITUAÇÃO:</strong><br>{{ situacao }}</p>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="info-box status-box">
+                ACESSO <span class="status-text">NEGADO</span>
+            </div>
+        </div>
+    </main>
+
+    <footer class="page-footer">
+        <span>desenvolvido por</span>
+        <img src="{% static 'imagens/Logo_IN4_png2.png' %}" alt="Logo IN4">
+    </footer>
+    <script>
+        const video = document.getElementById('camera');
+
+        // Pede acesso à câmera
+        navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(error => {
+                console.error('Erro ao acessar a câmera:', error);
+            });
+
+        // Envia imagem para o servidor a cada 2 segundos
+        const enviarImagem = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imagemBase64 = canvas.toDataURL('image/jpeg');
+
+            fetch('/receber_imagem/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ imagem: imagemBase64 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    // Espera X ms antes de enviar a próxima imagem
+                    setTimeout(enviarImagem, 3000); 
+                }
+            })
+            .catch(err => {
+                console.error('Erro ao enviar imagem:', err);
+                // Mesmo em erro, tenta novamente após X ms
+                setTimeout(enviarImagem, 3000); 
+            });
+        };
+
+        // Quando o vídeo estiver pronto, inicia o primeiro envio
+        video.addEventListener('loadedmetadata', () => {
+                setTimeout(() => {
+                    enviarImagem();
+                }, 3000); // 3 segundos
+        });
+    </script>
+</body>
+</html>
